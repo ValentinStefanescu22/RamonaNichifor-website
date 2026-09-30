@@ -1,0 +1,617 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-30T17:35:45.297972+00:00",
+  "title": "Design System: Ramona Nichifor",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Plum Ink",
+        "canonical": "#34224a",
+        "oklch": "oklch(29.5% 0.073 303.0)",
+        "tonalRamp": [
+          "oklch(15% 0.043 303.0)",
+          "oklch(26% 0.050 303.0)",
+          "oklch(38% 0.058 303.0)",
+          "oklch(50% 0.066 303.0)",
+          "oklch(62% 0.072 303.0)",
+          "oklch(74% 0.064 303.0)",
+          "oklch(85% 0.056 303.0)",
+          "oklch(95% 0.050 303.0)"
+        ]
+      },
+      "ink-soft": {
+        "role": "primary",
+        "displayName": "Dusk Plum",
+        "canonical": "#5e4a75",
+        "oklch": "oklch(44.8% 0.073 305.0)",
+        "tonalRamp": [
+          "oklch(15% 0.043 305.0)",
+          "oklch(26% 0.050 305.0)",
+          "oklch(38% 0.058 305.0)",
+          "oklch(50% 0.066 305.0)",
+          "oklch(62% 0.071 305.0)",
+          "oklch(74% 0.063 305.0)",
+          "oklch(85% 0.056 305.0)",
+          "oklch(95% 0.049 305.0)"
+        ]
+      },
+      "violet": {
+        "role": "secondary",
+        "displayName": "Wing Violet",
+        "canonical": "#7a5fb0",
+        "oklch": "oklch(54.8% 0.125 297.5)",
+        "tonalRamp": [
+          "oklch(15% 0.074 297.5)",
+          "oklch(26% 0.086 297.5)",
+          "oklch(38% 0.100 297.5)",
+          "oklch(50% 0.113 297.5)",
+          "oklch(62% 0.122 297.5)",
+          "oklch(74% 0.109 297.5)",
+          "oklch(85% 0.096 297.5)",
+          "oklch(95% 0.085 297.5)"
+        ]
+      },
+      "magenta": {
+        "role": "secondary",
+        "displayName": "Butterfly Magenta",
+        "canonical": "#b8468a",
+        "oklch": "oklch(56.9% 0.165 346.8)",
+        "tonalRamp": [
+          "oklch(15% 0.095 346.8)",
+          "oklch(26% 0.111 346.8)",
+          "oklch(38% 0.128 346.8)",
+          "oklch(50% 0.145 346.8)",
+          "oklch(62% 0.157 346.8)",
+          "oklch(74% 0.140 346.8)",
+          "oklch(85% 0.124 346.8)",
+          "oklch(95% 0.109 346.8)"
+        ]
+      },
+      "lilac": {
+        "role": "tertiary",
+        "displayName": "Lilac",
+        "canonical": "#c9b8e6",
+        "oklch": "oklch(81.2% 0.066 301.8)",
+        "tonalRamp": [
+          "oklch(15% 0.039 301.8)",
+          "oklch(26% 0.046 301.8)",
+          "oklch(38% 0.053 301.8)",
+          "oklch(50% 0.060 301.8)",
+          "oklch(62% 0.065 301.8)",
+          "oklch(74% 0.058 301.8)",
+          "oklch(85% 0.051 301.8)",
+          "oklch(95% 0.045 301.8)"
+        ]
+      },
+      "petal": {
+        "role": "tertiary",
+        "displayName": "Petal Blush",
+        "canonical": "#f6dde6",
+        "oklch": "oklch(92.0% 0.030 353.9)",
+        "tonalRamp": [
+          "oklch(15% 0.018 353.9)",
+          "oklch(26% 0.021 353.9)",
+          "oklch(38% 0.024 353.9)",
+          "oklch(50% 0.027 353.9)",
+          "oklch(62% 0.029 353.9)",
+          "oklch(74% 0.026 353.9)",
+          "oklch(85% 0.023 353.9)",
+          "oklch(95% 0.020 353.9)"
+        ]
+      },
+      "sky": {
+        "role": "neutral",
+        "displayName": "Powder Sky",
+        "canonical": "#d6e6f5",
+        "oklch": "oklch(91.8% 0.027 246.4)",
+        "tonalRamp": [
+          "oklch(15% 0.016 246.4)",
+          "oklch(26% 0.018 246.4)",
+          "oklch(38% 0.021 246.4)",
+          "oklch(50% 0.024 246.4)",
+          "oklch(62% 0.026 246.4)",
+          "oklch(74% 0.023 246.4)",
+          "oklch(85% 0.021 246.4)",
+          "oklch(95% 0.018 246.4)"
+        ]
+      },
+      "mist": {
+        "role": "neutral",
+        "displayName": "Mist",
+        "canonical": "#eef3fa",
+        "oklch": "oklch(96.2% 0.011 256.7)",
+        "tonalRamp": [
+          "oklch(15% 0.006 256.7)",
+          "oklch(26% 0.007 256.7)",
+          "oklch(38% 0.009 256.7)",
+          "oklch(50% 0.010 256.7)",
+          "oklch(62% 0.011 256.7)",
+          "oklch(74% 0.009 256.7)",
+          "oklch(85% 0.008 256.7)",
+          "oklch(95% 0.007 256.7)"
+        ]
+      },
+      "sage": {
+        "role": "tertiary",
+        "displayName": "Sage",
+        "canonical": "#dfe7d4",
+        "oklch": "oklch(91.7% 0.027 125.6)",
+        "tonalRamp": [
+          "oklch(15% 0.016 125.6)",
+          "oklch(26% 0.018 125.6)",
+          "oklch(38% 0.021 125.6)",
+          "oklch(50% 0.024 125.6)",
+          "oklch(62% 0.026 125.6)",
+          "oklch(74% 0.023 125.6)",
+          "oklch(85% 0.021 125.6)",
+          "oklch(95% 0.018 125.6)"
+        ]
+      },
+      "leaf": {
+        "role": "tertiary",
+        "displayName": "Leaf",
+        "canonical": "#6f8a5a",
+        "oklch": "oklch(60.0% 0.076 132.2)",
+        "tonalRamp": [
+          "oklch(15% 0.045 132.2)",
+          "oklch(26% 0.053 132.2)",
+          "oklch(38% 0.061 132.2)",
+          "oklch(50% 0.069 132.2)",
+          "oklch(62% 0.075 132.2)",
+          "oklch(74% 0.067 132.2)",
+          "oklch(85% 0.059 132.2)",
+          "oklch(95% 0.052 132.2)"
+        ]
+      },
+      "cream": {
+        "role": "neutral",
+        "displayName": "Meadow Cream",
+        "canonical": "#fbf7f1",
+        "oklch": "oklch(97.8% 0.009 78.3)",
+        "tonalRamp": [
+          "oklch(15% 0.005 78.3)",
+          "oklch(26% 0.006 78.3)",
+          "oklch(38% 0.007 78.3)",
+          "oklch(50% 0.008 78.3)",
+          "oklch(62% 0.009 78.3)",
+          "oklch(74% 0.008 78.3)",
+          "oklch(85% 0.007 78.3)",
+          "oklch(95% 0.006 78.3)"
+        ]
+      },
+      "paper-mat": {
+        "role": "neutral",
+        "displayName": "Paper Mat",
+        "canonical": "#fffdf9",
+        "oklch": "oklch(99.4% 0.006 84.6)",
+        "tonalRamp": [
+          "oklch(15% 0.003 84.6)",
+          "oklch(26% 0.004 84.6)",
+          "oklch(38% 0.005 84.6)",
+          "oklch(50% 0.005 84.6)",
+          "oklch(62% 0.006 84.6)",
+          "oklch(74% 0.005 84.6)",
+          "oklch(85% 0.004 84.6)",
+          "oklch(95% 0.004 84.6)"
+        ]
+      }
+    },
+    "universeTints": {
+      "_note": "CMS content per universe: [light, mid, deep]. Used only for that universe's orb, creature, status text and tinted sky (--tint = light).",
+      "fluture": [
+        "#F8DCEB",
+        "#E58FBF",
+        "#9B3F7A"
+      ],
+      "buburuza": [
+        "#FBE1DA",
+        "#EE9B8C",
+        "#A8483C"
+      ],
+      "tantar": [
+        "#DCE9F6",
+        "#97BCE0",
+        "#3F6A98"
+      ],
+      "musca": [
+        "#E3EBDA",
+        "#A9BE95",
+        "#56704A"
+      ]
+    },
+    "grounds": [
+      {
+        "name": "meadow-hero",
+        "value": "linear-gradient(180deg, var(--color-sky) 0%, var(--color-mist) 38%, var(--color-cream) 72%)",
+        "purpose": "Home hero and the live universe window, with the meadow painting feathered in (mask transparent 0% to #000 26%)."
+      },
+      {
+        "name": "book-wash",
+        "value": "linear-gradient(180deg, var(--color-cream), var(--color-petal) 38%, var(--color-cream))",
+        "purpose": "Book section."
+      },
+      {
+        "name": "sky-day",
+        "value": "radial-gradient(90% 45% at 88% 6%, rgb(255 255 255 / 0.55), transparent 62%), radial-gradient(80% 40% at 8% 42%, rgb(201 184 230 / 0.35), transparent 68%), linear-gradient(180deg, #cddff1 0%, #e1eaf6 26%, #ece6f5 54%, #f6e2ea 80%, var(--color-cream) 100%)",
+        "purpose": "Universuri ground: powder blue, lilac mist, blush horizon, cream."
+      },
+      {
+        "name": "sky-tint",
+        "value": "radial-gradient(90% 50% at 50% 0%, color-mix(in oklab, var(--tint) 70%, white), transparent 70%), linear-gradient(180deg, color-mix(in oklab, var(--tint) 55%, #e1eaf6) 0%, #eef3fa 42%, var(--color-cream) 78%)",
+        "purpose": "Universe page: the same sky tinted by the universe's light tint."
+      },
+      {
+        "name": "section-grounds",
+        "value": "cream (paths, universes, about, footer), mist (art), sage (counselling)",
+        "purpose": "Flat section grounds."
+      }
+    ],
+    "filters": [
+      {
+        "name": "paint-edge",
+        "value": "feTurbulence fractalNoise baseFrequency 0.035 numOctaves 3 seed 7; feDisplacementMap scale 12",
+        "purpose": "Watercolor edge on arches and icon seeds (meadow)."
+      },
+      {
+        "name": "orb-rim",
+        "value": "no filter; mask radial-gradient(closest-side, #000 calc(100% - 1.5px), transparent)",
+        "purpose": "Smooth, perfectly round orb rim with a soft 1.5px feather. Replaces the old orb-edge displacement filter, which left jagged steps."
+      },
+      {
+        "name": "paint-bloom",
+        "value": "feTurbulence fractalNoise baseFrequency 0.012 numOctaves 4 seed 3; feDisplacementMap scale 60; feGaussianBlur 6",
+        "purpose": "Pink (#f3d3e3) to lilac (#dccbf0) bloom behind the hero name."
+      }
+    ],
+    "fontVariation": {
+      "display": "'SOFT' 100, 'WONK' 0; font-optical-sizing auto",
+      "accent": "'SOFT' 100, 'WONK' 1 (italic accent words only)",
+      "nextFont": "Fraunces variable with axes ['SOFT','WONK','opsz'], roman+italic, subsets ['latin','latin-ext']; Alegreya Sans 400/500/700 + italic 400/500, subsets ['latin','latin-ext']"
+    },
+    "shadows": [
+      {
+        "name": "soft",
+        "value": "0 1px 2px rgb(52 34 74 / 0.06), 0 18px 40px -18px rgb(52 34 74 / 0.28)",
+        "purpose": "Buttons, chips, floating bar, glass buttons, arch windows, art mat."
+      },
+      {
+        "name": "book",
+        "value": "0 2px 4px rgb(52 34 74 / 0.08), 0 30px 60px -24px rgb(52 34 74 / 0.45), inset 3px 0 6px -3px rgb(255 255 255 / 0.5)",
+        "purpose": "Book covers only; inset is the spine highlight."
+      },
+      {
+        "name": "orb-volume",
+        "value": "inset -10px -14px 30px <deep tint>33, inset 8px 10px 24px #ffffff80",
+        "purpose": "Watercolor orbs; plus a blur-2xl radial glow of the mid tint at -18% inset."
+      }
+    ],
+    "focus": {
+      "value": "outline 2px solid var(--color-magenta); outline-offset 3px",
+      "purpose": "Every focusable element (:focus-visible)."
+    },
+    "glass": {
+      "value": "background rgb(251 247 241 / 0.75-0.85); backdrop-filter blur(4px) (pills) / blur(24px) saturate(1.5) (floating bar); ring 1px rgb(52 34 74 / 0.05)",
+      "purpose": "Only way a control floats over imagery."
+    },
+    "motion": [
+      {
+        "name": "ease-bloom",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Every entrance, reveal, hover nudge, menu sheet and floating bar (Motion: easeOut [0.16,1,0.3,1])."
+      },
+      {
+        "name": "ease-soft",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Language-switch root cross-fade."
+      },
+      {
+        "name": "ease-glide",
+        "value": "cubic-bezier(0.2, 0.9, 0.1, 1)",
+        "purpose": "Orb paint-in, orb hover and the orb-to-page morph."
+      },
+      {
+        "name": "ease-sway",
+        "value": "cubic-bezier(0.45, 0.05, 0.55, 0.95)",
+        "purpose": "Looping breath: butterfly bob, orb glow."
+      },
+      {
+        "name": "ease-drift",
+        "value": "cubic-bezier(0.37, 0, 0.63, 1)",
+        "purpose": "Sine easing for the orbs' endless drift: speed changes continuously and never stops dead."
+      },
+      {
+        "name": "ease-wing",
+        "value": "cubic-bezier(0.45, 0.05, 0.35, 1)",
+        "purpose": "Wing flap, alternate infinite."
+      },
+      {
+        "name": "duration-press",
+        "value": "150ms",
+        "purpose": "Press scale to 0.97 (chips 0.96, menu 0.94)."
+      },
+      {
+        "name": "duration-lang",
+        "value": "280ms",
+        "purpose": "Language view-transition cross-fade."
+      },
+      {
+        "name": "duration-hover",
+        "value": "300ms",
+        "purpose": "Arrow slides, row hover background; seed nudge up to 500ms."
+      },
+      {
+        "name": "duration-bar",
+        "value": "500ms",
+        "purpose": "Floating bar blur-in/out (y -24px, blur 6px); appears after 85% of a viewport."
+      },
+      {
+        "name": "duration-sheet",
+        "value": "700ms",
+        "purpose": "Menu sheet circle clip-path reveal from the menu button; items stagger 50ms from 120ms."
+      },
+      {
+        "name": "rise",
+        "value": "1.1s ease-bloom; from translateY(0.35em) blur(10px) opacity 0",
+        "purpose": "Hero name lines at 0.25s and 0.37s. CSS keyframes, fill both."
+      },
+      {
+        "name": "fade-up",
+        "value": "0.9s ease-bloom; from translateY(14px) opacity 0",
+        "purpose": "Tagline 0.62s, roles 0.72s, CTA 0.84s, path chips 1.0s; Universuri intro 0.1-0.4s."
+      },
+      {
+        "name": "bloom-in",
+        "value": "1.8s ease-bloom; scale 0.55 to 1, opacity to 0.85",
+        "purpose": "Pink-lilac paint bloom behind the hero name."
+      },
+      {
+        "name": "wash-in",
+        "value": "1.4s ease-bloom; opacity to 0.75",
+        "purpose": "Watercolor wash in the hero."
+      },
+      {
+        "name": "meadow-in",
+        "value": "1.2s ease-bloom 0.1s; from translateY(24px) blur(8px)",
+        "purpose": "Front meadow lifting into place."
+      },
+      {
+        "name": "parallax-meadow",
+        "value": "wash +18%, back meadow -10%, front meadow -26%, text +22% over hero scroll (start start to end start)",
+        "purpose": "Hero depth."
+      },
+      {
+        "name": "wing-flap",
+        "value": "0.34s idle / 0.16s flying / 1.1s in orb / 1.5s perched; left rotateY 6-66deg, right -6 to -66deg; stopped at +/-18deg",
+        "purpose": "Butterfly wings hinge at 52% height."
+      },
+      {
+        "name": "butterfly-arrive",
+        "value": "1.6s ease-bloom delay 0.5s from x 180 y 140 rotate -18deg",
+        "purpose": "Butterfly flies into its hero perch."
+      },
+      {
+        "name": "butterfly-bob",
+        "value": "3.2s ease-sway infinite, 7px",
+        "purpose": "Hover in place while not flying."
+      },
+      {
+        "name": "butterfly-flight",
+        "value": "spring stiffness 70 damping 18 mass 0.7; Catmull-Rom via (20%w, 34%) and (80%w, 70%); bank max 28deg; flutter sin(19t)*14px, sin(27t)*10px fading to 0; scale^1.6 to perch size; ends when perch is 42% down the viewport; landed at 0.992",
+        "purpose": "Scroll-driven flight from hero to the Universul Fluturelui window; perched twin takes over."
+      },
+      {
+        "name": "orb-in",
+        "value": "1.1s ease-glide; from scale 0.6 blur(8px); delay 0.35s + 0.15s per orb",
+        "purpose": "Orbs paint in on the sky."
+      },
+      {
+        "name": "orb-drift",
+        "value": "per orb: translateX ±8px (half-period 7.3/8.9/6.7/9.4s), translateY ±10px (5.1/6.3/5.8/7.1s), orb-only rotate ±2.5deg (9.7/11.3/10.1/12.2s); alternate infinite, staggered negative delays; ease-drift",
+        "purpose": "Worlds float freely with no connecting line; incommensurate periods so they never move in step. Transform-only, compositor-driven."
+      },
+      {
+        "name": "orb-glow",
+        "value": "3.6s ease-sway alternate; opacity 0.45-0.8, scale 0.96-1.06",
+        "purpose": "Live universe breathes."
+      },
+      {
+        "name": "orb-focus",
+        "value": "looked-at orb scale 1.22 (origin 50% 85%, z above); others scale 0.9, opacity 0.7, labels 0.72; transform 0.6s + opacity 0.4s ease-glide, no bounce",
+        "purpose": "Hover or keyboard focus on hover-capable devices; on touch (hover: none) the orb nearest mid-screen while scrolling (within 45% of viewport height, 24px margin against flicker)."
+      },
+      {
+        "name": "pollen",
+        "value": "canvas, count min(80, area/9000), radius 0.6-2.5px, rise 0.04-0.18px/frame, twinkle period ~5.6s (t/900), strength 0.5 sky / 0.55 universe page",
+        "purpose": "Drifting motes; paused off-screen; one static frame under reduced motion."
+      },
+      {
+        "name": "morph",
+        "value": "view-transition type 'morph', name 'universe-orb'; group 0.6s ease-glide, old/new 0.35s, root 0.5s",
+        "purpose": "Orb grows into the universe page header orb and back."
+      },
+      {
+        "name": "toggle-thumb",
+        "value": "spring bounce 0 duration 0.35s (shared layout)",
+        "purpose": "RO/EN thumb slide."
+      },
+      {
+        "name": "cover-tilt",
+        "value": "spring stiffness 150 damping 18; rotateY +/-7deg, rotateX +/-5deg, rest rotateZ -2.5deg; mouse only",
+        "purpose": "Book cover follows the pointer."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "all animation/transition 0.01ms, 1 iteration; no flight; wings open static; pollen static; view transitions off; scroll-behavior auto",
+        "purpose": "Everything lands at its visible end state."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Plum pill with a cream seed circle holding the arrow; the main action on every surface.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Intră în poveste<span class=\"ds-btn-seed\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 5v14M6 13l6 6 6-6\"/></svg></span></a>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:12px;min-height:48px;padding:6px 6px 6px 24px;border-radius:9999px;background:#34224a;color:#fbf7f1;font:500 1.02rem/1.2 'Alegreya Sans',sans-serif;text-decoration:none;box-shadow:0 1px 2px rgb(52 34 74/.06),0 18px 40px -18px rgb(52 34 74/.28);transition:transform .15s}.ds-btn-primary:active{transform:scale(.97)}.ds-btn-primary:focus-visible{outline:2px solid #b8468a;outline-offset:3px}.ds-btn-seed{display:grid;place-items:center;width:36px;height:36px;border-radius:9999px;background:rgb(251 247 241/.15);transition:transform .5s cubic-bezier(.16,1,.3,1)}.ds-btn-primary:hover .ds-btn-seed{transform:translateY(2px)}"
+    },
+    {
+      "name": "Path Chip",
+      "kind": "chip",
+      "refersTo": "path-chip",
+      "description": "Glass pill at the meadow's edge linking to one of the three paths.",
+      "html": "<a class=\"ds-chip\" href=\"#\"><svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#7a5fb0\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5zM12 6v13\"/></svg>Cărți</a>",
+      "css": ".ds-chip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:9999px;background:rgb(251 247 241/.85);color:#34224a;font:500 .98rem/1.2 'Alegreya Sans',sans-serif;text-decoration:none;box-shadow:0 0 0 1px rgb(52 34 74/.05),0 1px 2px rgb(52 34 74/.06),0 18px 40px -18px rgb(52 34 74/.28);backdrop-filter:blur(4px);transition:transform .15s}.ds-chip:active{transform:scale(.96)}.ds-chip:focus-visible{outline:2px solid #b8468a;outline-offset:3px}"
+    },
+    {
+      "name": "Language Toggle",
+      "kind": "nav",
+      "refersTo": "lang-toggle",
+      "description": "RO | EN pill; Romanian first and default; ink thumb slides to the active language.",
+      "html": "<div class=\"ds-lang\" role=\"radiogroup\" aria-label=\"Limba\"><button role=\"radio\" aria-checked=\"true\" class=\"ds-lang-on\">RO</button><button role=\"radio\" aria-checked=\"false\">EN</button></div>",
+      "css": ".ds-lang{display:inline-flex;align-items:center;height:44px;padding:4px;border-radius:9999px;background:rgb(251 247 241/.7);font:700 .8rem/1 'Alegreya Sans',sans-serif;letter-spacing:.08em}.ds-lang button{min-width:44px;height:36px;padding:0 12px;border:0;border-radius:9999px;background:transparent;color:#5e4a75;font:inherit;letter-spacing:inherit;cursor:pointer;transition:color .3s,background .35s}.ds-lang .ds-lang-on{background:#34224a;color:#fbf7f1}.ds-lang button:focus-visible{outline:2px solid #b8468a;outline-offset:3px}"
+    },
+    {
+      "name": "Floating Bar",
+      "kind": "nav",
+      "refersTo": "lang-toggle",
+      "description": "Glass pill nav that takes over after the hero: wordmark, sections (desktop), toggle, menu.",
+      "html": "<div class=\"ds-bar\"><a class=\"ds-wordmark\" href=\"#\">Ramona Nichifor</a><div class=\"ds-bar-end\"><span class=\"ds-mini\">RO · EN</span><button class=\"ds-menu\" aria-label=\"Meniu\"><span></span><span></span></button></div></div>",
+      "css": ".ds-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:768px;padding:6px 6px 6px 20px;border-radius:9999px;background:rgb(251 247 241/.75);backdrop-filter:blur(24px) saturate(1.5);box-shadow:0 0 0 1px rgb(52 34 74/.05),0 1px 2px rgb(52 34 74/.06),0 18px 40px -18px rgb(52 34 74/.28)}.ds-wordmark{font:italic 400 1.125rem/1 Fraunces,Georgia,serif;font-variation-settings:'SOFT' 100,'WONK' 1;letter-spacing:-.02em;color:#34224a;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}.ds-bar-end{display:flex;align-items:center;gap:6px}.ds-mini{font:700 .8rem 'Alegreya Sans',sans-serif;letter-spacing:.08em;color:#5e4a75;padding:0 8px}.ds-menu{position:relative;width:44px;height:44px;border:0;border-radius:9999px;background:#34224a;color:#fbf7f1;cursor:pointer;transition:transform .15s}.ds-menu span{position:absolute;left:12px;width:20px;height:1.5px;border-radius:2px;background:currentColor}.ds-menu span:first-child{top:17.5px}.ds-menu span:last-child{top:25.5px}.ds-menu:active{transform:scale(.94)}.ds-menu:focus-visible{outline:2px solid #b8468a;outline-offset:3px}"
+    },
+    {
+      "name": "Path Row",
+      "kind": "custom",
+      "refersTo": "path-row",
+      "description": "One of three equal-weight paths: paint-edged tint seed, Fraunces title, one line, violet arrow.",
+      "html": "<a class=\"ds-row\" href=\"#\"><span class=\"ds-seed\"></span><span class=\"ds-row-t\"><b>Artă</b><small>Originale și printuri</small></span><span class=\"ds-row-a\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></span></a>",
+      "css": ".ds-row{display:flex;align-items:center;gap:16px;min-height:96px;padding:16px;border-radius:28px;color:#34224a;text-decoration:none;transition:background .3s}.ds-row:hover{background:rgb(255 255 255/.6)}.ds-row:focus-visible{outline:2px solid #b8468a;outline-offset:3px}.ds-seed{width:56px;height:56px;flex-shrink:0;border-radius:9999px;background:#dce8f5}.ds-row-t{flex:1;display:flex;flex-direction:column}.ds-row-t b{font:400 1.55rem/1.25 Fraunces,Georgia,serif;font-variation-settings:'SOFT' 100;letter-spacing:-.02em}.ds-row-t small{font:400 .98rem/1.375 'Alegreya Sans',sans-serif;color:#5e4a75;margin-top:4px}.ds-row-a{color:#7a5fb0;transition:transform .3s}.ds-row:hover .ds-row-a{transform:translateX(4px)}"
+    },
+    {
+      "name": "Universe Window",
+      "kind": "card",
+      "refersTo": "universe-window",
+      "description": "Arched 3:4 window: sky wash with meadow (live) or tint circle with creature (soon), status badge at the foot.",
+      "html": "<div class=\"ds-arch\"><span class=\"ds-arch-badge\">Disponibilă</span></div>",
+      "css": ".ds-arch{position:relative;width:240px;aspect-ratio:3/4;border-radius:999px 999px 28px 28px;overflow:hidden;background:linear-gradient(180deg,#d6e6f5 0%,#eef3fa 42%,#fbf7f1 70%);box-shadow:0 1px 2px rgb(52 34 74/.06),0 18px 40px -18px rgb(52 34 74/.28)}.ds-arch::after{content:'';position:absolute;inset:auto 0 0 0;height:64%;background:radial-gradient(60% 50% at 30% 90%,#e58fbf88,transparent),radial-gradient(60% 50% at 75% 95%,#c9b8e6aa,transparent),linear-gradient(transparent,#dfe7d4 70%)}.ds-arch-badge{position:absolute;z-index:1;bottom:16px;left:50%;transform:translateX(-50%);padding:4px 12px;border-radius:9999px;background:rgb(251 247 241/.88);color:#9b3f7a;font:700 .78rem 'Alegreya Sans',sans-serif;white-space:nowrap}"
+    },
+    {
+      "name": "Watercolor Orb",
+      "kind": "custom",
+      "refersTo": "orb-label",
+      "description": "Universe orb on the sky: tinted radial paint, inset volume, breathing glow, glass name pill and status.",
+      "html": "<button class=\"ds-orb-btn\"><span class=\"ds-orb\"><span class=\"ds-orb-glow\"></span><span class=\"ds-orb-body\"></span></span><span class=\"ds-orb-name\">Universul Fluturelui</span><span class=\"ds-orb-status\">Disponibilă</span></button>",
+      "css": ".ds-orb-btn{display:flex;flex-direction:column;align-items:center;border:0;background:none;cursor:pointer;min-width:144px}.ds-orb-btn:focus-visible{outline:2px solid #b8468a;outline-offset:3px;border-radius:24px}.ds-orb{position:relative;width:150px;aspect-ratio:1;border-radius:9999px;transition:transform .5s cubic-bezier(.2,.9,.1,1)}.ds-orb-btn:hover .ds-orb{transform:scale(1.04)}.ds-orb-btn:active .ds-orb{transform:scale(.97)}.ds-orb-glow{position:absolute;inset:-18%;border-radius:9999px;filter:blur(40px);background:radial-gradient(circle,#e58fbf 0%,transparent 68%);opacity:.6;animation:ds-glow 3.6s cubic-bezier(.45,.05,.55,.95) infinite alternate}.ds-orb-body{position:absolute;inset:0;border-radius:9999px;background:radial-gradient(circle at 36% 30%,#fff8f1 0%,#f8dceb 30%,#e58fbf 88%);box-shadow:inset -10px -14px 30px #9b3f7a33,inset 8px 10px 24px #ffffff80}.ds-orb-name{margin-top:10px;padding:2px 12px;border-radius:9999px;background:rgb(251 247 241/.8);box-shadow:0 0 0 1px rgb(52 34 74/.05);color:#34224a;font:400 1.05rem/1.25 Fraunces,Georgia,serif;font-variation-settings:'SOFT' 100}.ds-orb-status{margin-top:6px;padding:2px 10px;border-radius:9999px;background:#b8468a;color:#fbf7f1;font:700 .78rem 'Alegreya Sans',sans-serif}@keyframes ds-glow{from{opacity:.45;transform:scale(.96)}to{opacity:.8;transform:scale(1.06)}}@media (prefers-reduced-motion:reduce){.ds-orb-glow{animation:none}}"
+    },
+    {
+      "name": "Status Badges",
+      "kind": "chip",
+      "refersTo": "status-available",
+      "description": "Available (magenta) and coming soon (10% ink) on the sky.",
+      "html": "<span class=\"ds-st ds-st-on\">Disponibilă</span> <span class=\"ds-st ds-st-soon\">În curând</span>",
+      "css": ".ds-st{display:inline-block;padding:2px 10px;border-radius:9999px;font:700 .78rem/1.5 'Alegreya Sans',sans-serif}.ds-st-on{background:#b8468a;color:#fbf7f1}.ds-st-soon{background:rgb(52 34 74/.1);color:#5e4a75}"
+    },
+    {
+      "name": "Glass Back Button",
+      "kind": "button",
+      "refersTo": "button-glass",
+      "description": "Cream glass pill for navigation over a sky (universe page back).",
+      "html": "<button class=\"ds-glass\"><svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M19 12H5M11 6l-6 6 6 6\"/></svg>Universuri</button>",
+      "css": ".ds-glass{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px 0 12px;border:0;border-radius:9999px;background:rgb(251 247 241/.8);color:#34224a;font:500 1rem 'Alegreya Sans',sans-serif;box-shadow:0 0 0 1px rgb(52 34 74/.05),0 1px 2px rgb(52 34 74/.06),0 18px 40px -18px rgb(52 34 74/.28);backdrop-filter:blur(4px);cursor:pointer;transition:transform .15s}.ds-glass:active{transform:scale(.97)}.ds-glass:focus-visible{outline:2px solid #b8468a;outline-offset:3px}"
+    },
+    {
+      "name": "Text Link",
+      "kind": "button",
+      "refersTo": "path-row",
+      "description": "Inline action with lilac underline and sliding arrow.",
+      "html": "<a class=\"ds-link\" href=\"#\">Întreabă despre o lucrare <span><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></span></a>",
+      "css": ".ds-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:#34224a;font:700 1rem 'Alegreya Sans',sans-serif;text-decoration:underline;text-decoration-color:#c9b8e6;text-decoration-thickness:2px;text-underline-offset:6px}.ds-link span{transition:transform .3s}.ds-link:hover span{transform:translateX(4px)}.ds-link:focus-visible{outline:2px solid #b8468a;outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Stepping Into the Cover",
+    "overview": "The site is the meadow from the cover of *Fluturele dansator de step*: a powder-blue sky at the top of every screen, her own flower painting rising at the bottom, and soft plum ink in between. The visitor walks into the illustration rather than reading a brochure about it. One committed light world; there is no dark variant by design. Everything that feels soft does so through light, air and watercolor edges, never through ornament piled on.\n\nTwo grounds share one palette. The **meadow** (home) runs sky → mist → cream with the painting at its foot. The **sky** (Universuri and each universe page) drops the meadow, keeps the same tokens, and adds free-floating watercolor orbs (no connecting line) that drift constantly and grow when you look at one, plus drifting pollen; a universe page tints that same sky with its own colour. Type is Fraunces at its softest (SOFT 100) for everything that speaks, with its wonky italic reserved for the one word in a line that should sing; Alegreya Sans carries everything that informs.\n\nMotion is the signature, and it always ends at rest. Her butterfly (the real cut-out from the cover, split at the body so each wing hinges in 3D) waits beside the headline, flies a scroll-driven path down the page and lands on the Universul Fluturelui window. Entrances paint in: blur-to-sharp rises, soft blooms, a meadow that lifts into place. Content never depends on motion to become visible.",
+    "keyCharacteristics": [
+      "Sky-to-cream vertical washes; the painting, not a pattern, is the texture.",
+      "Plum ink (never black) for all text; magenta is the butterfly's spark, used sparingly.",
+      "Fraunces SOFT 100 display, WONK italic only on accent words; Alegreya Sans body at 17px.",
+      "Arched windows, orbs and pills. Nothing square, nothing bordered.",
+      "Plum-tinted, long, low shadows; glass pills over imagery.",
+      "A butterfly that flies and lands; worlds that drift freely and grow when you look at them.",
+      "Romanian first, English on a visible toggle."
+    ],
+    "rules": [
+      {
+        "name": "The Plum-Not-Black Rule",
+        "body": "No text, icon or button is ever #000 or a grey. Text is ink or ink-soft; on ink, text is cream.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Spark Rule",
+        "body": "Magenta marks what is alive or actionable right now (focus, available, discover). If two magenta things compete in a viewport, one of them is wrong.",
+        "section": "colors"
+      },
+      {
+        "name": "The Soft Axis Rule",
+        "body": "Every Fraunces setting carries SOFT 100. WONK 1 is allowed only on italic accent words (the second name line, manifesto emphases, the wordmark), never on a whole paragraph.",
+        "section": "typography"
+      },
+      {
+        "name": "The Diacritics Rule",
+        "body": "A face or weight that cannot render ă â î ș ț correctly does not ship. Check the wordmark, \"Țânțarului\" and \"Poveștile\" in every weight used.",
+        "section": "typography"
+      },
+      {
+        "name": "The At-Rest Rule",
+        "body": "Every section is fully readable with all motion removed. Layout never reserves empty space for something that only arrives by animation, except the butterfly's own perch.",
+        "section": "layout"
+      },
+      {
+        "name": "The Plum Shadow Rule",
+        "body": "Shadows are always tinted with ink (52 34 74), never neutral black, and never hard-edged or offset.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Arch Window Rule",
+        "body": "A universe, a portrait or a scene is framed as an arch or an orb; rectangles are for the book and the paintings, because those are real objects.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Reduced-Motion Rule",
+        "body": "Under `prefers-reduced-motion: reduce` all animations and transitions collapse to their end state; the flight does not render and the butterfly sits perched with wings open, both in the hero and in the window; pollen draws one still frame; parallax, drift and glow stop (orb focus still applies, instantly); view transitions (language switch and morph) are skipped and state changes instantly; smooth scrolling is off. Nothing is hidden as a result.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "**Do** open every screen on the sky (powder sky → mist → cream) and end the home page on the meadow painting.",
+      "**Do** set every text colour from ink or ink-soft, and cream on ink.",
+      "**Do** carry SOFT 100 on every Fraunces setting; keep WONK italic for one accent word or name line.",
+      "**Do** keep every tap target at least 44×44px (primary actions 48px), including toggle segments, icon buttons and text links.",
+      "**Do** default to Romanian, show the RO | EN toggle in the top bar, floating bar and universe pages, and keep `<html lang>` in sync.",
+      "**Do** frame universes as arches or orbs, and paintings and books as real objects (mat, spine).",
+      "**Do** make content visible at rest and give every motion a reduced-motion end state.",
+      "**Do** mark unreleased universes and items as „în curând” rather than inventing content."
+    ],
+    "donts": [
+      "**Don't** use the line „Bine ai revenit acasă, puiule!” / \"Welcome home, baby\" anywhere.",
+      "**Don't** put an eyebrow or kicker (a small label line above a heading); the heading leads, context goes below it.",
+      "**Don't** use bordered cards or grey boxes; the only outline is a 5% ink hairline on glass pills and tiles over imagery.",
+      "**Don't** use black or neutral-grey shadows, or hard offset shadows.",
+      "**Don't** add a dark mode or a night sky; the dusk Universuri look is not part of this world.",
+      "**Don't** replace the SVG line icons (24px grid, 1.5 stroke, round joins) with emoji, glyph characters or a mixed icon set.",
+      "**Don't** let any image show a straight edge against the sky; feather it with a mask.",
+      "**Don't** ship a font or weight that drops or mangles ă â î ș ț."
+    ]
+  }
+}

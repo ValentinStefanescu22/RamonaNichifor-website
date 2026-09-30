@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mockups-dev",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd mockups && exec npx vite --port 5173 --strictPort"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "mockups-preview",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd mockups && exec npx vite preview --port 4173 --strictPort"
+      ],
+      "port": 4173
+    }
+  ]
+}

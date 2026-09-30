@@ -1,0 +1,74 @@
+/* Shared behaviour for every concept page. Colours always come from the page's own tokens. */
+:root {
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: clip;
+}
+h1, h2, h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+img {
+  max-width: 100%;
+}
+:focus-visible {
+  outline: 2px solid var(--focus, currentColor);
+  outline-offset: 3px;
+}
+button {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* The flapping butterfly */
+.butterfly {
+  display: flex;
+  align-items: flex-start;
+  perspective: 900px;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.butterfly .wing {
+  display: block;
+  height: auto;
+  max-width: none;
+  backface-visibility: visible;
+  will-change: transform;
+}
+.butterfly .wing-l { width: 43.4%; transform-origin: 100% 52%; }
+.butterfly .wing-r { width: 56.6%; transform-origin: 0% 52%; }
+.butterfly[data-flap="on"] .wing-l { animation: wing-l var(--flap-tempo, 0.34s) cubic-bezier(0.45, 0.05, 0.35, 1) infinite alternate; }
+.butterfly[data-flap="on"] .wing-r { animation: wing-r var(--flap-tempo, 0.34s) cubic-bezier(0.45, 0.05, 0.35, 1) infinite alternate; }
+.butterfly[data-flap="off"] .wing-l { transform: rotateY(18deg); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+.butterfly[data-flap="off"] .wing-r { transform: rotateY(-18deg); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes wing-l { from { transform: rotateY(6deg); } to { transform: rotateY(66deg); } }
+@keyframes wing-r { from { transform: rotateY(-6deg); } to { transform: rotateY(-66deg); } }
+
+/* Language switch cross-fade */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
