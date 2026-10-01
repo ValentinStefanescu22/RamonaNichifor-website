@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-- Final site: Next.js + Tailwind CSS v4 + a lightweight CMS the client edits herself (CMS choice open: Sanity vs Keystatic vs Decap, decided after the design direction is chosen).
+- Final site: Next.js + Tailwind CSS v4 + Payload CMS (in the same app, admin at `/admin`, Postgres + R2 image storage), which the client edits herself. Payload was chosen over Sanity because she likely wants an online shop later, and its e-commerce plugin keeps the shop in the same admin.
 - Phase-1 mockups: `mockups/` (Vite + React + TypeScript + Tailwind v4 + Motion), published as Claude Artifacts for client feedback.
 
 ## Users

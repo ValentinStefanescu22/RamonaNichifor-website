@@ -1,6 +1,6 @@
 # Ramona Nichifor · website spec
 
-Status: **draft for review** · 2026-09-30
+Status: **draft for review** · 2026-09-30 · updated 2026-10-01 (CMS switched from Sanity to Payload)
 Related: [PRODUCT.md](../../../PRODUCT.md) (product truth) · [DESIGN.md](../../../DESIGN.md) (design system) · mockups in [`mockups/`](../../../mockups/) (published concepts: https://claude.ai/artifact/ASM9hocLQERfJYaWtY6zYE)
 
 ---
@@ -25,12 +25,12 @@ The site is done when:
 | Universuri | Concept C's orbs, pollen and orb opening on a **sky in the Poiana palette**. No meadow background, and no line between the worlds: they drift freely, and the one being looked at grows. Each universe page is tinted in its own colour. |
 | Universe detail | Tapping an orb **morphs it into its own page** (`/universuri/[slug]`), so it can be shared and indexed |
 | Stack | Next.js 16 (App Router) + TypeScript + Tailwind CSS v4 + Motion |
-| CMS | Sanity (Studio embedded at `/studio`) |
+| CMS | **Payload 3**, installed inside the Next.js app (admin at `/admin`), Postgres database, images in S3-compatible storage. Chosen over Sanity (2026-10-01) because a shop is likely later and Payload's e-commerce plugin keeps it in the same admin; the software is free and open source (MIT). |
 | Languages | RO default at `/`, EN at `/en`; more languages later |
-| Shop | None yet. Books link out to eMAG, Amazon, etc. Cart and payments come after her PFA is set up. |
+| Shop | None yet. Books link out to eMAG, Amazon, etc. Cart and payments come after her PFA is set up, as a later milestone (M7, §13) on Payload's e-commerce plugin. |
 | Copy rule | Never use „Bine ai revenit acasă, puiule!” / "Welcome home, baby" |
 | Hosting | **Open.** Decided before launch (see §12) |
-| Delivery | Six milestones (M1–M6), each with its own plan, preview link and review stop (see §13) |
+| Delivery | Six milestones (M1–M6), each with its own plan, preview link and review stop, plus the shop as M7 later (see §13) |
 
 ## 3. Audiences (equal weight on the home page)
 
@@ -57,7 +57,7 @@ Slugs are localised with next-intl `pathnames`. RO has no prefix; EN lives under
 | Privacy | `/confidentialitate` | `/en/privacy` |
 | Terms | `/termeni` | `/en/terms` |
 | Not found | any unknown URL | same, in EN |
-| CMS | `/studio` | not indexed, not localised |
+| CMS admin | `/admin` | not indexed, not localised |
 
 Slugs never contain diacritics. A slug change in the CMS creates a 301 redirect from the old one (handled in M5).
 
@@ -83,7 +83,7 @@ Port of the approved Poiana mockup (`mockups/src/poiana/`).
 7. **Counselling teaser.** The manifesto „Între rațiune și intuiție…”, two formats, a call to action.
 8. **Footer.** Name, tagline, socials, email with a copy button, nav, legal links.
 
-All content comes from Sanity: `siteSettings`, featured `book`, `universe[]`, the first artworks, `counsellingPage`, `aboutPage`.
+All content comes from Payload: the `site-settings` global, the featured book, the universes, the first artworks, and the `counselling-page` and `about-page` globals.
 
 ### 5.2 Universuri `/universuri`
 Port of `mockups/src/universuri-poiana/`.
@@ -167,23 +167,29 @@ Motion inventory. Every item has a `prefers-reduced-motion` fallback: static or 
 | Language cross-fade | Everywhere | Root View Transition |
 | Sheets and menus | Phone | Springs, drag to dismiss where it's a sheet |
 
-## 7. Content model (Sanity)
+## 7. Content model (Payload)
 
-**Localisation:** custom field types `localeString`, `localeText` and `localeRichText`, each with `ro` (required) and `en` fields. The editor sees RO and EN side by side. Queries use `coalesce(field[$lang], field.ro)`, and the Studio flags documents with missing EN. Slugs are localised: `slug.ro`, `slug.en`.
+**Localisation:** Payload's built-in localisation, `locales: ["ro", "en"]`, `defaultLocale: "ro"`, `fallback: true`. Text, rich text and slug fields are `localized: true`; numbers, dates, colours and relations are shared across languages. The editor switches RO/EN with the locale picker in the admin. Queries pass `locale` and fall back to RO when an EN field is empty, and a "missing EN" list view filter shows what still needs translating. The admin interface itself is in Romanian (Payload's `ro` translation).
 
-| Document | Key fields |
-|---|---|
-| `siteSettings` (singleton) | name, roles, taglines (souls, whisper), series name + lead, manifesto (3 lines, each with an emphasised word), contacts (email, WhatsApp, Instagram, Facebook, other profile URLs for `sameAs`), default SEO (title pattern, description, share image), portrait |
-| `universe` | name, slug, character, **tint** (3 colours), orb art (image *or* built-in line drawing), hook, story (rich text), status (available / soon), order, books → `book[]`, products → `product[]`, SEO |
-| `book` | title, slug, subtitle, age group (copii / adolescenti / adulti), cover, blurb (rich text), year, ISBN, formats, store links [{store, url}], universe → `universe`, sample pages[], status, SEO |
-| `product` | name, kind (semn de carte / cărți de joc / poster / altul), universe → `universe`, images[], status, optional external link |
-| `artwork` | title, slug, images[] (**alt required**), kind (original / print / ceramică), technique, size, year, availability, optional price, description |
-| `counsellingPage` (singleton) | intro, approach, formats (online / in person + city), steps[], FAQ[], optional price and duration, CTA copy |
-| `aboutPage` (singleton) | bio (rich text), portrait, highlights |
-| `legalPage` | kind (privacy / terms), rich text, last-updated date |
+Collections (lists of entries) and globals (single pages):
 
-- **Images:** every image field requires alt text (localised) and supports hotspot/crop.
-- **Seed:** the typed data in `mockups/src/shared/content.ts` goes in through an import script, so the Studio starts populated.
+| Name | Type | Key fields |
+|---|---|---|
+| `site-settings` | global | name, roles, taglines (souls, whisper), series name + lead, manifesto (3 lines, each with an emphasised word), contacts (email, WhatsApp, Instagram, Facebook, other profile URLs for `sameAs`), default SEO (title pattern, description, share image), portrait |
+| `universes` | collection | name, slug, character, **tint** (3 colours), orb art (image *or* built-in line drawing), hook, story (rich text), status (available / soon), order, books → `books`, products → `products`, SEO |
+| `books` | collection | title, slug, subtitle, age group (copii / adolescenti / adulti), cover, blurb (rich text), year, ISBN, formats, store links [{store, url}], universe → `universes`, sample pages[], status, SEO |
+| `products` | collection | name, kind (semn de carte / cărți de joc / poster / altul), universe → `universes`, images[], status, optional external link |
+| `artworks` | collection | title, slug, images[] (**alt required**), kind (original / print / ceramică), technique, size, year, availability, optional price, description |
+| `counselling-page` | global | intro, approach, formats (online / in person + city), steps[], FAQ[], optional price and duration, CTA copy |
+| `about-page` | global | bio (rich text), portrait, highlights |
+| `legal-pages` | collection | kind (privacy / terms), rich text, last-updated date |
+| `media` | upload collection | the image file, alt text (localised, **required**), focal point and crop; Payload generates the resized versions on upload |
+| `users` | auth collection | Ramona's (and the developer's) admin login; `maxLoginAttempts` + `lockTime` against password guessing |
+
+- **Rich text:** Payload's Lexical editor, limited to the formatting the design uses (paragraphs, emphasis, links, lists, headings level 2–3).
+- **Drafts:** `versions: { drafts: true }` on every content type, so Ramona can save without publishing, and can restore an earlier version.
+- **Ready for a shop:** `products`, `books` and `artworks` stay separate collections, so the e-commerce plugin (M7) can make them sellable later without moving her content.
+- **Seed:** the typed data in `mockups/src/shared/content.ts` goes in through a Local API script (`payload run`), so the admin starts populated.
 - **UI strings:** labels like „Cumpără de pe”, „În curând” and nav items live in next-intl message files (`messages/ro.json`, `messages/en.json`), not in the CMS.
 
 ## 8. SEO
@@ -191,7 +197,7 @@ Motion inventory. Every item has a `prefers-reduced-motion` fallback: static or 
 **Goal: first result for "Ramona Nichifor".** Today that search returns essentially nothing about her, so there is no competing entity and the goal is very achievable once the site is indexed and tied to her identity. No one can guarantee a ranking.
 
 - **Domain.** `ramonanichifor.com` was registered at Namecheap on 2026-09-16; **confirm it's hers**. `ramonanichifor.ro` appeared free and should be registered too. One is canonical, and the other 301-redirects to it.
-- **Rendering.** Every public page is statically generated, with on-demand revalidation from a Sanity webhook. All text is in the HTML, and animations never hide content at rest.
+- **Rendering.** Every public page is statically generated and revalidated on demand when Ramona publishes. All text is in the HTML, and animations never hide content at rest.
 - **Titles and descriptions per locale.**
   - Home: „Ramona Nichifor · Autoare, ilustratoare și consilier pentru dezvoltare personală”.
   - Inner pages: „{Page} · Ramona Nichifor”.
@@ -205,9 +211,9 @@ Motion inventory. Every item has a `prefers-reduced-motion` fallback: static or 
   - `BreadcrumbList` for inner pages
   - All validated in Google's Rich Results Test.
 - **International:** `hreflang` ro, en and x-default (→ RO), self-referencing canonical URLs, `<html lang>` per locale.
-- **Crawling:** `sitemap.xml` with language alternates and lastmod dates from the CMS; `robots.txt`; `/studio` and API routes set to noindex.
+- **Crawling:** `sitemap.xml` with language alternates and lastmod dates from the CMS; `robots.txt`; `/admin` and API routes set to noindex.
 - **Social previews:** an Open Graph and Twitter image for every page, generated from the book cover, the portrait or the universe colour, with the page title in Fraunces.
-- **Images:** descriptive file names (`ramona-nichifor-portret`) and alt text, served through `next/image` from Sanity's CDN (AVIF/WebP, responsive sizes). The hero image loads first.
+- **Images:** descriptive file names (`ramona-nichifor-portret`) and alt text, served through `next/image` (AVIF/WebP, responsive sizes) from the image storage. The hero image loads first.
 - **Identity across the web.** The site links to her Instagram, Facebook, Goodreads, Amazon Author Central, eMAG and publisher pages, and each of those links back. Same name and photo everywhere. This is what earns a Google knowledge panel over time.
 - **At launch (M6):**
   - verify the domain in Google Search Console and Bing Webmaster Tools, submit the sitemap and request indexing
@@ -221,7 +227,7 @@ Motion inventory. Every item has a `prefers-reduced-motion` fallback: static or 
 - Next.js 16 (App Router, React 19), TypeScript
 - Tailwind CSS v4, Motion
 - next-intl 4 (`localePrefix: "as-needed"`, localised pathnames)
-- next-sanity 13 + Sanity Studio 6 embedded at `/studio`, with draft mode + Presentation for live preview
+- Payload 3 in the same Next.js app (admin at `/admin`), with `@payloadcms/db-postgres`, `@payloadcms/richtext-lexical`, `@payloadcms/storage-s3` (pointed at Cloudflare R2), and Live Preview + draft mode. **Payload pins the Next.js versions it supports**, so at M1 start Next.js is set to the newest version Payload supports, not simply the newest Next.js.
 - `next/font` (Fraunces variable with the SOFT/WONK/opsz axes, Alegreya Sans; latin + latin-ext subsets, self-hosted)
 - a server action + Resend for the contact form
 
@@ -230,23 +236,29 @@ Motion inventory. Every item has a `prefers-reduced-motion` fallback: static or 
 app/
   [locale]/(site)/          page routes (home, universuri, carti, arta, consiliere, despre, contact, legal)
   [locale]/(site)/layout.tsx header, footer, language switch, JSON-LD (WebSite + Person)
-  studio/[[...tool]]/        embedded Sanity Studio (noindex)
-  api/revalidate/            Sanity webhook → revalidateTag
+  (payload)/admin/           Payload admin (noindex)
+  (payload)/api/             Payload REST/GraphQL routes (noindex)
   sitemap.ts · robots.ts · opengraph-image.tsx (per route)
 components/
   poiana/   Hero, Flight, Butterfly, Meadow, PathPills, ArchWindow, FloatingBar, MenuSheet…
   universe/ WorldMap, OrbArt, Pollen, UniverseHero…
   ui/       LangSwitch, Button, CopyEmail, SegmentedControl, Icons, Creatures…
-sanity/     schemaTypes/, lib/ (client, image, live), queries.ts, seed/
+payload/    collections/, globals/, fields/ (seo, localised slug), hooks/ (revalidate), seed/
+payload.config.ts · migrations/
 i18n/       routing.ts, request.ts        messages/ ro.json, en.json
 ```
 
 **Rendering and data:**
-- Pages are static, with `revalidateTag` fired by the Sanity webhook on publish. Draft mode handles the Studio preview.
+- Pages read content through Payload's **Local API** (direct database calls inside the app, no HTTP round trip).
+- Pages are static. An `afterChange` hook on each collection and global calls `revalidateTag` when Ramona publishes, so no webhook is needed. Draft mode + Live Preview show unpublished changes next to the editing form.
+- Database changes ship as Payload migrations (`payload migrate`), committed in `migrations/`.
 - Motion-heavy parts (Flight, Pollen, WorldMap) are client components loaded after the static HTML.
 
+**Data safety:** a nightly `pg_dump` of the database to the R2 bucket (scheduled GitHub Action), kept for 30 days, plus the free database plan's own short restore window. Restoring a backup is tried once before launch.
+
 **Environment variables:**
-- `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`
+- `PAYLOAD_SECRET`, `DATABASE_URI`
+- `S3_BUCKET`, `S3_ENDPOINT`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` (R2), `NEXT_PUBLIC_MEDIA_URL`
 - `RESEND_API_KEY`, `CONTACT_TO_EMAIL`
 
 **Reused from the mockups:**
@@ -267,26 +279,34 @@ i18n/       routing.ts, request.ts        messages/ ro.json, en.json
 - **Budgets (mid-range phone, 4G):**
   - LCP < 2.5s, CLS < 0.05, INP < 200ms.
   - The butterfly and pollen never block first paint.
-  - Images come from the Sanity CDN in responsive AVIF/WebP.
+  - Images are served through `next/image` in responsive AVIF/WebP.
 
 ## 11. Privacy (GDPR)
 
-- No cookies by default.
+- No cookies for visitors. The only cookie is the admin login session, which only Ramona (and the developer) gets.
 - Analytics is cookie-free, so no consent banner is needed. The tool is chosen with the hosting.
 - The contact form sends an email and stores nothing. A consent line links to the privacy page.
 - Fonts are self-hosted, so there are no requests to Google Fonts.
 
 ## 12. Hosting (open decision, needed before M6)
 
-The host must support Next.js server features: ISR/revalidation, server actions, and image optimisation.
+Payload is free software, but it needs three things to run, and these are what cost money:
+
+1. **The app:** a host for Next.js with server features (ISR/revalidation, server actions, image optimisation) and Node for the Payload admin.
+2. **A Postgres database.**
+3. **File storage for images.** Cloudflare R2: 10 GB free, no fees for serving files. This is the default in every option below.
 
 | Option | Cost | Notes |
 |---|---|---|
-| Vercel Pro | ~$20/mo | Best Next.js support. The free Hobby plan doesn't allow commercial sites. |
-| Netlify (free) | €0 | Commercial use allowed. Good Next.js support; image optimisation and ISR are a little less seamless. |
-| Cloudflare (free) | €0 | Fast in Romania. Next.js runs through OpenNext, which means more setup and some limits. |
+| Netlify (free) + Neon (free Postgres) + R2 | €0 | Commercial use allowed. Neon's free database sleeps when idle, so the first admin load after a quiet spell takes a second longer; visitors see static pages and don't notice. Payload on Netlify is less common than on Vercel, so it gets tested at M2. |
+| Vercel Pro + Neon + R2 | ~$20/mo | Best Next.js support; Payload's own templates target it. The free Hobby plan doesn't allow commercial sites. |
+| Small VPS (e.g. Hetzner) running app + Postgres with Docker | ~€5/mo | No sleeping database or function limits, one bill, full control. The developer handles OS updates, HTTPS and monitoring. |
 
-Previews for M1–M5 also need a host. Vercel's Hobby terms don't clearly cover client work, so the default is **Netlify's free plan** (commercial use allowed), unless Vercel Pro is chosen at M1 start. Moving hosts later is cheap because nothing in the build depends on the host.
+Payload also has a Cloudflare Workers template (D1 database + R2), but it swaps Postgres for D1, so it is not the default.
+
+**Default for previews (M1–M5): Netlify free + Neon free + R2**, unless Vercel Pro is chosen at M1 start. M1 doesn't use the database yet. Moving hosts later is cheap: the app is host-independent, the database moves with a dump and restore, and R2 stays.
+
+When the shop arrives (M7), payment fees (Stripe, roughly 1.5% + €0.25 per EU card sale) are the same on any host.
 
 ## 13. Milestones
 
@@ -295,11 +315,12 @@ Each milestone gets its own implementation plan, is built and verified, and ship
 | # | Scope | Acceptance |
 |---|---|---|
 | **M1** | Next.js foundation, Tailwind tokens from DESIGN.md, next-intl routing, fonts, shared components; **home page** from typed local data shaped like the CMS; header, footer, menu, language switch; SEO basics (metadata, Person/WebSite JSON-LD) | The home page matches the approved mockup on phone and laptop, RO/EN; Lighthouse phone SEO 100 and Performance ≥ 90 |
-| **M2** | Sanity project, schemas (§7), Studio at `/studio`, seed import, live preview; the home page reads from Sanity; the revalidation webhook | Editing text or an image in the Studio updates the preview immediately and the live page within a minute |
+| **M2** | Payload in the app: Postgres (Neon) + R2 storage, collections and globals (§7), admin at `/admin` in Romanian, seed import, drafts + Live Preview; the home page reads from Payload; revalidation hooks; nightly backup | Editing text or an image in the admin updates Live Preview immediately and the live page within a minute; a backup restores cleanly |
 | **M3** | Universuri + universe pages, with the orb → page morph | The morph works on a real phone (Safari + Chrome); reduced motion falls back cleanly |
 | **M4** | Books, art, counselling, about, contact (form + email), legal, 404 | Every page on the preview link in RO and EN; the form delivers to her inbox |
 | **M5** | SEO and quality pass: all JSON-LD validated, hreflang, sitemap, OG images, redirects, accessibility audit, performance | Every checklist in §8 and §10 passes |
 | **M6** | Real content entered, a short Romanian editing guide, hosting chosen, domains connected, launch, Search Console | Site live on the canonical domain; sitemap submitted; profiles link back |
+| *M7 (later)* | *Shop, once her PFA is set up: Payload e-commerce plugin (products, variants, cart, orders), Stripe payments, shipping options, Romanian e-Factura invoices through the SmartBill API, terms of sale and return policy. Specced separately when she's ready.* | *A test order is paid, invoiced through SmartBill and appears in the admin* |
 
 **Fixes carried into M1 from the mockup review** (the DESIGN.md documenter found these; not fixed in the archived mockup):
 - **Book section eyebrow.** The line „Pentru copii · 2026 · „Magia suntem noi”” sits above the book title, which the design rules forbid. Move it below the title as a meta line.
@@ -322,6 +343,8 @@ Each milestone gets its own implementation plan, is built and verified, and ship
 ## 15. Risks and open questions
 
 - **Hosting** isn't decided (§12). Everything else is independent of it until M6.
+- **Self-hosted CMS upkeep.** With Payload, the database, backups and Payload updates are the developer's job, not a vendor's. Mitigated by the nightly backup, a tested restore, and updating Payload at each milestone rather than letting versions pile up.
+- **Payload's Next.js support** can lag behind the newest Next.js release; the build uses the newest Next.js that Payload supports (§9).
 - **Image quality.** The current photos are about 900px WhatsApp copies; originals are needed before M6.
 - **Unreleased universes** use line-drawn stand-ins until her illustrations exist. The CMS supports swapping in an image.
 - **View Transitions:** supported in Chromium 125+, Safari 18.2+ and Firefox 144+. Older browsers get plain navigation.
@@ -329,4 +352,4 @@ Each milestone gets its own implementation plan, is built and verified, and ship
 
 ## 16. Out of scope (for now)
 
-Shop, cart and payments · newsletter · more languages (FR, DE, ES, AR, HI) · journal/blog · booking calendar for sessions.
+Shop, cart and payments (planned as M7; the content model is ready for it) · newsletter · more languages (FR, DE, ES, AR, HI) · journal/blog · booking calendar for sessions.
