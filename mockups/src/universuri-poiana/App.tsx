@@ -6,6 +6,9 @@ import type { UniverseId } from "../shared/content";
 import { book, nav, site, ui, universes } from "../shared/content";
 import { ArrowRight, ArrowUpRight, Instagram } from "../shared/icons";
 import { LangToggle, useLang } from "../shared/lang";
+import { SiteShell, washMask } from "../site/Layout";
+import { bookOf, itemHref, productKinds } from "../shared/content-pages";
+import { BookCover, ProductArt } from "../site/Painted";
 import { Pollen } from "../universuri/Pollen";
 import { OrbArt, WorldMap } from "../universuri/WorldMap";
 
@@ -34,12 +37,6 @@ function morph(update: () => void) {
   vt.ready.catch(() => {});
   vt.finished.catch(() => {});
   return vt;
-}
-
-/** Fades a watercolour wash out on every side so no image edge ever shows */
-function washMask(shape: string): CSSProperties {
-  const m = `radial-gradient(${shape}, #000 30%, transparent 100%)`;
-  return { maskImage: m, WebkitMaskImage: m };
 }
 
 function hexToRgb(hex: string) {
@@ -71,7 +68,7 @@ function UniversePage({ id, onBack, onSwitch }: { id: UniverseId; onBack: () => 
       role="dialog"
       aria-modal="true"
       aria-label={t(u.name)}
-      className="sky-tint fixed inset-0 z-50 overflow-y-auto overscroll-contain"
+      className="sky-tint fixed inset-0 z-[60] overflow-y-auto overscroll-contain"
       style={{ "--tint": u.tint[0] } as CSSProperties}
     >
       <Pollen className="pointer-events-none fixed inset-0 h-full w-full" colors={[hexToRgb(u.tint[1]), "201, 184, 230"]} strength={0.55} />
@@ -106,19 +103,30 @@ function UniversePage({ id, onBack, onSwitch }: { id: UniverseId; onBack: () => 
           <ul className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {u.items.map((item, i) => {
               const ready = item.status === "available";
+              // every item opens its own page: the book its book page, the keepsakes their product page
               return (
-                <li key={i} className="overflow-hidden rounded-[1.5rem] bg-cream/80 ring-1 ring-ink/5 backdrop-blur-sm">
-                  <div className="grid aspect-[4/5] place-items-center" style={{ background: `color-mix(in oklab, ${u.tint[0]} 70%, white)` }}>
-                    {ready && live && i === 0 ? (
-                      <img src={img("cover-fluturele.webp")} alt="" className="h-[86%] w-auto rounded-[3px] shadow-book" />
-                    ) : (
-                      <span className="size-10 rounded-full opacity-70" style={{ background: u.tint[1] }} aria-hidden="true" />
-                    )}
-                  </div>
-                  <div className="px-4 py-3">
-                    <p className="font-bold text-ink">{t(item.name)}</p>
-                    <p className="text-[0.9rem] text-ink-soft">{t(ready ? ui.available : ui.comingSoon)}</p>
-                  </div>
+                <li key={i}>
+                  <a
+                    href={itemHref(u.id, i)}
+                    className="group block h-full overflow-hidden rounded-[1.5rem] bg-cream/80 ring-1 ring-ink/5 backdrop-blur-sm transition-transform duration-500 ease-(--ease-bloom) hover:-translate-y-1 active:scale-[0.98]"
+                  >
+                    <div className="grid aspect-[4/5] place-items-center" style={{ background: `color-mix(in oklab, ${u.tint[0]} 70%, white)` }}>
+                      {i === 0 ? (
+                        <div className="w-[52%]">
+                          <BookCover book={bookOf(u.id)} />
+                        </div>
+                      ) : (
+                        <ProductArt kind={productKinds[i - 1]} universe={u.id} tint={u.tint} className="w-full" />
+                      )}
+                    </div>
+                    <div className="flex items-end justify-between gap-2 px-4 py-3">
+                      <span className="min-w-0">
+                        <span className="block font-bold text-ink">{t(item.name)}</span>
+                        <span className="block text-[0.9rem] text-ink-soft">{t(ready ? ui.available : ui.comingSoon)}</span>
+                      </span>
+                      <ArrowRight size={17} className="mb-1 shrink-0 text-ink-soft transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-ink" />
+                    </div>
+                  </a>
                 </li>
               );
             })}
@@ -210,7 +218,7 @@ export default function App() {
     [reduce],
   );
 
-  // A shared link like universuri-poiana.html#fluture opens straight into that world
+  // A shared link like universuri.html#fluture opens straight into that world
   useEffect(() => {
     const id = window.location.hash.slice(1);
     if (universes.some((u) => u.id === id)) setActive(id as UniverseId);
@@ -234,7 +242,7 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <SiteShell current="universuri" ground="sky" floatAfter={0.6}>
       <div className="sky-day relative isolate min-h-svh overflow-hidden">
         <Pollen className="absolute inset-0 -z-10 h-full w-full" colors={["184, 70, 138", "122, 95, 176"]} strength={0.5} />
         <img
@@ -252,15 +260,8 @@ export default function App() {
           style={washMask("ellipse 58% 52% at 68% 62%")}
         />
 
-        <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 pt-4 sm:px-6 lg:pt-6">
-          <a href="index.html" className="display display-wonk inline-flex min-h-11 items-center text-[1.35rem] italic text-ink sm:text-2xl">
-            Ramona Nichifor
-          </a>
-          <LangToggle id="head" />
-        </header>
-
         {/* Phones pick the world nearest mid-screen, so the page needs room for the last world to reach the middle */}
-        <main className="mx-auto grid max-w-6xl gap-6 px-4 pt-8 pb-[45svh] sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:pt-16 lg:pb-24">
+        <main className="mx-auto grid max-w-[75rem] gap-6 px-4 pt-28 pb-[45svh] sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:pt-36 lg:pb-24">
           <div className="lg:sticky lg:top-16 lg:self-start lg:pt-10">
             <h1 className="fade-up display text-[clamp(3rem,13vw,6rem)] font-[380] text-ink" style={{ "--d": "0.1s" } as CSSProperties}>
               {t(nav.universes)}
@@ -281,6 +282,6 @@ export default function App() {
       </div>
 
       {active && <UniversePage id={active} onBack={back} onSwitch={switchTo} />}
-    </>
+    </SiteShell>
   );
 }

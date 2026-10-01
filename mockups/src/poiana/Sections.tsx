@@ -2,12 +2,12 @@ import { useRef, type ReactNode, type RefObject } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { img } from "../shared/assets";
 import { Butterfly } from "../shared/Butterfly";
-import { art, book, counselling, mockupNote, nav, pillars, site, ui, universes } from "../shared/content";
+import { art, book, counselling, nav, pillars, site, ui, universes } from "../shared/content";
 import { CopyEmail } from "../shared/CopyEmail";
 import { Creature } from "../shared/creatures";
 import { Armchair, ArrowRight, ArrowUpRight, Brush, OpenBook, Video, WhatsApp } from "../shared/icons";
 import { useLang } from "../shared/lang";
-import { SocialLinks, sectionHref, sections } from "./Nav";
+import { TextLink } from "../site/Layout";
 
 function SectionTitle({ children, lead, className = "" }: { children: ReactNode; lead?: ReactNode; className?: string }) {
   return (
@@ -21,9 +21,9 @@ function SectionTitle({ children, lead, className = "" }: { children: ReactNode;
 export function Paths() {
   const { t } = useLang();
   const rows = [
-    { href: "#universuri", icon: OpenBook, tint: "var(--color-petal)", ...pillars.books },
-    { href: "#arta", icon: Brush, tint: "#dce8f5", ...pillars.art },
-    { href: "#consiliere", icon: Armchair, tint: "var(--color-sage)", ...pillars.counselling },
+    { href: "carti.html", icon: OpenBook, tint: "var(--color-petal)", ...pillars.books },
+    { href: "arta.html", icon: Brush, tint: "#dce8f5", ...pillars.art },
+    { href: "consiliere.html", icon: Armchair, tint: "var(--color-sage)", ...pillars.counselling },
   ];
   return (
     <section aria-label={t(site.rolesShort)} className="relative bg-cream px-4 pt-14 pb-20 sm:px-6 lg:pt-24">
@@ -59,7 +59,7 @@ export function Universes({ perchRef, landed }: { perchRef: RefObject<HTMLDivEle
   const reduce = useReducedMotion();
   return (
     <section id="universuri" className="relative scroll-mt-20 overflow-hidden bg-cream pt-10 pb-24 lg:pt-16">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="mx-auto max-w-[75rem] px-4 sm:px-6">
         <SectionTitle
           lead={
             <>
@@ -72,13 +72,13 @@ export function Universes({ perchRef, landed }: { perchRef: RefObject<HTMLDivEle
         </SectionTitle>
       </div>
 
-      <ul className="snap-row mt-10 flex gap-4 overflow-x-auto px-[max(1rem,calc((100vw-72rem)/2+1.5rem))] pb-6 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible">
+      <ul className="snap-row mt-10 flex gap-4 overflow-x-auto px-[max(1rem,calc((100vw-72rem)/2))] sm:px-[max(1.5rem,calc((100vw-72rem)/2))] pb-6 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible">
         {universes.map((u) => {
           const live = u.status === "available";
           return (
             <li key={u.id} className="w-[72vw] max-w-[300px] shrink-0 lg:w-auto lg:max-w-none">
               <a
-                href={`universuri-poiana.html#${u.id}`}
+                href={`universuri.html#${u.id}`}
                 className="group relative block"
               >
                 <div
@@ -137,7 +137,7 @@ export function Universes({ perchRef, landed }: { perchRef: RefObject<HTMLDivEle
   );
 }
 
-function TiltCover() {
+export function TiltCover() {
   const ref = useRef<HTMLDivElement>(null);
   const rx = useSpring(useMotionValue(0), { stiffness: 150, damping: 18 });
   const ry = useSpring(useMotionValue(0), { stiffness: 150, damping: 18 });
@@ -209,6 +209,9 @@ export function Book() {
           <p className="mt-5 text-[0.92rem] text-ink-soft">
             {t(ui.formats)} <span className="tabular-nums">ISBN {book.isbn}</span>
           </p>
+          <TextLink href="carte.html" className="mt-4">
+            {t(ui.aboutBook)}
+          </TextLink>
         </div>
       </div>
     </section>
@@ -232,6 +235,9 @@ export function About() {
           <SectionTitle>{t(nav.about)}</SectionTitle>
           <p className="display mt-6 max-w-[26ch] text-[clamp(1.4rem,5vw,2rem)] leading-[1.25] font-[360] text-ink">{t(site.intro)}</p>
           <p className="mt-5 max-w-[52ch] text-[1.02rem] text-ink-soft">{t(site.roles)}</p>
+          <TextLink href="despre.html" className="mt-6">
+            {t(ui.myStory)}
+          </TextLink>
         </div>
       </div>
     </section>
@@ -242,10 +248,10 @@ export function Art() {
   const { t } = useLang();
   return (
     <section id="arta" className="relative scroll-mt-20 overflow-hidden bg-mist py-20 lg:py-28">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="mx-auto max-w-[75rem] px-4 sm:px-6">
         <SectionTitle lead={t(art.lead)}>{t(art.title)}</SectionTitle>
       </div>
-      <ul className="snap-row mt-12 flex gap-5 overflow-x-auto px-[max(1rem,calc((100vw-72rem)/2+1.5rem))] pb-4 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible">
+      <ul className="snap-row mt-12 flex gap-5 overflow-x-auto px-[max(1rem,calc((100vw-72rem)/2))] sm:px-[max(1.5rem,calc((100vw-72rem)/2))] pb-4 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible">
         {art.pieces.map((p, i) => (
           <li key={p.src} className={`w-[70vw] max-w-[320px] shrink-0 lg:w-auto lg:max-w-none ${i === 1 ? "lg:mt-16" : ""}`}>
             <figure>
@@ -260,17 +266,9 @@ export function Art() {
           </li>
         ))}
       </ul>
-      <div className="mx-auto mt-8 flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 sm:px-6">
+      <div className="mx-auto mt-8 flex max-w-[75rem] flex-wrap items-center justify-between gap-4 px-4 sm:px-6">
         <p className="text-[0.92rem] italic text-ink-soft">{t(ui.exampleNote)}</p>
-        <a
-          href={site.contact.whatsapp.href}
-          target="_blank"
-          rel="noreferrer"
-          className="group inline-flex min-h-11 items-center gap-2 font-semibold text-ink underline decoration-lilac decoration-2 underline-offset-[6px]"
-        >
-          {t(ui.askAboutPiece)}
-          <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-        </a>
+        <TextLink href="arta.html">{t(ui.seeGallery)}</TextLink>
       </div>
     </section>
   );
@@ -325,41 +323,11 @@ export function Counselling() {
                 </span>
               </a>
               <CopyEmail className="text-[0.98rem] text-ink-soft [&_button]:bg-cream/70 [&_button]:text-ink" />
+              <TextLink href="consiliere.html">{t(ui.howIWork)}</TextLink>
             </div>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-export function Footer() {
-  const { t } = useLang();
-  return (
-    <footer id="contact" className="relative isolate scroll-mt-20 overflow-hidden bg-cream pt-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <p className="display text-[clamp(2.6rem,11vw,5rem)] leading-none font-[380] text-ink">
-          Ramona <span className="display-wonk italic text-violet">Nichifor</span>
-        </p>
-        <p className="display mt-3 text-[1.3rem] italic text-ink-soft">{t(site.souls)}</p>
-        <div className="mt-10 grid gap-8 sm:grid-cols-2">
-          <div className="space-y-3 text-ink">
-            <SocialLinks />
-            <CopyEmail className="text-[0.98rem] text-ink-soft [&_button]:bg-petal/70 [&_button]:text-ink" />
-          </div>
-          <nav aria-label="Subsol" className="grid grid-cols-2 gap-x-6 text-[1rem] text-ink-soft">
-            {sections.map((s) => (
-              <a key={s.id} href={sectionHref(s)} className="flex min-h-11 items-center hover:text-ink">
-                {t(s.label)}
-              </a>
-            ))}
-          </nav>
-        </div>
-        <p className="relative z-10 mt-10 pb-3 text-[0.85rem] text-ink-soft">
-          © 2026 Ramona Nichifor · {t(mockupNote.placeholders)}
-        </p>
-      </div>
-      <img src={img("meadow-wide.webp")} alt="" aria-hidden="true" className="pointer-events-none -mt-10 h-[180px] w-full object-cover object-bottom sm:h-[240px]" />
-    </footer>
   );
 }

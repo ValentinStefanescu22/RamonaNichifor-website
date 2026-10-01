@@ -247,6 +247,8 @@ A pastel spring palette lifted from the client's own cover, anchored by one deep
 
 ## Typography
 
+**Decision (2026-10-01):** the „Poveste” pairing below is final, confirmed after comparing it with Newsreader + Commissioner, Literata + Atkinson Hyperlegible Next, and Instrument Serif + Hanken Grotesk.
+
 **Display Font:** Fraunces (variable: opsz auto, wght 300–700, SOFT, WONK, roman + italic), falling back to Iowan Old Style, Palatino Linotype, Georgia.
 **Body Font:** Alegreya Sans (400, 500, 700, italics 400/500), falling back to Gill Sans, Segoe UI, system-ui.
 
@@ -320,6 +322,14 @@ A 44px cream-70% pill with two 44×36px segments (RO first, default). The active
 - **Top bar** (in the hero, not fixed): italic WONK wordmark at 1.35–1.5rem, desktop section links in ink-soft (hover: ink with lilac underline), toggle, menu button on phones.
 - **Floating bar**: once the hero has scrolled 85% of a viewport, a cream-75% glass pill (max 768px wide, blur and saturation, soft lift, 10px below the safe area) blurs in from above in 0.5s.
 - **Menu sheet** (phones): full-screen cream with the wash top-right and the meadow along the bottom; it opens as a circle growing from the menu button (0.7s, bloom easing), items rise in at 2.6rem Fraunces with a 0.05s stagger, socials fade in last. Escape closes; the body stops scrolling.
+- **Every page shares this chrome.** Menu order: Universuri, Cărți, Despre mine, Artă, Consiliere, Comunitate, Contact (plus Acasă in the sheet and footer). The current page carries `aria-current` and the lilac underline (italic violet in the sheet). Inline links show from 1280px; below that the menu button is used. Links are 44px tall.
+- **Content edge.** Header, page titles, sections and footer share one left edge: a 75rem container with 16/24px side padding, which lands exactly where sections that pad on the outside do (144px at 1440).
+
+### Page opener (inner pages)
+Every inner page opens the same way: the header over the page's own ground, the masked wash top-right, an `<h1>` at clamp 3.1–6.4rem (an optional second line in violet WONK italic, indented like the home name: „Despre / mine”, „Comunitate / cu sens”), an italic tagline, a lead, actions, and one signature element beside it (portrait with the butterfly, cover stack, hanging frame, session formats, the butterflies gathering in an arch window, the form). Inner-page openers tint the sky toward the page's own colour, the way universe pages do: petal (Cărți, Comunitate), sage (Consiliere), lilac (Despre), mist (Artă, Contact).
+
+### Footer
+One footer everywhere: the name with violet „Nichifor”, the souls tagline, socials and email, all pages in two columns, the placeholder line, and the meadow strip at the bottom, so every page lands on the same ground. Only the light above the meadow changes with the page (`ground`): cream, sky (Universuri: cream opening back into sky), sage (from the pale sage of the counselling close), mist, petal. The ground at the top of the footer always equals the colour the page ends on, so there is never a seam.
 
 ### Universe window (home)
 An arched window, 3:4, soft lift. The live universe is a small copy of the hero (sky wash + meadow; the painting zooms to 1.04 over 1.4s on hover) and is the butterfly's landing perch. Unreleased universes show their creature on a paint-edged tint circle and a cream badge in the universe's deep tint. Name in Fraunces below, book title in italic ink-soft, "Descoperă" (magenta when live, ink-soft otherwise). Every window links to its universe page, including the ones still „în curând”.
@@ -335,6 +345,25 @@ A real cover image with a spine radius, book lift and a -2.5° resting tilt. Wit
 
 ### Status badges
 Small 700 labels in pills. On the sky: magenta with cream for available, ink 10% with ink-soft for coming soon. On an arch window: cream 88% with the universe's deep tint.
+
+### Inner-page components
+- **Section title**: the headline role (clamp 2.2–3.8rem, 380) for every section h2 on inner pages; statements (clamp 1.6–2.6rem, 360) for closing lines.
+- **Status chip**: one component. Magenta with cream text only for what is available now; everything coming is a 10% plum tint with ink-soft text. No ring. It sits *below* the title it describes, never above.
+- **Links**: the ink pill with seed circle is the primary action; the underlined text link with a lilac 2px underline and moving arrow is the secondary. Nothing outlined.
+- **Age switch (Cărți)**: tabs Copii · Adolescenți · Adulți on a white-60% pill; the ink thumb slides with a critically damped spring (0.4s); arrow keys, Home and End move between tabs.
+- **Shelf**: covers stand on a soft plum contact shadow and lift 8px with a 1.5° tilt on hover; magenta link only on the available book.
+- **Opening cover (book page)**: the cover is hinged at the spine and opens −24° on hover or tap, showing a page with faint lines beneath.
+- **Gallery wall (Artă)**: column masonry (2 → 3 columns), each work on a #fffdf9 mat with the soft shadow and a museum label (title, technique · size, availability dot, price when available). Sold is a quiet plum dot, never magenta. Filter chips use the same sliding ink thumb.
+- **Artwork sheet**: rises from the bottom on phones (spring, no bounce; drag the handle down to dismiss, velocity-aware), a centred two-column panel on laptop; Esc, Back and the close button close it, focus returns to the frame, Tab stays inside.
+- **Steps (Consiliere)**: numbered (a real sequence) on a leaf stem that grows with scroll; italic WONK numerals in leaf on cream discs.
+- **FAQ**: native `<details>` with a height transition where the browser can animate to `auto`; the plus turns 45°.
+- **Contact form**: paper fields (white 72%, 1px plum hairline as inset shadow, magenta 2px focus), 17px text so iOS never zooms, subject chips as native radios, inline errors in a muted red under each field plus a summary, focus to the first problem. The success note is a slightly tilted paper card that says honestly that the mockup sends nothing.
+- **Product page**: one template for every universe keepsake, opened from „În acest univers”: the universe-tinted sky, „← Universul X”, the product visual, the name with the universe as a violet WONK italic second line, the status chip and price below the title, specs, then „Din același univers” (the book first). Every book has its own book page too; the Fluture book page is the same from Universuri and from Cărți.
+- **Booking (Consiliere)**: inside one white-60% card. Numbered steps (format → day → time → details) reveal in turn with a short fade and focus moving to the next step. Format chips use the sliding ink thumb; the month calendar has 44px round days (open days bold with a small leaf dot, past and closed days at 45% ink-soft, today ringed, the chosen day solid ink); times are pill chips; the confirmation is the tilted paper note with the summary and an honest mockup line.
+- **Partner card (Comunitate)**: white-60% card with the logo, or a painted initial in Fraunces WONK italic on a smooth lilac-petal disc, the name, one line and the handle with an outbound arrow.
+- **Butterflies gathering (Comunitate hero)**: six real cover butterflies at different sizes, flying in from every side with a damped spring and settling over the meadow inside an arch window; each keeps its own wingbeat and slow drift.
+- **Spam guards**: every form carries an off-screen honeypot and a 3-second time trap; spam gets the normal success state.
+- **Painted placeholders**: code-painted watercolour pools in the palette (paler centres, darker drying rims, paint-edge filter) stand in for paintings, covers and spreads until the real scans arrive. They are always marked placeholder in content.
 
 ### Email copy
 The address is shown as selectable text with a 44px "Copiază" pill that confirms "Copiat" for 1.8s and announces it politely; mail links are not relied on.

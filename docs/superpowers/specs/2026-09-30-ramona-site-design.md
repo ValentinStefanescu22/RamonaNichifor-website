@@ -49,10 +49,12 @@ Slugs are localised with next-intl `pathnames`. RO has no prefix; EN lives under
 | Universe | `/universuri/fluturele` | `/en/universes/butterfly` |
 | Books (by age) | `/carti` | `/en/books` |
 | Book | `/carti/fluturele-dansator-de-step` | `/en/books/the-tap-dancing-butterfly` |
+| Product (universe keepsake) | `/universuri/fluturele/semn-de-carte` | `/en/universes/butterfly/bookmark` |
 | Art gallery | `/arta` | `/en/art` |
 | Artwork | `/arta/[slug]` | `/en/art/[slug]` |
 | Counselling | `/consiliere` | `/en/counselling` |
 | About | `/despre` | `/en/about` |
+| Community | `/comunitate` | `/en/community` |
 | Contact | `/contact` | `/en/contact` |
 | Privacy | `/confidentialitate` | `/en/privacy` |
 | Terms | `/termeni` | `/en/terms` |
@@ -99,7 +101,7 @@ Port of `mockups/src/universuri-poiana/`.
 - The sky tinted in the universe colour (`tint`), with pollen in that colour.
 - A back pill „← Universuri” and the language switch.
 - **Hero orb** (the morph target), the universe name as `<h1>`, the book title, a status chip, and a hook paragraph. An optional longer story in rich text.
-- **„În acest univers”**: the book(s) and products (bookmark, cards, poster…), each with an image and a status. Available items link out; „în curând” items are shown honestly.
+- **„În acest univers”**: the book(s) and products (bookmark, cards, poster…), each with an image and a status. **Every item opens its own page**: the book its book page (the same page Cărți links to), each product its product page (image, description, specs, price, status; „în curând” items offer „Anunță-mă” instead of a buy button).
 - Calls to action. If available: store buttons for the book. If „în curând”: „Anunță-mă când apare” (follow on Instagram for now; a newsletter is out of scope).
 - **„Alte universuri”**: small orbs linking to the others.
 - JSON-LD `BreadcrumbList`, plus `Book` when the universe has a published book.
@@ -122,20 +124,40 @@ Port of `mockups/src/universuri-poiana/`.
 - JSON-LD `VisualArtwork`.
 
 ### 5.6 Counselling `/consiliere`
-- Hero with the manifesto.
-- „Cum lucrăm” (her approach, in rich text).
-- Formats: **online** and **in person** (city from the CMS).
-- **How a session works.** A real sequence, so numbered steps are justified.
+- Hero with the tagline and the session formats beside it; the primary action is „Programează o ședință” (scrolls to the booking), WhatsApp is the secondary link. **No manifesto on this page** (removed 2026-10-01 so the practical sections come sooner).
+- „Cum lucrez” (her approach, in rich text) next to **„Cum decurge”** (a real sequence, so numbered steps are justified).
+- **„Programează o ședință”**: the booking flow (§5.6b).
 - FAQ as an accordion (JSON-LD `FAQPage`).
-- Call to action: the contact form (subject Consiliere) and WhatsApp.
-- Price and session length are optional CMS fields, shown only when filled.
+- Price and session length are CMS fields, shown when filled.
+
+### 5.6b Booking (programări) — built into the site
+Chosen 2026-10-01 over SaaS: Cal.com is closing its EU region on 1 Nov 2026, Calendly has no Romanian interface, and Google's free booking page has no payments or reminders. A native flow keeps the design, the language and the data (EU) in our hands, with no subscription.
+- **Flow:** format (primă discuție 15 min gratuit · online 50 min · față în față 60 min) → day (month calendar; past days, days without hours and days beyond 60 days are inactive; keyboard: arrows, Home/End, PageUp/PageDown, Enter) → time (free start times, „Ora României”) → details (name, email, phone optional, a few lines optional, the 16+ consent) → confirmation.
+- **Payload:** global `availability` (weekly hours per format, buffer between sessions, minimum notice, booking horizon, blocked dates and holidays) and collection `bookings` (format, start, end, name, email, phone, note, status: confirmed/cancelled/completed, cancel token, consent + 16+ flag, created at). Ramona sees and manages bookings in the admin.
+- **Slots** are computed on the server: availability minus existing bookings minus Ramona's **Google Calendar** busy times (freeBusy), in Europe/Bucharest. The mockup's `slotsFor()` (`mockups/src/pages/consiliere/Booking.tsx`) is the reference logic.
+- **On booking:** a transaction re-checks the slot (unique index on start time, no double booking), creates the Google Calendar event with a Meet link for online sessions (OAuth on Ramona's Google account; refresh token in env), and sends emails via Resend: confirmation with an `.ics` file and a cancel/reschedule link, a notification to Ramona, and a reminder 24 h before (scheduled job).
+- **Rules:** cancel or reschedule free until 24 h before (link with token); data kept 12 months, then deleted; anti-spam as in §5.8.
+- **Later (M7):** optional Stripe payment at booking for paid formats.
 
 ### 5.7 About `/despre`
 Arched portrait, bio (rich text), roles, manifesto, and links to all her profiles. These are the same links as `sameAs` in the Person JSON-LD. JSON-LD `ProfilePage` → `Person`.
 
+### 5.7b Comunitate cu sens `/comunitate`
+A page for gatherings and good works around the stories (mocked up 2026-10-01; content is placeholder).
+- **Opener:** „Comunitate / cu sens”, a lead on why, and **butterflies gathering**: the real cover butterfly several times over, flying in from every side and settling above the meadow inside an arch window (each with its own wingbeat and drift; still under reduced motion).
+- **Întâlniri:** events as date-led rows (day and month on a painted disc, title, audience, kind · day and time, place or online) with „Mă înscriu” → contact form, subject Comunitate.
+- **Proiecte cu sens:** projects with a painted image, title, line and a status (e.g. „În pregătire”).
+- **Parteneri:** partner cards (logo or a painted initial, name, one line, link to their page, opening in a new tab) and „Vrei să fim parteneri? Scrie-mi” → contact. First partner: AVA Art & Soul (instagram.com/ava.art.soul); logo and description to come from the client.
+- **Close:** „Vreau să aflu primul” (follow on Instagram) and „Propune un proiect” → contact.
+- JSON-LD `Event` for each upcoming event.
+
 ### 5.8 Contact `/contact`
-- **Form fields:** name, email, subject (Carte · Artă · Consiliere · Altceva), message, and a GDPR consent checkbox.
-- **Anti-spam:** a honeypot, a time trap and rate limiting.
+- **Form fields:** name, email, subject (Carte · Artă · Consiliere · Comunitate · Altceva), message, and one consent checkbox that also confirms age: „Am cel puțin 16 ani și sunt de acord…”. No separate age field (GDPR data minimisation; 16 is Romania's age of digital consent under GDPR art. 8 / Law 190/2018). Not legal advice: Ramona's privacy text should be reviewed by her.
+- **Anti-spam and security** (in the mockup already: honeypot + time trap; spam gets the normal success state and is dropped):
+  - honeypot field (off-screen, not `display:none`, out of the tab order) and a time trap (under 3 s → spam)
+  - **Cloudflare Turnstile** (invisible; more GDPR-friendly than reCAPTCHA), verified on the server
+  - server action with Next's origin check (CSRF), **zod** validation, rate limit per IP (5 messages / 10 min), all user text escaped in the email, Resend; messages are not stored
+  - tested with **Strix** in M5 against the preview
 - **States:** inline field validation, a designed success state, and an error state that explains what to do.
 - **Other channels:** email as selectable text with a copy button, WhatsApp, Instagram, Facebook.
 
@@ -178,10 +200,15 @@ Collections (lists of entries) and globals (single pages):
 | `site-settings` | global | name, roles, taglines (souls, whisper), series name + lead, manifesto (3 lines, each with an emphasised word), contacts (email, WhatsApp, Instagram, Facebook, other profile URLs for `sameAs`), default SEO (title pattern, description, share image), portrait |
 | `universes` | collection | name, slug, character, **tint** (3 colours), orb art (image *or* built-in line drawing), hook, story (rich text), status (available / soon), order, books → `books`, products → `products`, SEO |
 | `books` | collection | title, slug, subtitle, age group (copii / adolescenti / adulti), cover, blurb (rich text), year, ISBN, formats, store links [{store, url}], universe → `universes`, sample pages[], status, SEO |
-| `products` | collection | name, kind (semn de carte / cărți de joc / poster / altul), universe → `universes`, images[], status, optional external link |
+| `products` | collection | name, slug, kind (semn de carte / cărți de joc / poster / altul), universe → `universes`, images[], description (rich text), specs [{label, value}], optional price, status, optional external link |
 | `artworks` | collection | title, slug, images[] (**alt required**), kind (original / print / ceramică), technique, size, year, availability, optional price, description |
 | `counselling-page` | global | intro, approach, formats (online / in person + city), steps[], FAQ[], optional price and duration, CTA copy |
 | `about-page` | global | bio (rich text), portrait, highlights |
+| `events` | collection | title, kind (atelier / cerc / lectură / altul), start date and time, place or online, audience, image, sign-up note, status (upcoming / past) |
+| `projects` | collection | title, line, image, status (idee / în pregătire / în desfășurare / încheiat), order |
+| `partners` | collection | name, logo (optional), line, url, order |
+| `availability` | global | weekly hours per format, buffer, minimum notice, horizon, blocked dates |
+| `bookings` | collection | format, start, end, name, email, phone, note, status, cancel token, consent (16+), created at |
 | `legal-pages` | collection | kind (privacy / terms), rich text, last-updated date |
 | `media` | upload collection | the image file, alt text (localised, **required**), focal point and crop; Payload generates the resized versions on upload |
 | `users` | auth collection | Ramona's (and the developer's) admin login; `maxLoginAttempts` + `lockTime` against password guessing |
@@ -318,7 +345,8 @@ Each milestone gets its own implementation plan, is built and verified, and ship
 | **M2** | Payload in the app: Postgres (Neon) + R2 storage, collections and globals (§7), admin at `/admin` in Romanian, seed import, drafts + Live Preview; the home page reads from Payload; revalidation hooks; nightly backup | Editing text or an image in the admin updates Live Preview immediately and the live page within a minute; a backup restores cleanly |
 | **M3** | Universuri + universe pages, with the orb → page morph | The morph works on a real phone (Safari + Chrome); reduced motion falls back cleanly |
 | **M4** | Books, art, counselling, about, contact (form + email), legal, 404 | Every page on the preview link in RO and EN; the form delivers to her inbox |
-| **M5** | SEO and quality pass: all JSON-LD validated, hreflang, sitemap, OG images, redirects, accessibility audit, performance | Every checklist in §8 and §10 passes |
+| **M4b** | Booking (§5.6b): availability and bookings in Payload, slot engine, Google Calendar (freeBusy + events with Meet), Resend confirmations with `.ics`, cancel/reschedule links, 24 h reminders | A test booking appears in Ramona's Google Calendar and both inboxes; double booking is impossible; cancelling frees the slot |
+| **M5** | Security (Strix pentest of the preview: forms, booking, admin) and SEO and quality pass: all JSON-LD validated, hreflang, sitemap, OG images, redirects, accessibility audit, performance | Every checklist in §8 and §10 passes |
 | **M6** | Real content entered, a short Romanian editing guide, hosting chosen, domains connected, launch, Search Console | Site live on the canonical domain; sitemap submitted; profiles link back |
 | *M7 (later)* | *Shop, once her PFA is set up: Payload e-commerce plugin (products, variants, cart, orders), Stripe payments, shipping options, Romanian e-Factura invoices through the SmartBill API, terms of sale and return policy. Specced separately when she's ready.* | *A test order is paid, invoiced through SmartBill and appears in the admin* |
 
@@ -329,6 +357,14 @@ Each milestone gets its own implementation plan, is built and verified, and ship
 
 ## 14. Content checklist for Ramona
 
+- [ ] Counselling availability (days and hours), session lengths and prices, the 15-min free intro yes/no
+- [ ] Access to her Google account (for the calendar sync) and where in-person sessions take place
+- [ ] AVA Art & Soul: logo and one or two lines about them
+- [ ] Long bio for Despre mine (the mockup uses placeholder text)
+- [ ] Counselling: session steps, FAQ answers, durations and prices (placeholders now)
+- [ ] More books (teen and adult titles are placeholders) and real cover files
+- [ ] Artworks: photos, technique, size, year, availability, prices (most are placeholders)
+- [ ] Comunitate cu sens: real events (dates, places, audience) and projects
 - [ ] Original, full-resolution photos (portrait: 2–3 options)
 - [ ] Paintings: photos + title, technique, size, year, availability (+ price if public)
 - [ ] Bio: a short and a long version

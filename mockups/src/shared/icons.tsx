@@ -110,3 +110,29 @@ export const OpenBook = (p: IconProps) => (
   </Icon>
 );
 
+export const Close = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5" />
+  </Icon>
+);
+
+export const Plus = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M12 5.5v13M5.5 12h13" />
+  </Icon>
+);
+
+export const MapPin = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M12 20.5s-6-5.4-6-10.3a6 6 0 0 1 12 0c0 4.9-6 10.3-6 10.3Z" />
+    <circle cx="12" cy="10.2" r="2.2" />
+  </Icon>
+);
+
+export const Leaf = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M5 19c0-8 5.5-13.5 14-14-.5 8.5-6 14-14 14Z" />
+    <path d="M5 19c3-3.5 6-6.5 9.5-9" />
+  </Icon>
+);
+

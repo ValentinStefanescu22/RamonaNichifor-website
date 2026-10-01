@@ -47,6 +47,7 @@ export const nav = {
   art: t("Artă", "Art"),
   counselling: t("Consiliere", "Counselling"),
   about: t("Despre mine", "About me"),
+  community: t("Comunitate", "Community"),
   contact: t("Contact", "Contact"),
   menu: t("Meniu", "Menu"),
   close: t("Închide", "Close"),
@@ -70,6 +71,10 @@ export const ui = {
   exampleNote: t("Exemplu: picturile reale vin în curând", "Example: real paintings coming soon"),
   languageLabel: t("Limba site-ului", "Site language"),
   formats: t("În curând și ca e-book și audiobook.", "E-book and audiobook coming soon."),
+  aboutBook: t("Despre carte", "About the book"),
+  myStory: t("Povestea mea", "My story"),
+  seeGallery: t("Vezi toată galeria", "See the whole gallery"),
+  howIWork: t("Cum lucrez", "How I work"),
 };
 
 export type UniverseId = "fluture" | "buburuza" | "tantar" | "musca";

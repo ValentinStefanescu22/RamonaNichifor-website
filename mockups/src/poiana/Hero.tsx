@@ -6,22 +6,6 @@ import { nav, site, ui } from "../shared/content";
 import { Armchair, ArrowDown, Brush, OpenBook } from "../shared/icons";
 import { useLang } from "../shared/lang";
 
-export function PaintDefs() {
-  return (
-    <svg width="0" height="0" className="absolute" aria-hidden="true" focusable="false">
-      <filter id="paint-edge" x="-10%" y="-10%" width="120%" height="120%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="7" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" />
-      </filter>
-      <filter id="paint-bloom" x="-30%" y="-30%" width="160%" height="160%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" seed="3" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="60" xChannelSelector="R" yChannelSelector="B" result="warp" />
-        <feGaussianBlur in="warp" stdDeviation="6" />
-      </filter>
-    </svg>
-  );
-}
-
 const delay = (s: number) => ({ ["--d" as string]: `${s}s` });
 
 // Feathers the top of the meadow into the sky, whatever part of the painting object-fit keeps
@@ -31,9 +15,9 @@ const meadowMask = {
 };
 
 const paths = [
-  { href: "#carte", label: nav.books, Icon: OpenBook },
-  { href: "#arta", label: nav.art, Icon: Brush },
-  { href: "#consiliere", label: nav.counselling, Icon: Armchair },
+  { href: "carti.html", label: nav.books, Icon: OpenBook },
+  { href: "arta.html", label: nav.art, Icon: Brush },
+  { href: "consiliere.html", label: nav.counselling, Icon: Armchair },
 ];
 
 export function Hero({ startRef }: { startRef: RefObject<HTMLDivElement | null> }) {
@@ -66,7 +50,7 @@ export function Hero({ startRef }: { startRef: RefObject<HTMLDivElement | null> 
         }}
       />
 
-      <div className="relative mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 content-start px-4 pt-[9vh] sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:content-center lg:pt-16 lg:pb-[31vh]">
+      <div className="relative mx-auto grid w-full max-w-[75rem] flex-1 grid-cols-1 content-start px-4 pt-[9vh] sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:content-center lg:pt-16 lg:pb-[31vh]">
         <motion.div style={{ y: textY }} className="relative z-10">
           <svg
             viewBox="0 0 400 260"
