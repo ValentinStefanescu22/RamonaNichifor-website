@@ -124,7 +124,6 @@ save(wide, "meadow-wide.webp", 80)
 # --- Portrait, the handmade mug, the watercolor wash
 portrait = Image.open(SRC / "portrait.webp").convert("RGB")
 save(portrait, "portrait.webp", 84)
-save(portrait.crop((0, 120, 899, 1319)), "portrait-crop.webp", 84)
 mug = Image.open(SRC / "mug.jpg").convert("RGB")
 save(mug.crop((0, 360, 900, 1260)), "mug.webp", 84)
 save(Image.open(SRC / "watercolor-wash.webp").convert("RGB"), "wash.webp", 80)

@@ -1,6 +1,6 @@
 // Copies the Vite build into artifact/ in the shape the Claude Artifact host expects:
-// the main page (index.html) without its document wrapper, since the host adds its own
-// skeleton; the concept pages stay full documents; assets and images are published beside them.
+// the main page (index.html, the home page) without its document wrapper, since the host adds
+// its own skeleton; other pages stay full documents; assets and images are published beside them.
 import { cpSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 
 const out = "artifact";

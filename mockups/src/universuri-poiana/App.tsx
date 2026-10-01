@@ -14,8 +14,6 @@ import { OrbArt, WorldMap } from "../universuri/WorldMap";
 
 const MORPH = "universe-orb";
 const copy = {
-  label: { ro: "Pagina Universuri · propunere pe paleta Poiana", en: "Universes page · proposal in the Meadow palette" },
-  back: { ro: "Înapoi la Poiana", en: "Back to the Meadow" },
   tap: { ro: "Atinge o lume ca s-o deschizi", en: "Tap a world to open it" },
   allWorlds: { ro: "Universuri", en: "Universes" },
   others: { ro: "Alte universuri", en: "Other universes" },
@@ -237,16 +235,6 @@ export default function App() {
 
   return (
     <>
-
-      <div className="relative z-40" style={{ background: "var(--color-ink)", color: "var(--color-cream)" }}>
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 text-[0.78rem] sm:px-6">
-          <p className="py-2 font-semibold">{t(copy.label)}</p>
-          <a href="poiana.html" className="inline-flex min-h-11 shrink-0 items-center gap-1.5 font-semibold hover:underline">
-            {t(copy.back)} <ArrowRight size={14} />
-          </a>
-        </div>
-      </div>
-
       <div className="sky-day relative isolate min-h-svh overflow-hidden">
         <Pollen className="absolute inset-0 -z-10 h-full w-full" colors={["184, 70, 138", "122, 95, 176"]} strength={0.5} />
         <img
@@ -265,7 +253,7 @@ export default function App() {
         />
 
         <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 pt-4 sm:px-6 lg:pt-6">
-          <a href="poiana.html" className="display display-wonk inline-flex min-h-11 items-center text-[1.35rem] italic text-ink sm:text-2xl">
+          <a href="index.html" className="display display-wonk inline-flex min-h-11 items-center text-[1.35rem] italic text-ink sm:text-2xl">
             Ramona Nichifor
           </a>
           <LangToggle id="head" />
@@ -288,7 +276,7 @@ export default function App() {
               {t(copy.tap)}
             </p>
           </div>
-          <WorldMap tone="day" onOpen={open} orbRefs={orbRefs} />
+          <WorldMap onOpen={open} orbRefs={orbRefs} />
         </main>
       </div>
 

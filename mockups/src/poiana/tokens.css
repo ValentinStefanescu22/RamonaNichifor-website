@@ -21,8 +21,6 @@
 
 :root {
   --focus: var(--color-magenta);
-  --strip-bg: var(--color-ink);
-  --strip-ink: var(--color-cream);
   --toggle-bg: color-mix(in oklab, var(--color-cream) 70%, transparent);
   --toggle-ink: var(--color-ink-soft);
   --toggle-thumb: var(--color-ink);

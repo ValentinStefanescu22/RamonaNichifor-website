@@ -1,7 +1,7 @@
 # Ramona Nichifor · website spec
 
 Status: **draft for review** · 2026-09-30 · updated 2026-10-01 (CMS switched from Sanity to Payload)
-Related: [PRODUCT.md](../../../PRODUCT.md) (product truth) · [DESIGN.md](../../../DESIGN.md) (design system) · mockups in [`mockups/`](../../../mockups/) (published concepts: https://claude.ai/artifact/ASM9hocLQERfJYaWtY6zYE)
+Related: [PRODUCT.md](../../../PRODUCT.md) (product truth) · [DESIGN.md](../../../DESIGN.md) (design system) · mockups in [`mockups/`](../../../mockups/) (published mockup, home + Universuri: https://claude.ai/artifact/ASM9hocLQERfJYaWtY6zYE)
 
 ---
 
@@ -265,7 +265,7 @@ i18n/       routing.ts, request.ts        messages/ ro.json, en.json
 - `shared/Butterfly.tsx` + the wing CSS
 - `shared/creatures.tsx`, `shared/icons.tsx`
 - `poiana/*`
-- `universuri/{WorldMap,Pollen}.tsx` (`OrbArt`, `tone="day"`)
+- `universuri/{WorldMap,Pollen}.tsx` (`OrbArt`)
 - `universuri-poiana/App.tsx` (sky, universe page, morph logic)
 - `scripts/prepare-images.py` for the cutout assets
 

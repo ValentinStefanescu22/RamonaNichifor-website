@@ -1,5 +1,4 @@
 import { useCallback, useRef, useState } from "react";
-import { ConceptStrip } from "../shared/ConceptStrip";
 import { Flight } from "./Flight";
 import { Hero, PaintDefs } from "./Hero";
 import { FloatingBar, MenuSheet, TopBar } from "./Nav";
@@ -17,7 +16,6 @@ export default function App() {
   return (
     <>
       <PaintDefs />
-      <ConceptStrip concept="poiana" />
       <FloatingBar menuOpen={menuOpen} onMenu={toggleMenu} />
       <MenuSheet open={menuOpen} onClose={closeMenu} />
       <div className="relative">

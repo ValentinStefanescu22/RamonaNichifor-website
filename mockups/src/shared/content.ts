@@ -222,44 +222,7 @@ export const counselling = {
   ],
 };
 
-export type ConceptId = "poiana" | "jurnal" | "universuri";
-
-export const concepts: { id: ConceptId; letter: string; name: Text; line: Text; href: string }[] = [
-  {
-    id: "poiana",
-    letter: "A",
-    name: t("Poiana", "The Meadow"),
-    line: t(
-      "Intri în poveste: poiana de pe copertă devine pagina, iar fluturele te conduce prin ea.",
-      "You step into the story: the meadow from the cover becomes the page, and the butterfly leads you through it.",
-    ),
-    href: "poiana.html",
-  },
-  {
-    id: "jurnal",
-    letter: "B",
-    name: t("Jurnalul", "The Journal"),
-    line: t(
-      "Pagini dintr-un jurnal de atelier: o fotografie lipită, note scrise de mână, capitole.",
-      "Pages from a studio journal: a taped-in photo, handwritten notes, chapters.",
-    ),
-    href: "jurnal.html",
-  },
-  {
-    id: "universuri",
-    letter: "C",
-    name: t("Universuri", "Universes"),
-    line: t(
-      "O hartă a lumilor: fiecare personaj e o lume pe care o deschizi cu o atingere.",
-      "A map of worlds: each character is a world you open with a tap.",
-    ),
-    href: "universuri.html",
-  },
-];
-
 export const mockupNote = {
-  chip: t("machetă", "mockup"),
-  all: t("Toate conceptele", "All concepts"),
   placeholders: t(
     "Linkurile, adresele și unele imagini sunt provizorii.",
     "Links, addresses and some images are placeholders.",

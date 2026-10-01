@@ -11,9 +11,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: resolve(import.meta.dirname, "index.html"),
-        poiana: resolve(import.meta.dirname, "poiana.html"),
-        jurnal: resolve(import.meta.dirname, "jurnal.html"),
-        universuri: resolve(import.meta.dirname, "universuri.html"),
         universuriPoiana: resolve(import.meta.dirname, "universuri-poiana.html"),
       },
     },

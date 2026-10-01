@@ -110,10 +110,3 @@ export const OpenBook = (p: IconProps) => (
   </Icon>
 );
 
-export const Sprout = (p: IconProps) => (
-  <Icon {...p}>
-    <path d="M12 20v-8" />
-    <path d="M12 12c0-3.5-2.4-6-6.5-6 0 3.6 2.5 6 6.5 6Z" />
-    <path d="M12 14.5c0-3 2.2-5.5 6.5-5.5 0 3.3-2.4 5.5-6.5 5.5Z" />
-  </Icon>
-);

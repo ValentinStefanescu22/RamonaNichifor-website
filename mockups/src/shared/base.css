@@ -1,4 +1,4 @@
-/* Shared behaviour for every concept page. Colours always come from the page's own tokens. */
+/* Shared behaviour for every page. Colours always come from the page's own tokens. */
 :root {
   color-scheme: light;
   -webkit-text-size-adjust: 100%;

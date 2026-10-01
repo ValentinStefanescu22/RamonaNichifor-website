@@ -1,0 +1,200 @@
+{
+  ".claude/launch.json": {
+    "mtime": 1790778991.8373518,
+    "seen": 1790846279.634915,
+    "ast_hash": "bc97c5bf0d8aecdb90630ed2949072b0",
+    "semantic_hash": "bc97c5bf0d8aecdb90630ed2949072b0"
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1790845517.0039937,
+    "seen": 1790846279.634917,
+    "ast_hash": "a9d169d18a9e2c9fb8e2816ae323d26e",
+    "semantic_hash": "a9d169d18a9e2c9fb8e2816ae323d26e"
+  },
+  ".impeccable/design.json": {
+    "mtime": 1790796401.3691518,
+    "seen": 1790846279.634918,
+    "ast_hash": "d6759b6e36477be8d83e0a8b18535a2e",
+    "semantic_hash": "d6759b6e36477be8d83e0a8b18535a2e"
+  },
+  "mockups/package.json": {
+    "mtime": 1790778380.2507815,
+    "seen": 1790846279.634919,
+    "ast_hash": "75fd5ce4215c1eea3b53677f183e86a9",
+    "semantic_hash": "75fd5ce4215c1eea3b53677f183e86a9"
+  },
+  "mockups/scripts/prepare-artifact.mjs": {
+    "mtime": 1790846815.6892173,
+    "seen": 1790847670.3211331,
+    "ast_hash": "9619a099f361c24d652243fd6ba2bfb4",
+    "semantic_hash": "9619a099f361c24d652243fd6ba2bfb4"
+  },
+  "mockups/scripts/prepare-images.py": {
+    "mtime": 1790846923.9053512,
+    "seen": 1790847670.321134,
+    "ast_hash": "ab7c541fbdcb552088fbf4953f7232ed",
+    "semantic_hash": "ab7c541fbdcb552088fbf4953f7232ed"
+  },
+  "mockups/src/poiana/App.tsx": {
+    "mtime": 1790846815.7496257,
+    "seen": 1790847670.321135,
+    "ast_hash": "40b7bc392a6ab69f552ea0b8e91925b5",
+    "semantic_hash": "40b7bc392a6ab69f552ea0b8e91925b5"
+  },
+  "mockups/src/poiana/Flight.tsx": {
+    "mtime": 1790778922.6932962,
+    "seen": 1790846279.634923,
+    "ast_hash": "7229cdea1366965997d137bf07315b5b",
+    "semantic_hash": "7229cdea1366965997d137bf07315b5b"
+  },
+  "mockups/src/poiana/Hero.tsx": {
+    "mtime": 1790780705.4243186,
+    "seen": 1790846279.634923,
+    "ast_hash": "adc7c608951d5326c186c032b77b840f",
+    "semantic_hash": "adc7c608951d5326c186c032b77b840f"
+  },
+  "mockups/src/poiana/Nav.tsx": {
+    "mtime": 1790794243.5403576,
+    "seen": 1790846279.634924,
+    "ast_hash": "fcc7bacf3dde39872e1098ea87b7c790",
+    "semantic_hash": "fcc7bacf3dde39872e1098ea87b7c790"
+  },
+  "mockups/src/poiana/Sections.tsx": {
+    "mtime": 1790794254.6304085,
+    "seen": 1790846279.634924,
+    "ast_hash": "d9d8c6c6e6bc80c4b840b48de27fd72a",
+    "semantic_hash": "d9d8c6c6e6bc80c4b840b48de27fd72a"
+  },
+  "mockups/src/poiana/main.tsx": {
+    "mtime": 1790778696.8527014,
+    "seen": 1790846279.634924,
+    "ast_hash": "eec576d481278fb882b8bd08e8d6ef53",
+    "semantic_hash": "eec576d481278fb882b8bd08e8d6ef53"
+  },
+  "mockups/src/shared/Butterfly.tsx": {
+    "mtime": 1790778625.7274997,
+    "seen": 1790846279.6349251,
+    "ast_hash": "e13fb92491fd949330277239b95b2f1a",
+    "semantic_hash": "e13fb92491fd949330277239b95b2f1a"
+  },
+  "mockups/src/shared/CopyEmail.tsx": {
+    "mtime": 1790778625.730489,
+    "seen": 1790846279.634926,
+    "ast_hash": "a7c16f3a660d74eac652dbb1004daacd",
+    "semantic_hash": "a7c16f3a660d74eac652dbb1004daacd"
+  },
+  "mockups/src/shared/assets.ts": {
+    "mtime": 1790778625.7243373,
+    "seen": 1790846279.634926,
+    "ast_hash": "ccfc80e255d46456443a9a87ee915fa6",
+    "semantic_hash": "ccfc80e255d46456443a9a87ee915fa6"
+  },
+  "mockups/src/shared/content.ts": {
+    "mtime": 1790846825.244576,
+    "seen": 1790847670.3213289,
+    "ast_hash": "5a99bff208cee4a134b43dc6631c141c",
+    "semantic_hash": "5a99bff208cee4a134b43dc6631c141c"
+  },
+  "mockups/src/shared/creatures.tsx": {
+    "mtime": 1790789104.4091823,
+    "seen": 1790846279.634927,
+    "ast_hash": "b94b88ba5bc6099ee9a5bdfebd1ecd41",
+    "semantic_hash": "b94b88ba5bc6099ee9a5bdfebd1ecd41"
+  },
+  "mockups/src/shared/icons.tsx": {
+    "mtime": 1790846911.5771935,
+    "seen": 1790847670.321367,
+    "ast_hash": "0f52d722b6079454cebf94d3fe2ecd36",
+    "semantic_hash": "0f52d722b6079454cebf94d3fe2ecd36"
+  },
+  "mockups/src/shared/lang.tsx": {
+    "mtime": 1790780082.4260025,
+    "seen": 1790846279.6349282,
+    "ast_hash": "306858e5e3b55800694ba586649f07d3",
+    "semantic_hash": "306858e5e3b55800694ba586649f07d3"
+  },
+  "mockups/src/shared/motion.ts": {
+    "mtime": 1790846911.6368682,
+    "seen": 1790847670.3213959,
+    "ast_hash": "875cf3b95ccd1ba2c1b3efced5b0f9db",
+    "semantic_hash": "875cf3b95ccd1ba2c1b3efced5b0f9db"
+  },
+  "mockups/src/universuri-poiana/App.tsx": {
+    "mtime": 1790847241.5722928,
+    "seen": 1790847670.3213959,
+    "ast_hash": "e958d72031e879acb9b597e0f8602aac",
+    "semantic_hash": "e958d72031e879acb9b597e0f8602aac"
+  },
+  "mockups/src/universuri-poiana/main.tsx": {
+    "mtime": 1790789066.9164839,
+    "seen": 1790846279.63493,
+    "ast_hash": "eec576d481278fb882b8bd08e8d6ef53",
+    "semantic_hash": "eec576d481278fb882b8bd08e8d6ef53"
+  },
+  "mockups/src/universuri/Pollen.tsx": {
+    "mtime": 1790789040.2995496,
+    "seen": 1790846279.6349308,
+    "ast_hash": "1194295d9365bf7eb0c76c9352e1d77a",
+    "semantic_hash": "1194295d9365bf7eb0c76c9352e1d77a"
+  },
+  "mockups/src/universuri/WorldMap.tsx": {
+    "mtime": 1790846886.8921504,
+    "seen": 1790847670.321454,
+    "ast_hash": "dc8c6e380b683f9954779b91fb3542fa",
+    "semantic_hash": "dc8c6e380b683f9954779b91fb3542fa"
+  },
+  "mockups/tsconfig.json": {
+    "mtime": 1790778379.4051535,
+    "seen": 1790846279.634932,
+    "ast_hash": "232d3462d8a516971d922cbbbe236852",
+    "semantic_hash": "232d3462d8a516971d922cbbbe236852"
+  },
+  "mockups/vite.config.ts": {
+    "mtime": 1790846815.6501884,
+    "seen": 1790847670.3214731,
+    "ast_hash": "f5735dcd8834ce20d1b7a21ad06281fc",
+    "semantic_hash": "f5735dcd8834ce20d1b7a21ad06281fc"
+  },
+  ".impeccable/surfaces/mockups-src-poiana-app-tsx.md": {
+    "mtime": 1790778459.4864175,
+    "seen": 1790846279.634934,
+    "ast_hash": "d22dde5a95c91a6ed0ff5d7d5a7708b2",
+    "semantic_hash": "d22dde5a95c91a6ed0ff5d7d5a7708b2"
+  },
+  "DESIGN.md": {
+    "mtime": 1790796395.928125,
+    "seen": 1790846279.6349351,
+    "ast_hash": "f8664aed9ef9284175cfe7355bb58d23",
+    "semantic_hash": "f8664aed9ef9284175cfe7355bb58d23"
+  },
+  "PRODUCT.md": {
+    "mtime": 1790833317.6707034,
+    "seen": 1790846279.6349351,
+    "ast_hash": "093e2e369ab2359a4db82b969d67a329",
+    "semantic_hash": "093e2e369ab2359a4db82b969d67a329"
+  },
+  "docs/superpowers/specs/2026-09-30-ramona-site-design.md": {
+    "mtime": 1790847342.9780548,
+    "seen": 1790847670.3214731,
+    "ast_hash": "27e05e8bc8603000a0ae7eff650c397c",
+    "semantic_hash": "27e05e8bc8603000a0ae7eff650c397c"
+  },
+  "mockups/index.html": {
+    "mtime": 1790846815.5946882,
+    "seen": 1790847670.321474,
+    "ast_hash": "11a67ce97b97198894ad109024fe4695",
+    "semantic_hash": "11a67ce97b97198894ad109024fe4695"
+  },
+  "mockups/universuri-poiana.html": {
+    "mtime": 1790789066.9144423,
+    "seen": 1790846279.634937,
+    "ast_hash": "321a7683b6a5a87c1ebf5146bf1ea257",
+    "semantic_hash": "321a7683b6a5a87c1ebf5146bf1ea257"
+  },
+  "mockups/assets-src/cover-fluturele-spread.jpg": {
+    "mtime": 1790778055.598121,
+    "seen": 1790846279.634938,
+    "ast_hash": "dffc89c80e9a7e1a48a971fd847ec529",
+    "semantic_hash": "dffc89c80e9a7e1a48a971fd847ec529"
+  }
+}
