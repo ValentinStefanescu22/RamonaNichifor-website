@@ -112,7 +112,7 @@ Port of `mockups/src/universuri-poiana/`.
   - the cover (tilt + shadow), title as `<h1>`, and the subtitle „O poveste pentru copii… o șoaptă pentru adulți”
   - the blurb in rich text, and meta: age (copii = 1–10 ani), year, pages, format (A4, copertă cartonată lucioasă), ISBN
   - store links only once real ones exist (until then „În curând · Comenzile online se deschid în curând.”), a link to its universe
-  - **Răsfoiește:** 2–4 real pages chosen by Ramona (cover + inner pages, exported from the printer's PDF), opening into a full-screen reader (see DESIGN.md)
+  - **Răsfoiește:** the back cover (coperta spate, as printed) + 2–3 inner pages chosen by Ramona, exported from the printer's PDF, opening into a full-screen reader (see DESIGN.md)
 - **Despre autor** closes the list page, above the footer (her own text, with e-book „în curând” and audiobook „planificată”).
 - JSON-LD `Book`: name, author → Person, isbn, image, inLanguage, url, sameAs store URLs.
 
@@ -169,7 +169,7 @@ A page for gatherings and good works around the stories (mocked up 2026-10-01; c
 
 ### 5.10 Global chrome
 - **Header:** the Parisienne wordmark (hidden on Acasă, whose hero is the name), nav on laptop in the client's order (Acasă, Despre mine, Consiliere, Cărți, Artă, Universuri, Comunitate, Contact), and the RO|EN switch.
-- **Every page opens at its top** (no scroll restoration; also on back/forward and inside wrapping frames); a routing test clicks every internal link and must pass with 0 failures before any release.
+- **Every page opens at its top** (no scroll restoration; also on back/forward and inside wrapping frames); a routing test clicks every internal link and must pass with 0 failures before any release. On the real Next.js site the artifact host's shared scroll key does not exist, but the same test (minus that emulation) still runs in CI.
 - **Phone menu:** a full-screen watercolour sheet with staggered links, opening from the menu button.
 - **Floating pill bar:** appears after the hero on long pages.
 - **Language switch:** keeps you on the same page in the other language (localised slug), and cross-fades with a View Transition.

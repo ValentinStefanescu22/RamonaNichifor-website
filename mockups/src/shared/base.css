@@ -57,6 +57,10 @@ button {
 @keyframes wing-l { from { transform: rotateY(6deg); } to { transform: rotateY(66deg); } }
 @keyframes wing-r { from { transform: rotateY(-6deg); } to { transform: rotateY(-66deg); } }
 
+/* Buburuza settled on a flower: a slow rock on her feet, transform only */
+.ladybird { transform-origin: 50% 92%; }
+@keyframes sway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+
 /* Language switch cross-fade */
 ::view-transition-old(root),
 ::view-transition-new(root) {

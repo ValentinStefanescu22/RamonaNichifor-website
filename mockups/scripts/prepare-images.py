@@ -138,11 +138,103 @@ def tall(img: Image.Image, h: int) -> Image.Image:
 PAGES = SRC / "pages"
 if PAGES.exists():
     (OUT / "pages").mkdir(exist_ok=True)
-    front = (1724, 139, 3120, 2201)  # the front board, inside the printer's guide lines, right of the spine
+    # the boards inside the printer's guide lines (2.4x render): back cover left of the spine, front right of it
+    back, front = (139, 139, 1535, 2201), (1724, 139, 3120, 2201)
     for book, numbers in (("fluturele", (4, 9)), ("buburuza", (8, 12))):
-        cover = Image.open(PAGES / f"{book}-cop-p1.png").convert("RGB").crop(front)
-        save(tall(cover, 1300), f"pages/{book}-coperta.webp", 82)
+        spread = Image.open(PAGES / f"{book}-cop-p1.png").convert("RGB")
+        # „Răsfoiește” opens on the back cover, exactly as printed
+        save(tall(spread.crop(back), 1300), f"pages/{book}-coperta-spate.webp", 82)
         for n in numbers:
             save(tall(Image.open(PAGES / f"{book}-p{n}.png").convert("RGB"), 1300), f"pages/{book}-p{n}.webp", 82)
     buburuza = Image.open(PAGES / "buburuza-cop-p1.png").convert("RGB").crop(front)
     save(tall(buburuza, 1120), "cover-buburuza.webp", 84)
+
+    # --- Buburuza's window on Acasă: the cover painting below the title (ladybird, grass, yellow wash),
+    # stopping above the „Băuțar 2026” mark, its top feathered into the window's sky like the meadow
+    W, H = buburuza.size
+    scene = buburuza.crop((0, round(H * 0.272), W, round(H * 0.9)))
+    scene = scene.resize((720, round(720 * scene.height / scene.width)), Image.LANCZOS)
+    fade = Image.linear_gradient("L").resize(scene.size).point(lambda v: max(0, min(255, int(v * 7))))
+    scene = scene.convert("RGBA")
+    scene.putalpha(fade)
+    save(scene, "buburuza-scene.webp", 84)
+
+    # --- Ladybird cut out of page 9 (she sits on a daisy): an alpha matte from the shell's red, an
+    # ellipse for the round head read on the page, and the near-black strokes of legs and antennae
+    page9 = Image.open(PAGES / "buburuza-p9.png").convert("RGB").crop((280, 1320, 640, 1700))
+    px = np.asarray(page9).astype(int)
+    r, g, b = px[..., 0], px[..., 1], px[..., 2]
+    lum = 0.299 * r + 0.587 * g + 0.114 * b
+    sat = px.max(-1) - px.min(-1)
+    h, w = lum.shape
+    yy, xx = np.mgrid[0:h, 0:w]
+
+    def components(mask: np.ndarray, conn8: bool = False):
+        lab, sizes, cur = np.zeros(mask.shape, int), {}, 0
+        steps = ((1, 0), (-1, 0), (0, 1), (0, -1)) + (((1, 1), (1, -1), (-1, 1), (-1, -1)) if conn8 else ())
+        for y0 in range(h):
+            for x0 in range(w):
+                if mask[y0, x0] and not lab[y0, x0]:
+                    cur += 1
+                    queue, n = deque([(y0, x0)]), 0
+                    lab[y0, x0] = cur
+                    while queue:
+                        a, c = queue.popleft()
+                        n += 1
+                        for dy, dx in steps:
+                            ny, nx = a + dy, c + dx
+                            if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not lab[ny, nx]:
+                                lab[ny, nx] = cur
+                                queue.append((ny, nx))
+                    sizes[cur] = n
+        return lab, sizes
+
+    def hull(points):
+        points = sorted(set(points))
+        cross = lambda o, a, c: (a[0] - o[0]) * (c[1] - o[1]) - (a[1] - o[1]) * (c[0] - o[0])
+        lower, upper = [], []
+        for pt in points:
+            while len(lower) >= 2 and cross(lower[-2], lower[-1], pt) <= 0:
+                lower.pop()
+            lower.append(pt)
+        for pt in reversed(points):
+            while len(upper) >= 2 and cross(upper[-2], upper[-1], pt) <= 0:
+                upper.pop()
+            upper.append(pt)
+        return lower[:-1] + upper[:-1]
+
+    lab, sizes = components(((r - g) > 70) & (g < 130))
+    ys, xs = np.nonzero(lab == max(sizes, key=sizes.get))
+    hull_img = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(hull_img).polygon(hull(list(zip(xs.tolist(), ys.tolist()))), fill=255)
+    shell = np.asarray(hull_img) > 0
+    # the shell's pale highlight is not red enough for the hull: an ellipse through its outline, read on the page
+    outline = np.array([(31, 215), (65, 135), (125, 95), (180, 97), (205, 180), (200, 240), (190, 280), (100, 312), (45, 280)], float)
+    cx, cy = outline.mean(0)
+    X, Y = outline[:, 0] - cx, outline[:, 1] - cy
+    k = np.linalg.lstsq(np.stack([X * X, X * Y, Y * Y, X, Y], 1), np.ones(len(X)), rcond=None)[0]
+    U, V = xx - cx, yy - cy
+    shell |= (k[0] * U * U + k[1] * U * V + k[2] * V * V + k[3] * U + k[4] * V) <= 1
+    t = np.radians(-18)
+    hu, hv = (xx - 247) * np.cos(t) + (yy - 163) * np.sin(t), -(xx - 247) * np.sin(t) + (yy - 163) * np.cos(t)
+    head = (hu / 83) ** 2 + (hv / 79) ** 2 <= 1
+    body = shell | head
+    near = np.asarray(Image.fromarray(body.astype(np.uint8) * 255).filter(ImageFilter.MaxFilter(7))) > 0
+    # legs are near-black; the thin antennae are greyer
+    strokes = ((lum < 72) & (sat < 60)) | ((lum < 120) & (sat < 45) & (yy < 105) & (xx > 180))
+    lab, sizes = components(strokes, conn8=True)
+    keep = np.zeros_like(strokes)
+    for idx, n in sizes.items():
+        comp = lab == idx
+        if n > 12 and (comp & near).any():
+            keep |= comp
+    matte = (
+        Image.fromarray(((body | keep) * 255).astype(np.uint8), "L")
+        .filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
+        .filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3))
+        .filter(ImageFilter.GaussianBlur(0.9))
+    )
+    ladybird = page9.convert("RGBA")
+    ladybird.putalpha(matte)
+    ladybird = ladybird.crop(ladybird.getbbox())
+    save(ladybird.resize((ladybird.width * 3 // 2, ladybird.height * 3 // 2), Image.LANCZOS), "ladybird.webp", 90)

@@ -4,11 +4,22 @@ import { MotionConfig } from "motion/react";
 import { LangProvider } from "../shared/lang";
 
 /**
- * Every page opens at its top. The browser's own restoration, a hash with no target, or a viewer
- * that wraps the page in a scrolling frame (the published artifact) could otherwise keep the old
- * position and drop the visitor at the footer. scrollIntoView also scrolls those wrapping frames.
- * In-page anchors (Consiliere's „Programează” → #programare) are clicks, not loads, so they still glide.
+ * Every page opens at its top. The published artifact's host runtime saves the scroll position under
+ * ONE sessionStorage key shared by all pages ("__frame_scroll") and restores it at DOMContentLoaded and
+ * again when the viewer promotes the frame, so without this every page would open where the previous
+ * one was left: usually the footer. Page code runs before DOMContentLoaded, so forgetting that key here
+ * leaves the host nothing to restore. Browser scroll restoration is off too, and in-page anchors
+ * (Consiliere's „Programează” → #programare) are clicks, not loads, so they still glide.
  */
+const HOST_SCROLL_KEY = "__frame_scroll";
+const forgetHostScroll = () => {
+  try {
+    sessionStorage.removeItem(HOST_SCROLL_KEY);
+  } catch {
+    // storage blocked: the host cannot restore anything either
+  }
+};
+
 /** Jump (never glide) to the top of the page and of any frame wrapping it */
 export function toTop() {
   window.scrollTo({ top: 0, behavior: "instant" });
@@ -16,6 +27,9 @@ export function toTop() {
 }
 
 function openAtTop() {
+  forgetHostScroll();
+  // the host flushes the position on pagehide; ours runs after it, so the next page starts clean too
+  addEventListener("pagehide", forgetHostScroll);
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   // once the visitor scrolls on their own, a late load event must never yank them back up
   let moved = false;

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { Butterfly } from "../shared/Butterfly";
+import { Ladybird } from "../shared/Ladybird";
 import type { Universe, UniverseId } from "../shared/content";
 import { ui, universes } from "../shared/content";
 import { Creature } from "../shared/creatures";
@@ -101,7 +102,13 @@ export function OrbArt({
         aria-hidden="true"
       />
       <span className="relative grid w-[64%] place-items-center">
-        {u.id === "fluture" ? <Butterfly width="100%" tempo={1.1} /> : <Creature id={u.id} size="78%" style={{ color: u.tint[2] }} />}
+        {u.id === "fluture" ? (
+          <Butterfly width="100%" tempo={1.1} />
+        ) : u.id === "buburuza" ? (
+          <Ladybird width="86%" sway={5.4} />
+        ) : (
+          <Creature id={u.id} size="78%" style={{ color: u.tint[2] }} />
+        )}
       </span>
     </div>
   );

@@ -276,7 +276,7 @@ export const shelf: ShelfBook[] = [
       pages: 40,
       isbn: "978-973-0-44382-0",
       leaf: [
-        { src: "pages/fluturele-coperta.webp", label: t("Coperta", "Cover") },
+        { src: "pages/fluturele-coperta-spate.webp", label: t("Coperta spate", "Back cover") },
         { src: "pages/fluturele-p4.webp", label: t("Pagina 4", "Page 4") },
         { src: "pages/fluturele-p9.webp", label: t("Pagina 9", "Page 9") },
       ],
@@ -312,7 +312,7 @@ export const shelf: ShelfBook[] = [
       pages: 28,
       isbn: "978-973-0-44383-7",
       leaf: [
-        { src: "pages/buburuza-coperta.webp", label: t("Coperta", "Cover") },
+        { src: "pages/buburuza-coperta-spate.webp", label: t("Coperta spate", "Back cover") },
         { src: "pages/buburuza-p8.webp", label: t("Pagina 8", "Page 8") },
         { src: "pages/buburuza-p12.webp", label: t("Pagina 12", "Page 12") },
       ],

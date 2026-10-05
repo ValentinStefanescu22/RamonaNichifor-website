@@ -88,7 +88,9 @@ export function Universes({ perchRef, landed }: { perchRef: RefObject<HTMLDivEle
                   style={{
                     background: meadow
                       ? "linear-gradient(180deg, var(--color-sky) 0%, var(--color-mist) 42%, var(--color-cream) 70%)"
-                      : u.tint[0],
+                      : u.id === "buburuza"
+                        ? `linear-gradient(180deg, var(--color-sky) 0%, ${u.tint[0]} 38%, #fbf1e2 70%)`
+                        : u.tint[0],
                   }}
                 >
                   {meadow ? (
@@ -105,6 +107,13 @@ export function Universes({ perchRef, landed }: { perchRef: RefObject<HTMLDivEle
                         </div>
                       </div>
                     </>
+                  ) : u.id === "buburuza" ? (
+                    // her own cover painting, the way the Fluture window is the meadow from his
+                    <img
+                      src={img("buburuza-scene.webp")}
+                      alt=""
+                      className="absolute inset-x-0 bottom-0 h-[82%] w-full object-cover object-[46%_100%] transition-transform duration-[1.4s] ease-(--ease-bloom) group-hover:scale-[1.04]"
+                    />
                   ) : (
                     <div className="relative grid h-full place-items-center">
                       <span

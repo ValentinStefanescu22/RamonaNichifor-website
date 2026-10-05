@@ -3,11 +3,37 @@
 //   cp scripts/frame-harness.html dist/__frame.html      (optional: also test inside a scrolling viewer frame)
 //   playwright-cli open http://localhost:4173/            (desktop; or add --device="iPhone 15")
 //   playwright-cli --raw run-code --filename=scripts/check-routing.js
+// Every check runs with the artifact host's scroll-restore logic emulated (see the init script below).
 // For each page it clicks every internal link once (from where the link sits, usually far down the
 // page), then checks scrollY on the new page right after load and 1.2 s later. It also opens the phone
 // menu, walks back/forward, and, if dist/__frame.html exists, repeats the footer links inside a viewer
 // frame that scrolls itself (how the published artifact wraps the pages).
 async (page) => {
+  // The published artifact injects a runtime into every page that saves scrollY under ONE sessionStorage
+  // key shared by all pages ("__frame_scroll") on scroll and pagehide, and restores it at DOMContentLoaded
+  // (again on load if the page was still short) and once more when the viewer promotes the frame, unless
+  // the URL has a #hash. This is a faithful copy of it (from the published page's frame-runtime, Rn()),
+  // installed before every page so the checks run under the same conditions as the live artifact.
+  await page.addInitScript(() => {
+    if (window.__hostScroll) return;
+    window.__hostScroll = true;
+    const KEY = "__frame_scroll";
+    let timer = 0;
+    let pending = null;
+    const save = (y) => { try { sessionStorage.setItem(KEY, JSON.stringify({ y })); } catch {} };
+    const flush = () => { clearTimeout(timer); if (pending === null) return; const y = pending; pending = null; save(y); };
+    addEventListener("scroll", () => { pending = scrollY; clearTimeout(timer); timer = setTimeout(flush, 150); }, { passive: true });
+    addEventListener("pagehide", flush);
+    const read = () => { try { const v = JSON.parse(sessionStorage.getItem(KEY)); return typeof v?.y === "number" ? v.y : null; } catch { return null; } };
+    const apply = (y) => {
+      scrollTo({ top: y, left: 0, behavior: "instant" });
+      const reached = scrollY;
+      if (reached !== y) addEventListener("load", () => { if (scrollY === reached) { const again = read(); if (again !== null) scrollTo({ top: again, left: 0, behavior: "instant" }); } }, { once: true });
+    };
+    document.addEventListener("DOMContentLoaded", () => { if (location.hash) return; const y = read(); if (y !== null) apply(y); }, { once: true });
+    // the viewer later „promotes” the frame by message and the runtime restores the saved position again
+    addEventListener("load", () => setTimeout(() => { if (location.hash) return; const y = read(); if (y !== null) scrollTo({ top: y, left: 0, behavior: "instant" }); }, 400), { once: true });
+  });
   const base = new URL(page.url()).origin + "/";
   const pages = ["index.html", "despre.html", "consiliere.html", "carti.html", "carte.html", "carte.html#buburuza", "arta.html", "universuri.html", "comunitate.html", "contact.html", "produs.html#fluture-semn"];
   const fails = [];
