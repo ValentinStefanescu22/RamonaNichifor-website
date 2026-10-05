@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><title>frame harness</title>
+<!-- Test only (copied into dist/ as __frame.html by the routing check): a viewer that sizes the page
+     frame to its content and scrolls itself, the way the published artifact can wrap the pages. -->
+<style>body{margin:0;background:#222}iframe{display:block;width:100%;border:0;height:900px}</style>
+<div style="height:40px;color:#fff;font:14px sans-serif;padding:10px">viewer chrome</div>
+<iframe id="f" src="carti.html"></iframe>
+<script>
+  const f = document.getElementById("f");
+  const fit = () => { try { f.style.height = f.contentDocument.documentElement.scrollHeight + "px"; } catch {} };
+  f.addEventListener("load", fit);
+  setInterval(fit, 300);
+</script>

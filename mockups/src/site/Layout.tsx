@@ -1,5 +1,10 @@
 import { useCallback, useState, type CSSProperties, type ReactNode } from "react";
+import { motion, useReducedMotion, type Transition } from "motion/react";
 import { img } from "../shared/assets";
+import { ui } from "../shared/content";
+import { useLang } from "../shared/lang";
+import { easeOut } from "../shared/motion";
+import { StatusChip } from "./StatusChip";
 import { FloatingBar, MenuSheet, PaintDefs, TopBar } from "./Chrome";
 import { Footer, type Ground } from "./Footer";
 import type { PageId } from "./pages";
@@ -174,3 +179,35 @@ export function TextLink({ href, children, className = "", external = false }: {
     </a>
   );
 }
+
+/** Where a buy button will go: no book can be ordered online yet, so say so plainly and offer a note instead */
+export function BuySoon({ link = true, className = "" }: { link?: boolean; className?: string }) {
+  const { t } = useLang();
+  return (
+    <div className={`flex flex-wrap items-center gap-x-6 gap-y-2 ${className}`}>
+      <p className="flex flex-wrap items-center gap-2.5 text-[1rem] text-ink-soft">
+        <StatusChip>{t(ui.comingSoon)}</StatusChip>
+        {t(ui.buySoon)}
+      </p>
+      {link && <TextLink href="contact.html#carte">{t(ui.writeToMe)}</TextLink>}
+    </div>
+  );
+}
+
+/** A paragraph that settles into place as it reaches the reader: fade and 14px, once, staggered within its movement */
+export function Reveal({ i, children, className = "" }: { i: number; children: ReactNode; className?: string }) {
+  const reduce = useReducedMotion();
+  const transition: Transition = { duration: 0.8, ease: easeOut, delay: Math.min(i, 4) * 0.06 };
+  return (
+    <motion.div
+      className={className}
+      initial={reduce ? false : { opacity: 0, transform: "translateY(14px)" }}
+      whileInView={{ opacity: 1, transform: "translateY(0px)" }}
+      viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+      transition={transition}
+    >
+      {children}
+    </motion.div>
+  );
+}
+

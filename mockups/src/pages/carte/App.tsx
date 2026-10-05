@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { img } from "../../shared/assets";
-import { book, site, ui, universes } from "../../shared/content";
+import { site, ui, universes, type Text } from "../../shared/content";
 import { bookPage, booksPage, shelf, type ShelfBook } from "../../shared/content-pages";
-import { ArrowRight, ArrowUpRight, Instagram } from "../../shared/icons";
+import { ArrowRight, Instagram } from "../../shared/icons";
 import { useLang } from "../../shared/lang";
-import { delay, PillLink, SiteShell, TextLink } from "../../site/Layout";
-import { BookCover, Wash } from "../../site/Painted";
+import { toTop } from "../../site/mount";
+import { BuySoon, delay, PillLink, SiteShell, TextLink } from "../../site/Layout";
+import { BookCover } from "../../site/Painted";
+import { Leaf } from "./Leaf";
 import { OrbArt } from "../../universuri/WorldMap";
 import { StatusChip } from "../../site/StatusChip";
 
@@ -52,7 +54,7 @@ export default function App() {
   useEffect(() => {
     const onHash = () => {
       setB(pick());
-      window.scrollTo({ top: 0 });
+      toTop(); // another book or product is another page: open it at its top
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
@@ -61,16 +63,25 @@ export default function App() {
     document.title = `${t(b.title)} · Ramona Nichifor`;
   }, [b, t]);
 
-  const live = b.status === "available";
+  const live = b.status === "published";
+  const d = b.details;
   const u = b.universe ? universes.find((x) => x.id === b.universe) : undefined;
   const related = shelf.filter((x) => x.id !== b.id && (b.universe ? Boolean(x.universe) : x.age === b.age));
-  const blurb = live ? book.blurb : [u ? u.hook : b.line, bookPage.placeholderBlurb];
-  const meta = live
-    ? bookPage.meta
+  const blurb = d ? d.blurb : [u ? u.hook : b.line, bookPage.placeholderBlurb];
+  const L = bookPage.labels;
+  const soon = bookPage.toBeAnnounced;
+  const meta: { label: Text; value: Text | string }[] = d
+    ? [
+        { label: L.age, value: bookPage.ageRange[b.age] },
+        { label: L.year, value: String(b.year) },
+        { label: L.pages, value: String(d.pages) },
+        { label: L.format, value: bookPage.format },
+        { label: L.isbn, value: d.isbn },
+      ]
     : [
-        { label: bookPage.meta[0].label, value: bookPage.ageRange[b.age] },
-        { label: bookPage.meta[1].label, value: bookPage.toBeAnnounced },
-        { label: bookPage.meta[3].label, value: bookPage.toBeAnnounced },
+        { label: L.age, value: bookPage.ageRange[b.age] },
+        { label: L.year, value: soon },
+        { label: L.format, value: soon },
       ];
   return (
     <SiteShell current="carti" ground="cream" floatAfter={0.6}>
@@ -90,10 +101,10 @@ export default function App() {
                   {t(b.title)}
                 </h1>
                 <p className="fade-up display mt-3 text-[1.35rem] leading-snug italic text-ink-soft" style={delay(0.3)}>
-                  {t(live ? book.subtitle : b.line)}
+                  {t(d ? d.subtitle : b.line)}
                 </p>
                 <p className="fade-up mt-4 flex flex-wrap items-center gap-2 text-[0.95rem] text-ink-soft" style={delay(0.35)}>
-                  <StatusChip live={live}>{t(booksPage.status[b.status])}</StatusChip>
+                  <StatusChip tint={live ? b.tint[2] : undefined}>{t(booksPage.status[b.status])}</StatusChip>
                   {b.universe && <>„{t(site.series)}”</>}
                 </p>
                 <div className="fade-up mt-6 max-w-[58ch] space-y-4 text-[1.06rem] leading-[1.75] text-ink-soft" style={delay(0.4)}>
@@ -102,24 +113,9 @@ export default function App() {
                   ))}
                 </div>
                 {live ? (
-                <div className="fade-up mt-8 flex flex-wrap gap-3" style={delay(0.5)}>
-                  {book.stores.map((s) => (
-                    <a
-                      key={s.name}
-                      href={s.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="group inline-flex min-h-12 items-center gap-3 rounded-full bg-ink py-1.5 pr-1.5 pl-5 font-medium text-cream shadow-soft transition-transform duration-150 active:scale-[0.97]"
-                    >
-                      <span>
-                        {t(ui.buyAt)} <strong className="font-bold">{s.name}</strong>
-                      </span>
-                      <span className="grid size-9 place-items-center rounded-full bg-cream/15 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                        <ArrowUpRight size={17} />
-                      </span>
-                    </a>
-                  ))}
-                </div>
+                  <div className="fade-up mt-8" style={delay(0.5)}>
+                    <BuySoon />
+                  </div>
                 ) : (
                   <div className="fade-up mt-8 flex flex-wrap items-center gap-x-6 gap-y-3" style={delay(0.5)}>
                     <PillLink href={site.contact.instagram.href} external icon={<Instagram size={18} />}>
@@ -128,7 +124,6 @@ export default function App() {
                     <TextLink href="contact.html#carte">{t(ui.writeToMe)}</TextLink>
                   </div>
                 )}
-                {live && <p className="mt-4 text-[0.92rem] text-ink-soft">{t(ui.formats)}</p>}
               </div>
             </div>
           </div>
@@ -139,33 +134,27 @@ export default function App() {
             {meta.map((m) => (
               <div key={m.label.ro}>
                 <dt className="text-[0.9rem] text-ink-soft">{t(m.label)}</dt>
-                <dd className="mt-1 font-medium text-ink tabular-nums">{t(m.value)}</dd>
+                <dd className="mt-1 font-medium text-ink tabular-nums">{typeof m.value === "string" ? m.value : t(m.value)}</dd>
               </div>
             ))}
           </dl>
         </section>
 
-        {/* PLACEHOLDER spreads: painted stand-ins until the real pages are scanned */}
-        <section className="bg-cream pb-16">
+        <section className="bg-cream pb-16 lg:pb-24">
           <div className="mx-auto max-w-[75rem] px-4 sm:px-6">
             <h2 className="display text-[clamp(2rem,7vw,3rem)] font-[380] text-ink">{t(bookPage.leaf)}</h2>
-            <p className="mt-2 text-ink-soft">{t(bookPage.leafNote)}</p>
+            <p className="mt-2 flex flex-wrap items-center gap-3 text-ink-soft">
+              {d ? (
+                t(bookPage.leafHint)
+              ) : (
+                <>
+                  <StatusChip>{t(ui.comingSoon)}</StatusChip>
+                  {t(bookPage.leafNote)}
+                </>
+              )}
+            </p>
           </div>
-          <ul className="snap-row mt-8 flex gap-5 overflow-x-auto px-[max(1rem,calc((100vw-72rem)/2))] sm:px-[max(1.5rem,calc((100vw-72rem)/2))] pb-4">
-            {(
-              [
-                ["#fbe3c9", "#f3b9c9", "#c9b8e6"],
-                ["#dce9f6", "#97bce0", "#f6dde6"],
-                ["#dfe7d4", "#a9be95", "#f3c9dc"],
-              ] as [string, string, string][]
-            ).map((wash, i) => (
-              <li key={i} className="w-[82vw] max-w-[520px] shrink-0">
-                <Wash colors={wash} seed={`spread-${i}`} className="aspect-[1.45] rounded-[6px] shadow-soft">
-                  <span className="absolute inset-y-0 left-1/2 w-[6%] -translate-x-1/2 bg-gradient-to-r from-transparent via-[rgb(52_34_74/0.1)] to-transparent" aria-hidden="true" />
-                </Wash>
-              </li>
-            ))}
-          </ul>
+          {d && <Leaf pages={d.leaf} title={t(b.title)} />}
         </section>
 
         <section className="bg-cream px-4 pb-24 sm:px-6">
@@ -176,7 +165,7 @@ export default function App() {
                 <span className="min-w-0">
                   <span className="block text-[0.95rem] text-ink-soft">{t(bookPage.universe)}</span>
                   <span className="display mt-1 block text-[1.6rem] leading-tight text-ink">{t(u.name)}</span>
-                  <span className={`mt-2 inline-flex min-h-11 items-center gap-1.5 font-semibold ${live ? "text-magenta" : "text-ink-soft"}`}>
+                  <span className="mt-2 inline-flex min-h-11 items-center gap-1.5 font-semibold text-ink underline decoration-lilac decoration-2 underline-offset-[6px]">
                     {t(ui.discover)}
                     <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
                   </span>

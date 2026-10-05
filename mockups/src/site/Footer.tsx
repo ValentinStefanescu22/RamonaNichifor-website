@@ -1,10 +1,10 @@
 import type { CSSProperties } from "react";
 import { img } from "../shared/assets";
-import { mockupNote, nav, site } from "../shared/content";
+import { mockupNote, site } from "../shared/content";
 import { CopyEmail } from "../shared/CopyEmail";
 import { useLang } from "../shared/lang";
 import { SocialLinks } from "./Chrome";
-import { homeHref, pages, type PageId } from "./pages";
+import { menu, type PageId } from "./pages";
 
 /**
  * One footer for the whole site. Every page lands on the same meadow; only the light above it
@@ -28,7 +28,7 @@ const grounds: Record<Ground, { bg: string; chip: string }> = {
 export function Footer({ current, ground = "cream" }: { current: PageId; ground?: Ground }) {
   const { t } = useLang();
   const g = grounds[ground];
-  const links = [{ id: "home" as const, label: nav.home, href: homeHref }, ...pages];
+  const links = menu;
   return (
     <footer className="relative isolate overflow-hidden pt-20" style={{ background: g.bg } as CSSProperties}>
       <div className="mx-auto max-w-[75rem] px-4 sm:px-6">
@@ -41,7 +41,7 @@ export function Footer({ current, ground = "cream" }: { current: PageId; ground?
             <SocialLinks />
             <CopyEmail className="text-[0.98rem] text-ink-soft [&_button]:bg-(--chip) [&_button]:text-ink" />
           </div>
-          <nav aria-label="Subsol" className="grid grid-cols-2 gap-x-6 text-[1rem] text-ink-soft">
+          <nav aria-label="Subsol" className="grid grid-flow-col grid-cols-2 grid-rows-4 gap-x-6 text-[1rem] text-ink-soft">
             {links.map((p) => (
               <a
                 key={p.id}

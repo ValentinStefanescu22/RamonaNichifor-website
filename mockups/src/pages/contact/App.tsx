@@ -257,7 +257,6 @@ export default function App() {
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-[0.95rem] italic text-ink-soft">{t(contactPage.reply)}</p>
         </PageOpener>
       </main>
     </SiteShell>

@@ -5,7 +5,7 @@
 // is stand-in content so the pages can be designed at real density. Replace it with Ramona's
 // real texts, books, artworks, prices and dates; the components need no changes.
 
-import { universes, type Text, type UniverseId } from "./content";
+import { book, universes, type Text, type UniverseId } from "./content";
 
 const t = (ro: string, en: string): Text => ({ ro, en });
 
@@ -13,26 +13,77 @@ const t = (ro: string, en: string): Text => ({ ro, en });
 
 export const about = {
   title: [t("Despre", "About"), t("mine", "me")] as const,
-  // PLACEHOLDER: long bio
-  bio: [
-    t(
-      "Am crescut printre cărți și creioane colorate, convinsă că orice emoție are o culoare și orice culoare are o poveste. Am păstrat convingerea asta și ca adult, chiar și atunci când viața m-a dus pe drumuri care păreau departe de pensule.",
-      "I grew up among books and coloured pencils, convinced that every feeling has a colour and every colour has a story. I kept that belief as a grown-up, even when life took me down roads that seemed far from any brush.",
-    ),
-    t(
-      "Am lucrat ani buni cu oameni, în echipe și proiecte, și am învățat că cele mai importante conversații sunt cele pe care le avem cu noi înșine. Așa am ajuns la dezvoltarea personală și, de acolo, la consiliere.",
-      "For years I worked with people, in teams and projects, and learned that the most important conversations are the ones we have with ourselves. That is how I came to personal development and, from there, to counselling.",
-    ),
-    t(
-      "Poveștile au venit apoi aproape de la sine. Le scriu pentru copii, dar le gândesc și pentru adulții care le citesc cu voce tare. Le pictez în acuarelă, pentru că acuarela, ca și emoțiile, nu se lasă controlată până la capăt.",
-      "The stories came almost on their own after that. I write them for children, but I also write them for the grown-ups reading them aloud. I paint them in watercolour, because watercolour, like feelings, never lets itself be fully controlled.",
-    ),
-    t(
-      "Astăzi, scrisul, pictura și consilierea sunt pentru mine trei feluri de a spune același lucru: că fiecare dintre noi are un ritm al lui și merită să fie ascultat.",
-      "Today, writing, painting and counselling are three ways of saying the same thing: that each of us has a rhythm of our own and deserves to be heard.",
-    ),
-  ],
-  bioPlaceholder: true,
+  /** Her own line under the title */
+  role: t(
+    "Consilier pentru dezvoltare personală, jurist, autor și ilustrator.",
+    "Personal development counsellor, lawyer, author and illustrator.",
+  ),
+  // Ramona's own text (final, 2026-10-03). Only diacritics were restored; the words are hers.
+  // English is a working translation awaiting her approval.
+  // The story is set in four movements; `quote` and `questions` are its two display moments.
+  story: [
+    [
+      { text: t(
+        "Din copilărie, picturile au fost pentru mine, uși întredeschise, prin care simțeam secole întregi de iubiri, de suferințe, de nevoi de apartenență.",
+        "Since childhood, paintings have been, for me, half-open doors through which I felt whole centuries of love, of suffering, of the need to belong.",
+      ) },
+      { text: t(
+        "Stăruiam în fața lor, analizând și căutând, cu admirație și curiozitate, culorile, umbrele, tehnicile prin care erau transmise emoții atât de puternice și de profunde.",
+        "I would linger in front of them, studying and searching, with admiration and curiosity, for the colours, the shadows, the techniques that carried such strong and deep feelings.",
+      ) },
+      { text: t(
+        "Mi-ar fi plăcut să rămân în lumea aceea, să învăț să ofer și eu, să… exprim, prin artă, ceea ce simțeam. Am fost însă îndrumată către un liceu cu profil real, cu multă matematică și fizică. Poate din grijă, poate din teama că pasiunea mea nu mi-ar fi putut oferi o viață sigură. Nu privesc astăzi acea alegere ca fiind corectă sau greșită. Știu doar că nu se alinia cu ceea ce simțeam eu atunci.",
+        "I would have liked to stay in that world, to learn to give something too, to… express through art what I felt. Instead, I was steered towards a science high school, with a great deal of maths and physics. Perhaps out of care, perhaps out of fear that my passion could not give me a secure life. Today I don't see that choice as right or wrong. I only know it didn't match what I felt back then.",
+      ) },
+      { text: t("Am urmat drumul propus. Eram un copil.", "I followed the path laid out for me. I was a child."), kind: "quote" as const },
+    ],
+    [
+      { text: t(
+        "Dorința de a studia psihologia, câțiva ani mai târziu, a venit firesc, în adolescență, când devenisem confidenta prietenelor mele. Veneau la mine cu situații apăsătoare, cu frici, blocaje, furie sau sentimentul că fuseseră nedreptățite. Găseau un spațiu în care puteau vorbi fără să fie judecate. Le ascultam cu discreție, răbdare și empatie.",
+        "The wish to study psychology came naturally a few years later, in my teens, when I had become my friends' confidante. They came to me with heavy situations, with fears, blocks, anger or the feeling they had been wronged. They found a space where they could speak without being judged. I listened with discretion, patience and empathy.",
+      ) },
+      { text: t(
+        "Și acest drum s-a oprit în fața unei temeri ce nu-mi aparținea. Auzisem deja că „pictorii mor de foame”. Acum și psihologia era percepută la fel de nesigură deoarece „rufele se spălau în familie”.",
+        "This path, too, stopped in front of a fear that wasn't mine. I had already heard that „painters starve”. Now psychology was seen as just as unsafe, because „dirty laundry was washed at home”.",
+      ) },
+      { text: t(
+        "Așa s-a declanșat în mine justițiarul, salvatorul. Am luat, în felul meu, sabia lui Don Quijote pornind către Facultatea de Drept, înainte să învăț să o ridic și în apărarea mea și ale propriilor alegeri.",
+        "That is how the champion of justice, the rescuer, woke up in me. In my own way, I took up Don Quixote's sword and set off for Law School, before I learned to raise it in my own defence and that of my own choices.",
+      ) },
+    ],
+    [
+      { text: t(
+        "Ca angajat, antreprenor și jurist, am experimentat, am construit, am greșit, am pierdut, am corectat și am început din nou. Unele capitole s-au închis prea brusc, prea dur, înainte să fi înțeles pe deplin ce se întâmplase.",
+        "As an employee, an entrepreneur and a lawyer, I experimented, built, got things wrong, lost, corrected and started again. Some chapters closed too suddenly, too harshly, before I had fully understood what had happened.",
+      ) },
+      { text: t(
+        "În mijlocul acestor tumultoase schimbări, am devenit mamă. Maternitatea m-a făcut să privesc altfel natura creatoare.",
+        "In the middle of all that upheaval, I became a mother. Motherhood made me see creative nature differently.",
+      ) },
+      { text: t(
+        "Întrebările care mă însoțeau din copilărie au devenit atunci mai stăruitoare.",
+        "The questions that had followed me since childhood grew more insistent.",
+      ) },
+      { text: t(
+        "Cine sunt? Cât din ceea ce cred îmi aparține? Ce le ofer fiicelor mele dincolo de lucrurile materiale și ce las, prin alegerile mele, în lumea în care vor crește?",
+        "Who am I? How much of what I believe is truly mine? What do I give my daughters beyond material things, and what do I leave, through my choices, in the world they will grow up in?",
+      ), kind: "questions" as const },
+      { text: t(
+        "Am înțeles treptat că unele îndrumări primite încercaseră să mă protejeze de un trecut trăit de altcineva, nu să mă pregătească pentru viitorul meu.",
+        "Slowly I understood that some of the guidance I had been given had tried to protect me from a past lived by someone else, not to prepare me for my own future.",
+      ) },
+      { text: t(
+        "Înțelegerea aceasta m-a condus către lucrul interior și către formarea prin care am devenit consilier pentru dezvoltare personală.",
+        "That understanding led me to inner work, and to the training through which I became a personal development counsellor.",
+      ) },
+    ],
+    [
+      { text: t(
+        "Astăzi pictez, scriu și ilustrez. Îmi onorez natura creatoare, trecutul și călătoria.",
+        "Today I paint, write and illustrate. I honour my creative nature, my past and the journey.",
+      ), kind: "close" as const },
+    ],
+  ] as { text: Text; kind?: "quote" | "questions" | "close" }[][],
   signature: "Ramona",
   crafts: {
     title: t("Trei meșteșuguri, o singură mână", "Three crafts, one hand"),
@@ -47,7 +98,7 @@ export const about = {
       {
         id: "arta",
         name: t("Pictură", "Painting"),
-        line: t("Acuarele, printuri și ceramică lucrată manual.", "Watercolours, prints and handmade ceramics."),
+        line: t("Acuarele, originale și printuri.", "Watercolours, originals and prints."),
         href: "arta.html",
         tint: "#c8daf0",
       },
@@ -85,14 +136,14 @@ export const counsellingPage = {
       id: "online",
       title: t("Online", "Online"),
       line: t("Prin apel video, de oriunde ai fi.", "By video call, wherever you are."),
-      detail: t("50 de minute · 250 lei", "50 minutes · 250 lei"),
+      detail: t("Durata și prețul, în curând", "Length and price coming soon"),
       placeholder: true,
     },
     {
       id: "fata",
       title: t("Față în față", "In person"),
       line: t("Într-un cadru cald și discret, în București.", "In a warm, private setting in Bucharest."),
-      detail: t("60 de minute · 300 lei", "60 minutes · 300 lei"),
+      detail: t("Durata și prețul, în curând", "Length and price coming soon"),
       placeholder: true,
     },
   ],
@@ -113,11 +164,11 @@ export const counsellingPage = {
     },
     {
       q: t("Cât durează o ședință?", "How long is a session?"),
-      a: t("O ședință online durează 50 de minute, iar una față în față 60 de minute.", "An online session lasts 50 minutes and an in-person one 60 minutes."),
+      a: t("Durata ședințelor este în lucru și o anunț aici în curând.", "Session lengths are being finalised and will be announced here soon."),
     },
     {
       q: t("Cât costă?", "How much does it cost?"),
-      a: t("Prima discuție, de 15 minute, este gratuită. Ședințele costă 250 de lei online și 300 de lei față în față.", "The first 15-minute conversation is free. Sessions cost 250 lei online and 300 lei in person."),
+      a: t("Prețurile sunt în lucru și le anunț aici în curând.", "Prices are being finalised and will be announced here soon."),
     },
     {
       q: t("Cum se desfășoară ședințele online?", "How do online sessions work?"),
@@ -139,7 +190,7 @@ export const counsellingPage = {
 /* ---------------------------------------------------------------- Cărți */
 
 export type AgeId = "copii" | "adolescenti" | "adulti";
-export type BookStatus = "available" | "soon" | "writing";
+export type BookStatus = "published" | "soon" | "writing";
 
 export type ShelfBook = {
   id: string;
@@ -154,22 +205,58 @@ export type ShelfBook = {
   tint: [string, string, string];
   universe?: UniverseId;
   href?: string;
+  /** A published book's page: its own blurb, facts and a few real pages to leaf through */
+  details?: {
+    subtitle: Text;
+    blurb: Text[];
+    pages: number;
+    isbn: string;
+    leaf: { src: string; label: Text }[];
+  };
   placeholder?: boolean;
 };
 
 export const booksPage = {
   seriesNote: t("Seria „Magia suntem noi”", "The „Magic Is Us” series"),
   status: {
-    available: t("Disponibilă", "Available"),
+    published: t("Apărută", "Out now"),
     soon: t("În curând", "Coming soon"),
     writing: t("În lucru", "In the works"),
   },
-  formatsTitle: t("Formate", "Formats"),
-  formats: t(
-    "Toate cărțile apar tipărite, iar în curând și ca e-book și audiobook, în română și engleză.",
-    "Every book comes out in print, and soon as an e-book and audiobook, in Romanian and English.",
-  ),
   where: t("Unde găsești cărțile", "Where to find the books"),
+  // From Ramona's „Despre autor” (2026-10-03); English is a working translation
+  author: {
+    title: t("Despre autor", "About the author"),
+    paragraphs: [
+      t(
+        "Ramona Nichifor este autor și artist vizual, iar poveștile ei s-au născut la ora de culcare a fiicei sale.",
+        "Ramona Nichifor is an author and visual artist, and her stories were born at her daughter's bedtime.",
+      ),
+      t(
+        "Au fost șoptite cu blândețe, seară de seară, pentru a crea o stare de liniște, bucurie și siguranță. Aceste povești au apărut din prezență și iubire, devenind tovarăși tăcuți ai copilăriei, purtători de căldură, speranță și sens.",
+        "They were whispered gently, night after night, to create a feeling of calm, joy and safety. These stories grew out of presence and love, and became quiet companions of childhood, carriers of warmth, hope and meaning.",
+      ),
+      t(
+        "Cărțile ei vorbesc cu delicatețe despre emoțiile pe care copiii le simt, dar nu știu întotdeauna să le numească. Ele oferă alinare, acceptare și un sentiment de apartenență, fără lecții sau judecată.",
+        "Her books speak gently about the feelings children have but cannot always name. They offer comfort, acceptance and a sense of belonging, without lessons or judgement.",
+      ),
+      t(
+        "Ramona Nichifor creează povești și ilustrații pentru copiii din întreaga lume, dar și pentru adulții care își redescoperă copilul interior.",
+        "Ramona Nichifor creates stories and illustrations for children all over the world, and for the grown-ups rediscovering their inner child.",
+      ),
+    ],
+    statement: t("Cărțile ei sunt menite să fie citite cu voce tare, împărtășite și simțite.", "Her books are meant to be read aloud, shared and felt."),
+    formats: [
+      { name: t("E-book", "E-book"), line: t("În curând, disponibile și ebook.", "Coming soon as e-books too.") },
+      {
+        name: t("Audiobook", "Audiobook"),
+        line: t(
+          "Este planificată și o versiune audiobook, care va readuce aceste povești în locul în care s-au născut pentru prima dată: vocea autoarei.",
+          "An audiobook is planned too, taking these stories back to where they were first born: the author's voice.",
+        ),
+      },
+    ],
+  },
 };
 
 export const shelf: ShelfBook[] = [
@@ -178,21 +265,58 @@ export const shelf: ShelfBook[] = [
     title: t("Fluturele dansator de step", "The Tap-Dancing Butterfly"),
     line: t("Un fluture care simte alt ritm decât ceilalți.", "A butterfly who hears a different rhythm."),
     age: "copii",
-    status: "available",
+    status: "published",
     year: 2026,
     cover: "cover-fluturele.webp",
     tint: ["#F8DCEB", "#E58FBF", "#9B3F7A"],
     universe: "fluture",
-    href: "carte.html",
+    details: {
+      subtitle: book.subtitle,
+      blurb: book.blurb,
+      pages: 40,
+      isbn: "978-973-0-44382-0",
+      leaf: [
+        { src: "pages/fluturele-coperta.webp", label: t("Coperta", "Cover") },
+        { src: "pages/fluturele-p4.webp", label: t("Pagina 4", "Page 4") },
+        { src: "pages/fluturele-p9.webp", label: t("Pagina 9", "Page 9") },
+      ],
+    },
   },
   {
     id: "buburuza",
     title: t("Buburuza rotunjoară", "The Roly-Poly Ladybird"),
-    line: t("Povestea prinde contur în atelier.", "The story is taking shape in the studio."),
+    line: t("O buburuză care învață să se iubească așa cum este.", "A ladybird who learns to love herself just as she is."),
     age: "copii",
-    status: "soon",
+    status: "published",
+    year: 2026,
+    cover: "cover-buburuza.webp",
     tint: ["#FBE1DA", "#EE9B8C", "#A8483C"],
     universe: "buburuza",
+    // From the back cover; English is a working translation
+    details: {
+      subtitle: t("O poveste șoptită inimii, acolo unde magia începe cu tine.", "A story whispered to the heart, where the magic begins with you."),
+      blurb: [
+        t(
+          "O buburuză rotunjoară și drăgălașă începe să creadă că nu este suficient de frumoasă. Cuprinsă de gelozie, rușine și dorința de a fi altcineva, descoperă că adevărata magie izvorăște din iubirea și acceptarea de sine.",
+          "A sweet, roly-poly ladybird begins to believe she isn't pretty enough. Caught up in jealousy, shame and the wish to be someone else, she discovers that real magic springs from love and self-acceptance.",
+        ),
+        t(
+          "Parte din seria „Magia suntem noi”, această carte este creată pentru a fi citită cu voce tare, pentru a deschide conversații sensibile despre sentimente și emoții pe care copiii le simt, dar nu știu întotdeauna să le numească; despre identitate, apartenență și bucuria de a fi exact așa cum ești.",
+          "Part of the „Magic Is Us” series, this book is made to be read aloud, to open gentle conversations about the feelings children have but cannot always name; about identity, belonging and the joy of being exactly who you are.",
+        ),
+        t(
+          "O poveste ilustrată pentru copii dar și pentru adulții care își redescoperă copilul interior.",
+          "An illustrated story for children, and for the grown-ups rediscovering their inner child.",
+        ),
+      ],
+      pages: 28,
+      isbn: "978-973-0-44383-7",
+      leaf: [
+        { src: "pages/buburuza-coperta.webp", label: t("Coperta", "Cover") },
+        { src: "pages/buburuza-p8.webp", label: t("Pagina 8", "Page 8") },
+        { src: "pages/buburuza-p12.webp", label: t("Pagina 12", "Page 12") },
+      ],
+    },
   },
   {
     id: "tantar",
@@ -211,43 +335,6 @@ export const shelf: ShelfBook[] = [
     status: "soon",
     tint: ["#E3EBDA", "#A9BE95", "#56704A"],
     universe: "musca",
-  },
-  // PLACEHOLDER: teen and adult titles
-  {
-    id: "vara",
-    title: t("Vara în care am crescut", "The Summer I Grew Up"),
-    line: t("Un jurnal despre prietenie, curaj și primele alegeri.", "A diary about friendship, courage and first choices."),
-    age: "adolescenti",
-    status: "writing",
-    tint: ["#E9E1F6", "#B9A3E0", "#5C4590"],
-    placeholder: true,
-  },
-  {
-    id: "oglinda",
-    title: t("Oglinda din pod", "The Mirror in the Attic"),
-    line: t("O poveste despre cum ne vedem și cum ne văd ceilalți.", "A story about how we see ourselves and how others see us."),
-    age: "adolescenti",
-    status: "writing",
-    tint: ["#F6E4D6", "#E3B08A", "#8F5A33"],
-    placeholder: true,
-  },
-  {
-    id: "intre",
-    title: t("Între rațiune și intuiție", "Between Reason and Intuition"),
-    line: t("Scrisori despre a te asculta pe tine.", "Letters on listening to yourself."),
-    age: "adulti",
-    status: "writing",
-    tint: ["#DFE7D4", "#A9BE95", "#4B6340"],
-    placeholder: true,
-  },
-  {
-    id: "scrisori",
-    title: t("Scrisori către mine", "Letters to Myself"),
-    line: t("Un caiet de reflecții, de completat încet.", "A book of reflections, to be filled in slowly."),
-    age: "adulti",
-    status: "writing",
-    tint: ["#F6DDE6", "#D99AB4", "#8A3D63"],
-    placeholder: true,
   },
 ];
 
@@ -268,13 +355,12 @@ export type Product = {
   name: Text;
   description: Text[];
   specs: { label: Text; value: Text }[];
-  price: string;
   status: "soon";
   placeholder: true;
 };
 
-// PLACEHOLDER: product texts, materials, sizes and prices
-const kindCopy: Record<ProductKind, { name: Text; description: Text[]; material: Text; size: Text; price: string }> = {
+// PLACEHOLDER: product texts, materials and sizes (prices are „în curând”)
+const kindCopy: Record<ProductKind, { name: Text; description: Text[]; material: Text; size: Text }> = {
   semn: {
     name: t("Semn de carte", "Bookmark"),
     description: [
@@ -285,7 +371,6 @@ const kindCopy: Record<ProductKind, { name: Text; description: Text[]; material:
     ],
     material: t("Carton gros, mat, cu panglică", "Thick matte card with a ribbon"),
     size: t("5 × 18 cm", "5 × 18 cm"),
-    price: "15 lei",
   },
   carti: {
     name: t("Cărți de joc", "Playing cards"),
@@ -297,7 +382,6 @@ const kindCopy: Record<ProductKind, { name: Text; description: Text[]; material:
     ],
     material: t("Carton plastifiat, 36 de cărți", "Coated card, 36 cards"),
     size: t("6 × 9 cm", "6 × 9 cm"),
-    price: "45 lei",
   },
   poster: {
     name: t("Poster ilustrat", "Illustrated poster"),
@@ -309,14 +393,13 @@ const kindCopy: Record<ProductKind, { name: Text; description: Text[]; material:
     ],
     material: t("Hârtie de artă, 250 g", "Art paper, 250 gsm"),
     size: t("A3 · 30 × 42 cm", "A3 · 30 × 42 cm"),
-    price: "70 lei",
   },
 };
 
 export const productPage = {
   labels: { material: t("Material", "Material"), size: t("Dimensiuni", "Size"), price: t("Preț", "Price") },
   sameUniverse: t("Din același univers", "From the same universe"),
-  pricePending: t("Preț estimativ", "Estimated price"),
+  priceSoon: t("Preț în curând", "Price coming soon"),
 };
 
 export const products: Product[] = universes.flatMap((u) =>
@@ -330,7 +413,6 @@ export const products: Product[] = universes.flatMap((u) =>
       { label: productPage.labels.material, value: kindCopy[k].material },
       { label: productPage.labels.size, value: kindCopy[k].size },
     ],
-    price: kindCopy[k].price,
     status: "soon" as const,
     placeholder: true as const,
   })),
@@ -346,32 +428,36 @@ export const itemHref = (u: UniverseId, index: number) =>
 
 export const bookPage = {
   back: t("Toate cărțile", "All books"),
-  // PLACEHOLDER: age range, pages, format
-  meta: [
-    { label: t("Vârstă", "Age"), value: t("4–8 ani", "4–8 years"), placeholder: true },
-    { label: t("Anul", "Year"), value: t("2026", "2026") },
-    { label: t("Pagini", "Pages"), value: t("32", "32"), placeholder: true },
-    { label: t("Format", "Format"), value: t("Copertă cartonată, 21 × 28 cm", "Hardcover, 21 × 28 cm"), placeholder: true },
-    { label: t("ISBN", "ISBN"), value: t("978-973-0-44382-0", "978-973-0-44382-0") },
-  ],
+  labels: {
+    age: t("Vârstă", "Age"),
+    year: t("Anul", "Year"),
+    pages: t("Pagini", "Pages"),
+    format: t("Format", "Format"),
+    isbn: t("ISBN", "ISBN"),
+  },
+  format: t("A4, copertă cartonată lucioasă", "A4, glossy hardcover"),
   // PLACEHOLDER: details for books that are not out yet
   placeholderBlurb: t(
     "Povestea prinde contur în atelier. Aici vei găsi despre ce este cartea, pentru cine și ce emoții atinge, imediat ce e gata.",
     "The story is taking shape in the studio. This is where you'll read what the book is about, who it's for and which feelings it touches, as soon as it's ready.",
   ),
-  ageRange: { copii: t("4–8 ani", "4–8 years"), adolescenti: t("12–16 ani", "12–16 years"), adulti: t("Adulți", "Adults") },
-  toBeAnnounced: t("Se anunță", "To be announced"),
+  ageRange: { copii: t("1–10 ani", "1–10 years"), adolescenti: t("12–16 ani", "12–16 years"), adulti: t("Adulți", "Adults") },
+  toBeAnnounced: t("În curând", "Coming soon"),
   moreBooks: t("Mai multe cărți", "More books"),
   leaf: t("Răsfoiește", "Leaf through"),
+  leafHint: t("Atinge o pagină ca s-o vezi mare.", "Tap a page to see it large."),
   leafNote: t("Pagini din carte, în curând.", "Pages from the book, coming soon."),
+  pageOf: t("din", "of"),
+  prev: t("Pagina anterioară", "Previous page"),
+  next: t("Pagina următoare", "Next page"),
   universe: t("Universul cărții", "The book's universe"),
   series: t("Din aceeași serie", "From the same series"),
 };
 
 /* ---------------------------------------------------------------- Artă */
 
-export type ArtKind = "original" | "print" | "ceramica";
-export type Availability = "available" | "sold" | "onRequest";
+export type ArtKind = "original" | "print";
+export type Availability = "preorder" | "sold" | "onRequest";
 
 export type Artwork = {
   id: string;
@@ -391,44 +477,46 @@ export type Artwork = {
 };
 
 export const artPage = {
-  tagline: t("Originale, printuri și ceramică.", "Originals, prints and ceramics."),
+  tagline: t("Originale și printuri.", "Originals and prints."),
   filters: [
     { id: "all" as const, label: t("Toate", "All") },
     { id: "original" as const, label: t("Originale", "Originals") },
     { id: "print" as const, label: t("Printuri", "Prints") },
-    { id: "ceramica" as const, label: t("Ceramică", "Ceramics") },
   ],
   kind: {
     original: t("Original", "Original"),
     print: t("Print", "Print"),
-    ceramica: t("Ceramică", "Ceramics"),
   },
   availability: {
-    available: t("Disponibilă", "Available"),
+    preorder: t("Pre-comandă", "Pre-order"),
     sold: t("Vândută", "Sold"),
     onRequest: t("La cerere", "On request"),
   },
   labels: { technique: t("Tehnică", "Technique"), size: t("Dimensiuni", "Size"), year: t("Anul", "Year"), price: t("Preț", "Price") },
   ask: t("Întreabă de această lucrare", "Ask about this piece"),
+  preorder: t("Pre-comandă", "Pre-order"),
+  preorderNote: t(
+    "Plata și livrarea le stabilim împreună. Magazinul online vine în curând.",
+    "We arrange payment and delivery together. The online shop is coming soon.",
+  ),
+  priceSoon: t("Preț în curând", "Price coming soon"),
   close: t("Închide", "Close"),
   commissionTitle: t("Lucrări la comandă", "Commissions"),
   // PLACEHOLDER: commission note
   commission: t(
-    "Pictez și la comandă: un portret al copilului tău într-un univers de poveste, o ilustrație pentru o ocazie specială sau o cană pictată pentru cineva drag.",
-    "I also paint on commission: a portrait of your child inside a storybook world, an illustration for a special occasion, or a painted mug for someone you love.",
+    "Pictez și la comandă: un portret al copilului tău într-un univers de poveste sau o ilustrație pentru o ocazie specială.",
+    "I also paint on commission: a portrait of your child inside a storybook world, or an illustration for a special occasion.",
   ),
 };
 
 export const artworks: Artwork[] = [
-  { id: "poiana", title: t("Poiana fluturelui", "The butterfly's meadow"), kind: "print", technique: t("Print după acuarelă", "Print of a watercolour"), size: "30 × 42 cm", year: 2026, availability: "available", price: "180 lei", src: "cover-fluturele.webp", ratio: 766 / 1120, placeholder: true },
+  { id: "poiana", title: t("Poiana fluturelui", "The butterfly's meadow"), kind: "print", technique: t("Print după acuarelă", "Print of a watercolour"), size: "30 × 42 cm", year: 2026, availability: "preorder", src: "cover-fluturele.webp", ratio: 766 / 1120, placeholder: true },
   // PLACEHOLDER: artworks from here on
-  { id: "dimineata", title: t("Lumină de dimineață", "Morning light"), kind: "original", technique: t("Acuarelă pe hârtie", "Watercolour on paper"), size: "30 × 40 cm", year: 2025, availability: "available", price: "900 lei", wash: ["#fbe3c9", "#f3b9c9", "#c9b8e6"], ratio: 3 / 4, placeholder: true },
-  { id: "cana", title: t("Cană din atelier", "Studio mug"), kind: "ceramica", technique: t("Ceramică pictată manual", "Hand-painted ceramic"), size: "Ø 9 cm", year: 2025, availability: "onRequest", src: "mug.webp", ratio: 1, placeholder: true },
+  { id: "dimineata", title: t("Lumină de dimineață", "Morning light"), kind: "original", technique: t("Acuarelă pe hârtie", "Watercolour on paper"), size: "30 × 40 cm", year: 2025, availability: "preorder", wash: ["#fbe3c9", "#f3b9c9", "#c9b8e6"], ratio: 3 / 4, placeholder: true },
   { id: "lavanda", title: t("Ploaie de lavandă", "Lavender rain"), kind: "original", technique: t("Acuarelă și tuș", "Watercolour and ink"), size: "40 × 30 cm", year: 2025, availability: "sold", wash: ["#e6dcf5", "#b9a3e0", "#7a5fb0"], ratio: 4 / 3, placeholder: true },
-  { id: "zbor", title: t("Liniștea dinaintea zborului", "The quiet before flight"), kind: "original", technique: t("Acuarelă pe hârtie", "Watercolour on paper"), size: "24 × 32 cm", year: 2026, availability: "available", price: "750 lei", src: "butterfly.webp", ratio: 4 / 5, placeholder: true },
-  { id: "gradina", title: t("Grădina bunicii", "Grandma's garden"), kind: "print", technique: t("Print giclée", "Giclée print"), size: "A3", year: 2025, availability: "available", price: "150 lei", wash: ["#dfe7d4", "#a9be95", "#f6dde6"], ratio: 3 / 4, placeholder: true },
-  { id: "nor", title: t("Norul timid", "The shy cloud"), kind: "print", technique: t("Print după acuarelă", "Print of a watercolour"), size: "A4", year: 2026, availability: "available", price: "90 lei", wash: ["#dce9f6", "#97bce0", "#f6dde6"], ratio: 1, placeholder: true },
-  { id: "bol", title: t("Bol cu flori de câmp", "Wildflower bowl"), kind: "ceramica", technique: t("Ceramică smălțuită", "Glazed ceramic"), size: "Ø 16 cm", year: 2026, availability: "available", price: "220 lei", wash: ["#f6e4d6", "#e3b08a", "#c9b8e6"], ratio: 1, placeholder: true },
+  { id: "zbor", title: t("Liniștea dinaintea zborului", "The quiet before flight"), kind: "original", technique: t("Acuarelă pe hârtie", "Watercolour on paper"), size: "24 × 32 cm", year: 2026, availability: "preorder", src: "butterfly.webp", ratio: 4 / 5, placeholder: true },
+  { id: "gradina", title: t("Grădina bunicii", "Grandma's garden"), kind: "print", technique: t("Print giclée", "Giclée print"), size: "A3", year: 2025, availability: "preorder", wash: ["#dfe7d4", "#a9be95", "#f6dde6"], ratio: 3 / 4, placeholder: true },
+  { id: "nor", title: t("Norul timid", "The shy cloud"), kind: "print", technique: t("Print după acuarelă", "Print of a watercolour"), size: "A4", year: 2026, availability: "preorder", wash: ["#dce9f6", "#97bce0", "#f6dde6"], ratio: 1, placeholder: true },
   { id: "apus", title: t("Poiana la apus", "Meadow at dusk"), kind: "original", technique: t("Acuarelă pe hârtie", "Watercolour on paper"), size: "50 × 35 cm", year: 2026, availability: "onRequest", wash: ["#f6dde6", "#e58fbf", "#7a5fb0"], ratio: 10 / 7, placeholder: true },
 ];
 
@@ -477,8 +565,6 @@ export const contactPage = {
     again: t("Scrie alt mesaj", "Write another message"),
   },
   otherWays: t("Sau găsește-mă aici", "Or find me here"),
-  // PLACEHOLDER: response time
-  reply: t("Răspund de obicei în 2–3 zile lucrătoare.", "I usually reply within 2–3 working days."),
 };
 
 /* ---------------------------------------------------------------- Comunitate cu sens */
@@ -490,8 +576,8 @@ export const community = {
     "A place where stories step out of the books: we gather to read, draw, talk about feelings and do good things together.",
   ),
   eventsTitle: t("Întâlniri", "Gatherings"),
-  eventsLead: t("Ateliere, cercuri de discuție și lecturi, în oraș sau online.", "Workshops, discussion circles and readings, in town or online."),
-  join: t("Mă înscriu", "Sign me up"),
+  eventsLead: t("Ce facem împreună. Anunț fiecare întâlnire pe Instagram.", "What we do together. I announce every gathering on Instagram."),
+  join: t("Vreau să particip", "I'd like to come"),
   projectsTitle: t("Proiecte cu sens", "Projects with meaning"),
   projectsLead: t("Povești care ajung acolo unde e cea mai mare nevoie de ele.", "Stories that reach the places that need them most."),
   ctaTitle: t("Vreau să aflu primul", "Tell me first"),
@@ -510,66 +596,44 @@ export const community = {
       name: "AVA Art & Soul",
       handle: "@ava.art.soul",
       url: "https://www.instagram.com/ava.art.soul/",
-      // PLACEHOLDER: description and logo arrive from the client
-      line: t(
-        "Un spațiu pentru artă și suflet, alături de care creștem întâlnirile comunității.",
-        "A space for art and soul, alongside whom the community's gatherings grow.",
-      ),
+      // Description and logo arrive from the client
+      line: t("Descriere în curând.", "Description coming soon."),
       logo: undefined as string | undefined,
       placeholder: true,
     },
   ],
-  // PLACEHOLDER: events
+  // The kinds of gathering Ramona runs (2026-10-03); dates and places are announced later
   events: [
     {
-      id: "atelier-povesti",
-      day: "14",
-      month: t("noi.", "Nov"),
-      weekday: t("sâmbătă, 11:00", "Saturday, 11:00"),
-      title: t("Atelier de povești și acuarelă", "Story and watercolour workshop"),
-      audience: t("Pentru copii de 5–8 ani, cu un părinte", "For children aged 5–8, with a parent"),
-      place: t("Librărie parteneră, București", "Partner bookshop, Bucharest"),
-      kind: t("Atelier", "Workshop"),
-      tint: "#f3c9dc",
-      placeholder: true,
-    },
-    {
-      id: "cerc-parinti",
-      day: "20",
-      month: t("noi.", "Nov"),
-      weekday: t("joi, 19:00", "Thursday, 19:00"),
-      title: t("Cerc de discuție pentru părinți", "Discussion circle for parents"),
-      audience: t("Despre emoțiile mari ale copiilor mici", "On the big feelings of small children"),
-      place: t("Online", "Online"),
-      kind: t("Cerc", "Circle"),
-      tint: "#d4e2c6",
-      placeholder: true,
-    },
-    {
-      id: "lectura",
-      day: "06",
-      month: t("dec.", "Dec"),
-      weekday: t("sâmbătă, 16:00", "Saturday, 16:00"),
-      title: t("Lectură de Moș Nicolae", "St Nicholas reading"),
-      audience: t("„Fluturele dansator de step”, citită cu voce tare", "„The Tap-Dancing Butterfly”, read aloud"),
-      place: t("Bibliotecă de cartier, București", "Neighbourhood library, Bucharest"),
-      kind: t("Lectură", "Reading"),
-      tint: "#c8daf0",
-      placeholder: true,
-    },
-    {
-      id: "acuarela-adulti",
-      day: "17",
-      month: t("ian.", "Jan"),
-      weekday: t("sâmbătă, 10:00", "Saturday, 10:00"),
-      title: t("Acuarelă pentru adulți care „nu știu să deseneze”", "Watercolour for grown-ups who „can't draw”"),
-      audience: t("Pentru începători, materiale incluse", "For beginners, materials included"),
-      place: t("Atelierul Ramonei", "Ramona's studio"),
+      id: "pictura",
+      title: t("Ateliere de pictură", "Painting workshops"),
+      audience: t("Acuarelă pentru copii și pentru adulți", "Watercolour for children and grown-ups"),
       kind: t("Atelier", "Workshop"),
       tint: "#e6dcf5",
-      placeholder: true,
+    },
+    {
+      id: "lansari",
+      title: t("Lansări de carte", "Book launches"),
+      audience: t("Fiecare poveste nouă din „Magia suntem noi”", "Every new story in „The Magic Is Us”"),
+      kind: t("Lansare", "Launch"),
+      tint: "#f3c9dc",
+    },
+    {
+      id: "autografe",
+      title: t("Sesiuni de autografe", "Book signings"),
+      audience: t("O dedicație scrisă de mână, pentru cine citește", "A handwritten note for whoever will read it"),
+      kind: t("Autografe", "Signing"),
+      tint: "#fbe1da",
+    },
+    {
+      id: "citit",
+      title: t("Ateliere de citit", "Reading workshops"),
+      audience: t("Povești citite cu voce tare, apoi vorbim despre emoții", "Stories read aloud, then we talk about feelings"),
+      kind: t("Lectură", "Reading"),
+      tint: "#c8daf0",
     },
   ],
+  datesSoon: t("Datele, în curând", "Dates coming soon"),
   // PLACEHOLDER: projects
   projects: [
     {
@@ -579,29 +643,18 @@ export const community = {
         "Pentru fiecare carte vândută, o carte ajunge într-o școală din mediul rural, împreună cu un ghid pentru învățători.",
         "For every book sold, one goes to a rural school, together with a guide for teachers.",
       ),
-      status: t("În pregătire", "In preparation"),
+      status: t("În lucru", "In the works"),
       wash: ["#fbe3c9", "#f3b9c9", "#e6dcf5"] as [string, string, string],
       placeholder: true,
     },
     {
-      id: "povesti-spital",
-      title: t("Povești în spital", "Stories in hospital"),
-      line: t(
-        "Lecturi și ateliere de desen pentru copiii internați, alături de voluntari.",
-        "Readings and drawing workshops for children in hospital, with volunteers.",
-      ),
-      status: t("În pregătire", "In preparation"),
-      wash: ["#dce9f6", "#97bce0", "#dfe7d4"] as [string, string, string],
-      placeholder: true,
-    },
-    {
       id: "centre-zi",
-      title: t("Ateliere în centre de zi", "Workshops in day centres"),
+      title: t("Ateliere în centre de zi și orfelinate", "Workshops in day centres and orphanages"),
       line: t(
-        "Întâlniri lunare despre emoții, prin povești și culoare, pentru copii din centre de zi.",
-        "Monthly sessions on feelings, through stories and colour, for children in day centres.",
+        "Întâlniri despre emoții, prin povești și culoare, pentru copiii din centre de zi și orfelinate.",
+        "Sessions on feelings, through stories and colour, for children in day centres and orphanages.",
       ),
-      status: t("Idee în lucru", "Idea in progress"),
+      status: t("În lucru", "In the works"),
       wash: ["#dfe7d4", "#a9be95", "#f6dde6"] as [string, string, string],
       placeholder: true,
     },
@@ -625,11 +678,11 @@ export const booking = {
     time: t("Ora", "Time"),
     details: t("Datele tale", "Your details"),
   },
-  // PLACEHOLDER: durations and prices (the same as on the page above)
+  // PLACEHOLDER: durations (prices are „în curând”); minutes only drive the demo calendar
   formats: [
-    { id: "intro" as FormatId, title: t("Primă discuție", "First conversation"), detail: t("15 min · gratuit", "15 min · free"), minutes: 15 },
-    { id: "online" as FormatId, title: t("Online", "Online"), detail: t("50 min · 250 lei", "50 min · 250 lei"), minutes: 50 },
-    { id: "fata" as FormatId, title: t("Față în față", "In person"), detail: t("60 min · 300 lei", "60 min · 300 lei"), minutes: 60 },
+    { id: "intro" as FormatId, title: t("Primă discuție", "First conversation"), detail: t("Detalii în curând", "Details coming soon"), minutes: 15 },
+    { id: "online" as FormatId, title: t("Online", "Online"), detail: t("Detalii în curând", "Details coming soon"), minutes: 50 },
+    { id: "fata" as FormatId, title: t("Față în față", "In person"), detail: t("Detalii în curând", "Details coming soon"), minutes: 60 },
   ],
   timezone: t("Ora României", "Romania time"),
   prev: t("Luna anterioară", "Previous month"),

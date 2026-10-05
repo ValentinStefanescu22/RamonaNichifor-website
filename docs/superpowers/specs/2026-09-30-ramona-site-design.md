@@ -110,17 +110,19 @@ Port of `mockups/src/universuri-poiana/`.
 - **List:** a segmented control **Copii · Adolescenți · Adulți** (from concept C, restyled in Poiana), then books as covers with title and year. Empty age groups show a designed „în lucru” state.
 - **Book page:**
   - the cover (tilt + shadow), title as `<h1>`, and the subtitle „O poveste pentru copii… o șoaptă pentru adulți”
-  - the blurb in rich text, and meta: age group, year, ISBN, formats
-  - store links, a link to its universe, and optional sample-page images
+  - the blurb in rich text, and meta: age (copii = 1–10 ani), year, pages, format (A4, copertă cartonată lucioasă), ISBN
+  - store links only once real ones exist (until then „În curând · Comenzile online se deschid în curând.”), a link to its universe
+  - **Răsfoiește:** 2–4 real pages chosen by Ramona (cover + inner pages, exported from the printer's PDF), opening into a full-screen reader (see DESIGN.md)
+- **Despre autor** closes the list page, above the footer (her own text, with e-book „în curând” and audiobook „planificată”).
 - JSON-LD `Book`: name, author → Person, isbn, image, inLanguage, url, sameAs store URLs.
 
 ### 5.5 Art `/arta` and artwork `/arta/[slug]`
-- **Gallery:** filter chips (Toate · Originale · Printuri · Ceramică) above a masonry of framed works. Captions show title and technique.
+- **Gallery:** filter chips (Toate · Originale · Printuri) above a masonry of framed works. Captions show title and technique. Paintings only: no ceramics (client, 2026-10-05).
 - **Artwork page:**
   - images you can swipe on a phone
   - title, technique, size, year
-  - availability („disponibil” / „vândut” / „la cerere”) and an optional price
-  - **„Întreabă de această lucrare”**, which opens the contact form with the subject filled in
+  - availability („pre-comandă” / „vândut” / „la cerere”) and a price or „Preț în curând”
+  - **„Pre-comandă”** (or „Întreabă de această lucrare” when sold / on request), which opens the contact form with the subject filled in; payment and delivery are arranged by hand until the shop (M7)
 - JSON-LD `VisualArtwork`.
 
 ### 5.6 Counselling `/consiliere`
@@ -140,13 +142,13 @@ Chosen 2026-10-01 over SaaS: Cal.com is closing its EU region on 1 Nov 2026, Cal
 - **Later (M7):** optional Stripe payment at booking for paid formats.
 
 ### 5.7 About `/despre`
-Arched portrait, bio (rich text), roles, manifesto, and links to all her profiles. These are the same links as `sameAs` in the Person JSON-LD. JSON-LD `ProfilePage` → `Person`.
+Arched portrait, her role line, her long story (rich text, set in movements with a pull line, her questions and a closing line; final text received 2026-10-03), the Parisienne signature, the three crafts, and links to all her profiles. These are the same links as `sameAs` in the Person JSON-LD. JSON-LD `ProfilePage` → `Person`.
 
 ### 5.7b Comunitate cu sens `/comunitate`
 A page for gatherings and good works around the stories (mocked up 2026-10-01; content is placeholder).
 - **Opener:** „Comunitate / cu sens”, a lead on why, and **butterflies gathering**: the real cover butterfly several times over, flying in from every side and settling above the meadow inside an arch window (each with its own wingbeat and drift; still under reduced motion).
-- **Întâlniri:** events as date-led rows (day and month on a painted disc, title, audience, kind · day and time, place or online) with „Mă înscriu” → contact form, subject Comunitate.
-- **Proiecte cu sens:** projects with a painted image, title, line and a status (e.g. „În pregătire”).
+- **Întâlniri:** the four kinds of gathering she runs (client, 2026-10-05): ateliere de pictură, lansări de carte, sesiuni de autografe, ateliere de citit. Each row: icon on a painted seed, title, audience, kind and „Datele, în curând” until an event has a date; then date, place and „Vreau să particip” → contact form, subject Comunitate.
+- **Proiecte cu sens:** projects with a painted image, title, line and a status: „Ateliere în centre de zi și orfelinate” and „O carte pentru fiecare clasă”, both „În lucru”. No hospital project.
 - **Parteneri:** partner cards (logo or a painted initial, name, one line, link to their page, opening in a new tab) and „Vrei să fim parteneri? Scrie-mi” → contact. First partner: AVA Art & Soul (instagram.com/ava.art.soul); logo and description to come from the client.
 - **Close:** „Vreau să aflu primul” (follow on Instagram) and „Propune un proiect” → contact.
 - JSON-LD `Event` for each upcoming event.
@@ -166,7 +168,8 @@ A page for gatherings and good works around the stories (mocked up 2026-10-01; c
 - **404:** „Pagina asta s-a rătăcit, ca Musca” (a nod to *Musca rătăcită*), with links home and to the universes.
 
 ### 5.10 Global chrome
-- **Header:** wordmark, nav on laptop, and the RO|EN switch.
+- **Header:** the Parisienne wordmark (hidden on Acasă, whose hero is the name), nav on laptop in the client's order (Acasă, Despre mine, Consiliere, Cărți, Artă, Universuri, Comunitate, Contact), and the RO|EN switch.
+- **Every page opens at its top** (no scroll restoration; also on back/forward and inside wrapping frames); a routing test clicks every internal link and must pass with 0 failures before any release.
 - **Phone menu:** a full-screen watercolour sheet with staggered links, opening from the menu button.
 - **Floating pill bar:** appears after the hero on long pages.
 - **Language switch:** keeps you on the same page in the other language (localised slug), and cross-fades with a View Transition.
@@ -199,12 +202,12 @@ Collections (lists of entries) and globals (single pages):
 |---|---|---|
 | `site-settings` | global | name, roles, taglines (souls, whisper), series name + lead, manifesto (3 lines, each with an emphasised word), contacts (email, WhatsApp, Instagram, Facebook, other profile URLs for `sameAs`), default SEO (title pattern, description, share image), portrait |
 | `universes` | collection | name, slug, character, **tint** (3 colours), orb art (image *or* built-in line drawing), hook, story (rich text), status (available / soon), order, books → `books`, products → `products`, SEO |
-| `books` | collection | title, slug, subtitle, age group (copii / adolescenti / adulti), cover, blurb (rich text), year, ISBN, formats, store links [{store, url}], universe → `universes`, sample pages[], status, SEO |
+| `books` | collection | title, slug, subtitle, age group (copii / adolescenti / adulti), cover, blurb (rich text), year, ISBN, pages, format, formats, store links [{store, url}] (empty = „comenzile online, în curând”), universe → `universes`, leaf pages [{image, label}], status (published / soon / writing), SEO |
 | `products` | collection | name, slug, kind (semn de carte / cărți de joc / poster / altul), universe → `universes`, images[], description (rich text), specs [{label, value}], optional price, status, optional external link |
-| `artworks` | collection | title, slug, images[] (**alt required**), kind (original / print / ceramică), technique, size, year, availability, optional price, description |
+| `artworks` | collection | title, slug, images[] (**alt required**), kind (original / print), technique, size, year, availability (preorder / sold / onRequest), optional price, description |
 | `counselling-page` | global | intro, approach, formats (online / in person + city), steps[], FAQ[], optional price and duration, CTA copy |
 | `about-page` | global | bio (rich text), portrait, highlights |
-| `events` | collection | title, kind (atelier / cerc / lectură / altul), start date and time, place or online, audience, image, sign-up note, status (upcoming / past) |
+| `events` | collection | title, kind (atelier de pictură / lansare de carte / sesiune de autografe / atelier de citit), optional start date and time („Datele, în curând” when empty), place or online, audience, image, sign-up note, status (upcoming / past) |
 | `projects` | collection | title, line, image, status (idee / în pregătire / în desfășurare / încheiat), order |
 | `partners` | collection | name, logo (optional), line, url, order |
 | `availability` | global | weekly hours per format, buffer, minimum notice, horizon, blocked dates |
@@ -360,7 +363,8 @@ Each milestone gets its own implementation plan, is built and verified, and ship
 - [ ] Counselling availability (days and hours), session lengths and prices, the 15-min free intro yes/no
 - [ ] Access to her Google account (for the calendar sync) and where in-person sessions take place
 - [ ] AVA Art & Soul: logo and one or two lines about them
-- [ ] Long bio for Despre mine (the mockup uses placeholder text)
+- [x] Long bio for Despre mine (received 2026-10-03), „Despre autor”, both books' covers and interiors (PDF)
+- [ ] Approve two small edits in her bio: the comma in „picturile au fost pentru mine, uși întredeschise” and „ale propriilor alegeri” → „a propriilor alegeri” (left as she wrote them)
 - [ ] Counselling: session steps, FAQ answers, durations and prices (placeholders now)
 - [ ] More books (teen and adult titles are placeholders) and real cover files
 - [ ] Artworks: photos, technique, size, year, availability, prices (most are placeholders)
@@ -369,7 +373,7 @@ Each milestone gets its own implementation plan, is built and verified, and ship
 - [ ] Paintings: photos + title, technique, size, year, availability (+ price if public)
 - [ ] Bio: a short and a long version
 - [ ] Counselling: approach, session length, price (if public), city for in-person sessions, FAQ
-- [ ] Book: store links (eMAG, Amazon, …), publisher name, formats, sample pages (optional)
+- [ ] Book: store links (eMAG, Amazon, …) when orders open, publisher name; „Băuțar” on the cover: place or imprint?
 - [ ] Profiles: Instagram, Facebook, Goodreads, Amazon Author Central, other
 - [ ] Email for the contact form, and her WhatsApp number
 - [ ] Domain: confirm she owns `ramonanichifor.com`; register `.ro`

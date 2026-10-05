@@ -24,7 +24,7 @@ function Picture({ a, className = "", decorative = false }: { a: Artwork; classN
   );
 }
 
-const dotColor: Record<Artwork["availability"], string> = { available: "#6f8a5a", sold: "rgb(52 34 74 / 0.35)", onRequest: "#7a5fb0" };
+const dotColor: Record<Artwork["availability"], string> = { preorder: "#6f8a5a", sold: "rgb(52 34 74 / 0.35)", onRequest: "#7a5fb0" };
 
 function Availability({ a }: { a: Artwork }) {
   const { t } = useLang();
@@ -32,10 +32,10 @@ function Availability({ a }: { a: Artwork }) {
     <span className="inline-flex items-center gap-1.5 text-[0.9rem] text-ink-soft">
       <span className="size-2 rounded-full" style={{ background: dotColor[a.availability] }} aria-hidden="true" />
       {t(artPage.availability[a.availability])}
-      {a.price && a.availability === "available" && (
+      {a.availability === "preorder" && (
         <>
           <span aria-hidden="true">·</span>
-          <span className="font-semibold text-ink tabular-nums">{a.price}</span>
+          <span>{t(a.price ? { ro: a.price, en: a.price } : artPage.priceSoon)}</span>
         </>
       )}
     </span>
@@ -159,9 +159,18 @@ function ArtworkSheet({ a, onClose }: { a: Artwork; onClose: () => void }) {
           <div className="mt-5">
             <Availability a={a} />
           </div>
-          <PillLink href="contact.html#arta" icon={<ArrowRight size={17} />} className="mt-8">
-            {t(artPage.ask)}
-          </PillLink>
+          {a.availability === "preorder" ? (
+            <>
+              <PillLink href="contact.html#arta" icon={<ArrowRight size={17} />} className="mt-8">
+                {t(artPage.preorder)}
+              </PillLink>
+              <p className="mt-3 max-w-[40ch] text-[0.95rem] leading-relaxed text-ink-soft">{t(artPage.preorderNote)}</p>
+            </>
+          ) : (
+            <PillLink href="contact.html#arta" icon={<ArrowRight size={17} />} className="mt-8">
+              {t(artPage.ask)}
+            </PillLink>
+          )}
         </div>
       </motion.div>
     </div>

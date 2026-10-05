@@ -136,3 +136,17 @@ export const Leaf = (p: IconProps) => (
   </Icon>
 );
 
+
+export const Pen = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M15.5 4.5 19.5 8.5 9 19H5v-4L15.5 4.5Z" />
+    <path d="M13.5 6.5l4 4" />
+  </Icon>
+);
+
+export const Speech = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M5 6.5h14v9.5h-7.5L7.5 19.5V16H5V6.5Z" />
+    <path d="M8.5 10h7M8.5 12.75h4.5" />
+  </Icon>
+);

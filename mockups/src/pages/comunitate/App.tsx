@@ -1,41 +1,43 @@
 import { site } from "../../shared/content";
 import { community } from "../../shared/content-pages";
-import { ArrowUpRight, Instagram, MapPin } from "../../shared/icons";
+import { ArrowUpRight, Brush, Instagram, OpenBook, Pen, Speech } from "../../shared/icons";
 import { useLang } from "../../shared/lang";
-import { PageOpener, PillLink, SectionTitle, SiteShell, TextLink } from "../../site/Layout";
+import { PageOpener, PillLink, Reveal, SectionTitle, SiteShell, TextLink } from "../../site/Layout";
 import { Wash } from "../../site/Painted";
 import { StatusChip } from "../../site/StatusChip";
 import { GatheringCircle } from "./Circle";
 
+const eventIcon = { pictura: Brush, lansari: OpenBook, autografe: Pen, citit: Speech } as const;
+
+/** What we do together: four kinds of gathering, each announced with its date when it is set */
 function Events() {
   const { t } = useLang();
   return (
     <ul className="mt-10 border-t border-ink/12">
-      {community.events.map((e) => (
-        <li key={e.id} className="grid grid-cols-[4.5rem_1fr] gap-x-5 gap-y-4 border-b border-ink/12 py-7 sm:grid-cols-[6rem_1fr_auto] sm:items-center sm:gap-x-8">
-          <div className="relative grid aspect-square place-items-center text-center">
-            <span className="paint-edge absolute inset-0 rounded-full opacity-80" style={{ background: e.tint }} aria-hidden="true" />
-            <span className="relative leading-none">
-              <span className="display block text-[2rem] text-ink tabular-nums sm:text-[2.4rem]">{e.day}</span>
-              <span className="mt-0.5 block text-[0.85rem] font-semibold text-ink-soft">{t(e.month)}</span>
-            </span>
-          </div>
-          <div className="min-w-0">
-            <h3 className="display text-[clamp(1.35rem,4.8vw,1.7rem)] leading-tight text-ink">{t(e.title)}</h3>
-            <p className="mt-1 text-[1rem] text-ink-soft">{t(e.audience)}</p>
-            <p className="mt-2 text-[0.95rem] text-ink-soft">
-              <span className="font-semibold text-violet">{t(e.kind)}</span> · {t(e.weekday)}
-            </p>
-            <p className="mt-1 inline-flex items-center gap-1.5 text-[0.95rem] text-ink">
-              <MapPin size={16} className="text-ink-soft" />
-              {t(e.place)}
-            </p>
-          </div>
-          <TextLink href="contact.html#comunitate" className="col-start-2 justify-self-start sm:col-start-3">
-            {t(community.join)}
-          </TextLink>
-        </li>
-      ))}
+      {community.events.map((e, i) => {
+        const Icon = eventIcon[e.id as keyof typeof eventIcon];
+        return (
+          <li key={e.id} className="border-b border-ink/12">
+            <Reveal i={i} className="grid grid-cols-[4.5rem_1fr] gap-x-5 gap-y-3 py-7 sm:grid-cols-[5.5rem_1fr_auto] sm:items-center sm:gap-x-8">
+              <div className="relative grid aspect-square place-items-center">
+                <span className="paint-edge absolute inset-0 rounded-full opacity-80" style={{ background: e.tint }} aria-hidden="true" />
+                <Icon size={30} className="relative text-ink" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="display text-[clamp(1.35rem,4.8vw,1.7rem)] leading-tight text-ink">{t(e.title)}</h3>
+                <p className="mt-1 text-[1rem] text-ink-soft">{t(e.audience)}</p>
+                <p className="mt-2.5 flex flex-wrap items-center gap-2.5 text-[0.95rem] text-ink-soft">
+                  <span className="font-semibold text-violet">{t(e.kind)}</span>
+                  <StatusChip>{t(community.datesSoon)}</StatusChip>
+                </p>
+              </div>
+              <TextLink href="contact.html#comunitate" className="col-start-2 justify-self-start sm:col-start-3">
+                {t(community.join)}
+              </TextLink>
+            </Reveal>
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -108,7 +110,6 @@ export default function App() {
           aside={<GatheringCircle />}
         />
 
-        {/* PLACEHOLDER events: dates, places and formats are stand-ins */}
         <section className="px-4 pt-10 pb-20 sm:px-6 lg:pb-28" style={{ background: "linear-gradient(180deg, #e4ecf6 0%, var(--color-cream) 40%)" }}>
           <div className="mx-auto max-w-6xl">
             <SectionTitle lead={t(community.eventsLead)}>{t(community.eventsTitle)}</SectionTitle>
@@ -116,7 +117,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* PLACEHOLDER projects */}
+        {/* Both projects are „În lucru”: the texts are working descriptions */}
         <section className="bg-cream px-4 pb-24 sm:px-6 lg:pb-32">
           <div className="mx-auto max-w-6xl">
             <SectionTitle lead={t(community.projectsLead)}>{t(community.projectsTitle)}</SectionTitle>

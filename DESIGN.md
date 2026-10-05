@@ -78,6 +78,11 @@ typography:
     fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "0.08em"
+  script:
+    fontFamily: "Parisienne, Snell Roundhand, Apple Chancery, cursive"
+    fontSize: "1.95rem"
+    fontWeight: 400
+    lineHeight: 1
 rounded:
   pill: "9999px"
   arch: "999px 999px 28px 28px"
@@ -254,7 +259,9 @@ A pastel spring palette lifted from the client's own cover, anchored by one deep
 
 **Character:** A storybook serif at its roundest, paired with a humanist sans that has a calligraphic pulse. Together they read as one hand writing both the story and the note beside it.
 
-Load both through next/font as self-hosted variable files with the `latin-ext` subset so ă â î ș ț (comma-below, not cedilla) render in every weight and italic. Fraunces must keep its SOFT and WONK axes (`axes: ["SOFT","WONK","opsz"]`).
+**Script Font (her hand, 2026-10-05):** Parisienne, falling back to Snell Roundhand, Apple Chancery, cursive. Only two places: the wordmark „Ramona Nichifor” in the top and floating bars (1.45–1.95rem) and the „Ramona” signature closing Despre mine (clamp 3.2–4.4rem, violet, −3°). Never a heading, never running text; it is a signature, not a voice. Chosen by the client over Corinthia and Allura as „cursive but clean”. The name has no diacritics, so the Diacritics Rule holds.
+
+Load all three through next/font as self-hosted files (Parisienne is a single static weight) with the `latin-ext` subset so ă â î ș ț (comma-below, not cedilla) render in every weight and italic. Fraunces must keep its SOFT and WONK axes (`axes: ["SOFT","WONK","opsz"]`).
 
 ### Hierarchy
 - **Display** (380, clamp 3.7–8.6rem, line-height 1, -0.02em): the name in the hero and footer. Two lines, second line indented 0.6em (0.9em from sm) and set as the violet WONK italic.
@@ -319,10 +326,11 @@ Soft, weighty pills that feel pressed into the page.
 A 44px cream-70% pill with two 44×36px segments (RO first, default). The active segment has an ink thumb with cream text that slides between segments on a spring (bounce 0, 0.35s). Each segment's hit area extends 4px above and below. Switching the language cross-fades the page with a 0.28s view transition (skipped under reduced motion), updates `<html lang>`, and persists the choice.
 
 ### Navigation
-- **Top bar** (in the hero, not fixed): italic WONK wordmark at 1.35–1.5rem, desktop section links in ink-soft (hover: ink with lilac underline), toggle, menu button on phones.
+- **Top bar** (in the hero, not fixed): Parisienne wordmark at 1.7–1.95rem (on Acasă the top bar shows no wordmark: the hero's display name is the only „Ramona Nichifor” on the first screen, and the floating bar carries the wordmark once you scroll), desktop section links in ink-soft (hover: ink with lilac underline), toggle, menu button on phones.
 - **Floating bar**: once the hero has scrolled 85% of a viewport, a cream-75% glass pill (max 768px wide, blur and saturation, soft lift, 10px below the safe area) blurs in from above in 0.5s.
 - **Menu sheet** (phones): full-screen cream with the wash top-right and the meadow along the bottom; it opens as a circle growing from the menu button (0.7s, bloom easing), items rise in at 2.6rem Fraunces with a 0.05s stagger, socials fade in last. Escape closes; the body stops scrolling.
-- **Every page shares this chrome.** Menu order: Universuri, Cărți, Despre mine, Artă, Consiliere, Comunitate, Contact (plus Acasă in the sheet and footer). The current page carries `aria-current` and the lilac underline (italic violet in the sheet). Inline links show from 1280px; below that the menu button is used. Links are 44px tall.
+- **Every page opens at its top.** `mount()` turns off scroll restoration and jumps (never glides) to the top on load, on back/forward and when a hash switches the book or product, scrolling any viewer frame that wraps the page as well; only in-page anchors (Consiliere „Programează” → #programare) scroll smoothly. `scripts/check-routing.js` clicks every internal link on every page (phone and laptop, plus a scrolling-frame harness) and must report 0 failures.
+- **Every page shares this chrome.** Menu order (client, 2026-10-05): Acasă, Despre mine, Consiliere, Cărți, Artă, Universuri, Comunitate, Contact, the same in the top bar, the floating bar, the sheet and the footer (whose two columns read down). The current page carries `aria-current` and the lilac underline (italic violet in the sheet). Inline links show from 1280px; below that the menu button is used. Links are 44px tall.
 - **Content edge.** Header, page titles, sections and footer share one left edge: a 75rem container with 16/24px side padding, which lands exactly where sections that pad on the outside do (144px at 1440).
 
 ### Page opener (inner pages)
@@ -335,23 +343,23 @@ One footer everywhere: the name with violet „Nichifor”, the souls tagline, s
 An arched window, 3:4, soft lift. The live universe is a small copy of the hero (sky wash + meadow; the painting zooms to 1.04 over 1.4s on hover) and is the butterfly's landing perch. Unreleased universes show their creature on a paint-edged tint circle and a cream badge in the universe's deep tint. Name in Fraunces below, book title in italic ink-soft, "Descoperă" (magenta when live, ink-soft otherwise). Every window links to its universe page, including the ones still „în curând”.
 
 ### Watercolor orb (Universuri sky)
-A perfectly round orb painted in its universe tint (light highlight at 36% / 30%, mid at the edge), with a smooth rim feathered over 1.5px (no displacement filter; it left jagged steps), inset volume, and a blurred glow halo that breathes only when the universe is live. It holds the flapping butterfly (live) or the line-drawn creature. Beneath: a glass name pill in Fraunces and a status badge (magenta "Disponibilă" / 10% ink "În curând"). The orb is the button. Orbs are never joined by a line; each drifts on its own and the one being looked at grows (see Orb focus in the Motion Vocabulary); press is 0.97. Opening it morphs the orb into the universe page's header orb.
+A perfectly round orb painted in its universe tint (light highlight at 36% / 30%, mid at the edge), with a smooth rim feathered over 1.5px (no displacement filter; it left jagged steps), inset volume, and a blurred glow halo that breathes only when the universe is live. It holds the flapping butterfly (live) or the line-drawn creature. Beneath: a glass name pill in Fraunces and a status badge („Cartea a apărut” on the universe's own deep tint, so two published books never read as two magenta sparks / 10% ink „În curând”). The orb is the button. Orbs are never joined by a line; each drifts on its own and the one being looked at grows (see Orb focus in the Motion Vocabulary); press is 0.97. Opening it morphs the orb into the universe page's header orb.
 
 ### Universe page
-A full-screen dialog on the universe's tinted sky with its own pollen. Glass back button + toggle at the top, the header orb (min(64vw, 300px)), title, italic book title, status badge, a hook paragraph (46ch). "În acest univers" lists items as 24px-rounded glass tiles on a 70% tint panel (2 columns, 4 from 1024px); items not yet made say "în curând". Live: primary store buttons; not live: a primary "anunță-mă" via Instagram. "Alte universuri" shows the other three as small orbs that switch in place. Escape and browser back close it; a shared `#id` link opens it directly.
+A full-screen dialog on the universe's tinted sky with its own pollen. Glass back button + toggle at the top, the header orb (min(64vw, 300px)), title, italic book title, status badge, a hook paragraph (46ch). "În acest univers" lists items as 24px-rounded glass tiles on a 70% tint panel (2 columns, 4 from 1024px); items not yet made say "în curând". Book out: the „În curând · Comenzile online se deschid în curând.” line (no store links until real ones exist); not out: a primary „anunță-mă” via Instagram. "Alte universuri" shows the other three as small orbs that switch in place. Escape and browser back close it; a shared `#id` link opens it directly.
 
 ### Book cover
 A real cover image with a spine radius, book lift and a -2.5° resting tilt. With a mouse it tilts toward the pointer (up to 7° / 5°) on a spring and settles on leave; touch keeps it still.
 
 ### Status badges
-Small 700 labels in pills. On the sky: magenta with cream for available, ink 10% with ink-soft for coming soon. On an arch window: cream 88% with the universe's deep tint.
+Small 700 labels in pills. A book that is out („Apărută”, „Cartea a apărut”) wears its universe's deep tint with cream text, on every surface (shelf, book page, orbs, universe page), so two published books never read as two magenta sparks; coming soon and in the works are ink 10% with ink-soft. On an arch window: cream 88% with the universe's deep tint.
 
 ### Inner-page components
 - **Section title**: the headline role (clamp 2.2–3.8rem, 380) for every section h2 on inner pages; statements (clamp 1.6–2.6rem, 360) for closing lines.
 - **Status chip**: one component. Magenta with cream text only for what is available now; everything coming is a 10% plum tint with ink-soft text. No ring. It sits *below* the title it describes, never above.
 - **Links**: the ink pill with seed circle is the primary action; the underlined text link with a lilac 2px underline and moving arrow is the secondary. Nothing outlined.
-- **Age switch (Cărți)**: tabs Copii · Adolescenți · Adulți on a white-60% pill; the ink thumb slides with a critically damped spring (0.4s); arrow keys, Home and End move between tabs.
-- **Shelf**: covers stand on a soft plum contact shadow and lift 8px with a 1.5° tilt on hover; magenta link only on the available book.
+- **Age switch (Cărți)**: tabs Copii · Adolescenți · Adulți on a white-60% pill; the ink thumb slides with a critically damped spring (0.4s); arrow keys, Home and End move between tabs. A tab without books shows no count and an „În lucru” chip with one line, never invented titles.
+- **Shelf**: covers stand on a soft plum contact shadow and lift 8px with a 1.5° tilt on hover; „Despre carte” is an ink link with the lilac underline on every published book (ink-soft for coming ones), never magenta.
 - **Opening cover (book page)**: the cover is hinged at the spine and opens −24° on hover or tap, showing a page with faint lines beneath.
 - **Gallery wall (Artă)**: column masonry (2 → 3 columns), each work on a #fffdf9 mat with the soft shadow and a museum label (title, technique · size, availability dot, price when available). Sold is a quiet plum dot, never magenta. Filter chips use the same sliding ink thumb.
 - **Artwork sheet**: rises from the bottom on phones (spring, no bounce; drag the handle down to dismiss, velocity-aware), a centred two-column panel on laptop; Esc, Back and the close button close it, focus returns to the frame, Tab stays inside.
@@ -363,6 +371,12 @@ Small 700 labels in pills. On the sky: magenta with cream for available, ink 10%
 - **Partner card (Comunitate)**: white-60% card with the logo, or a painted initial in Fraunces WONK italic on a smooth lilac-petal disc, the name, one line and the handle with an outbound arrow.
 - **Butterflies gathering (Comunitate hero)**: six real cover butterflies at different sizes, flying in from every side with a damped spring and settling over the meadow inside an arch window; each keeps its own wingbeat and slow drift.
 - **Spam guards**: every form carries an off-screen honeypot and a 3-second time trap; spam gets the normal success state.
+- **„În curând / În lucru” (the honesty rule, 2026-10-05)**: anything not decided yet is labelled, never invented. „În curând” (coming soon) for what will exist: online orders, e-book, dates of gatherings, prices of sessions, products and paintings. „În lucru” (in the works) for what is being made: teen and adult titles, the two community projects. Both use the 10% plum status chip; no invented dates, prices, durations or titles anywhere.
+- **Răsfoiește (book page)**: three real pages from the printer's PDF (the cover and two inner pages chosen by the client), A4 portrait on paper white with the book lift and a spine radius, on the horizontal snap row on phones and three columns on laptop; hover lifts 6px with a ±0.8° tilt. A tap lifts the page into a full-screen reader on a plum 55% blurred scrim: the page itself grows out of its thumbnail (shared layout, spring 0.45s, no bounce), round glass buttons turn pages (← → keys, swipe), turning is an instant swap with a 150ms crossfade, „Pagina 8 · 2 din 3” is announced politely, Esc/scrim/close put the page back into its thumbnail and focus returns there.
+- **Despre autor (Cărți)**: the last section before the footer: the books first, then the person behind them. An arched portrait on a petal paint-edge halo (sticky on laptop), the title, her text in ink at 58ch with „Ramona Nichifor” in bold as on the printed page, ending on her one-line statement in violet italic and a „Povestea mea” link to Despre mine. Her e-book / audiobook sentences live in „Unde găsești cărțile” just above, as plain definition lines under the „În curând · Comenzile online se pregătesc.” line.
+- **Long read (Despre mine)**: her text in four movements (childhood and painting · psychology and law · work and motherhood · today), ink body at 58ch, 1.65 line-height, 64–80px between movements. Two display moments: the pull line „Am urmat drumul propus. Eram un copil.” in violet italic (SOFT, no WONK on a whole sentence) hanging 0.4em into the margin, and her questions one per line in Fraunces 360. The closing line at statement size (clamp 1.6–2.6rem) after 64px of air, then the Parisienne signature written in with a clip-path sweep. Paragraphs settle in on scroll (fade + 14px, 0.8s bloom, 60ms stagger, once). Pattern taken from long-form editorial (Wired: narrative in the serif's rhythm, generous breathing between beats), kept in her palette.
+- **Pre-order (Artă)**: available works are „Pre-comandă” (leaf dot); the sheet's primary action is „Pre-comandă” → contact, with „Plata și livrarea le stabilim împreună. Magazinul online vine în curând.” beneath. Prices show „Preț în curând” until real. Art is paintings only: originals and prints; no ceramics.
+- **Gatherings (Comunitate)**: four kinds (ateliere de pictură, lansări de carte, sesiuni de autografe, ateliere de citit), each with a drawn icon on a paint-edge tint seed and a „Datele, în curând” chip, and „Vreau să particip” → contact.
 - **Painted placeholders**: code-painted watercolour pools in the palette (paler centres, darker drying rims, paint-edge filter) stand in for paintings, covers and spreads until the real scans arrive. They are always marked placeholder in content.
 
 ### Email copy

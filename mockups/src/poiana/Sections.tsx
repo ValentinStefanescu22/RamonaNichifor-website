@@ -5,9 +5,9 @@ import { Butterfly } from "../shared/Butterfly";
 import { art, book, counselling, nav, pillars, site, ui, universes } from "../shared/content";
 import { CopyEmail } from "../shared/CopyEmail";
 import { Creature } from "../shared/creatures";
-import { Armchair, ArrowRight, ArrowUpRight, Brush, OpenBook, Video, WhatsApp } from "../shared/icons";
+import { Armchair, ArrowRight, Brush, OpenBook, Video, WhatsApp } from "../shared/icons";
 import { useLang } from "../shared/lang";
-import { TextLink } from "../site/Layout";
+import { BuySoon, PillLink, TextLink } from "../site/Layout";
 
 function SectionTitle({ children, lead, className = "" }: { children: ReactNode; lead?: ReactNode; className?: string }) {
   return (
@@ -75,6 +75,8 @@ export function Universes({ perchRef, landed }: { perchRef: RefObject<HTMLDivEle
       <ul className="snap-row mt-10 flex gap-4 overflow-x-auto px-[max(1rem,calc((100vw-72rem)/2))] sm:px-[max(1.5rem,calc((100vw-72rem)/2))] pb-6 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible">
         {universes.map((u) => {
           const live = u.status === "available";
+          // the Fluture window is the butterfly's home: its meadow is where the flight lands
+          const meadow = u.id === "fluture";
           return (
             <li key={u.id} className="w-[72vw] max-w-[300px] shrink-0 lg:w-auto lg:max-w-none">
               <a
@@ -84,12 +86,12 @@ export function Universes({ perchRef, landed }: { perchRef: RefObject<HTMLDivEle
                 <div
                   className="arch relative aspect-[3/4] overflow-hidden shadow-soft"
                   style={{
-                    background: live
+                    background: meadow
                       ? "linear-gradient(180deg, var(--color-sky) 0%, var(--color-mist) 42%, var(--color-cream) 70%)"
                       : u.tint[0],
                   }}
                 >
-                  {live ? (
+                  {meadow ? (
                     <>
                       <img
                         src={img("meadow.webp")}
@@ -116,14 +118,14 @@ export function Universes({ perchRef, landed }: { perchRef: RefObject<HTMLDivEle
                     className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-[0.78rem] font-semibold whitespace-nowrap"
                     style={{ background: "rgb(251 247 241 / 0.88)", color: u.tint[2] }}
                   >
-                    {t(live ? ui.available : ui.comingSoon)}
+                    {t(live ? ui.bookOut : ui.comingSoon)}
                   </span>
                 </div>
                 <div className="px-1 pt-4">
                   <h3 className="display text-[1.4rem] leading-tight text-ink">{t(u.name)}</h3>
                   <p className="mt-1 text-[0.98rem] italic text-ink-soft">{t(u.book)}</p>
                   {/* every world has its own page, including the ones still „în curând” */}
-                  <span className={`mt-3 inline-flex min-h-11 items-center gap-2 font-semibold ${live ? "text-magenta" : "text-ink-soft"}`}>
+                  <span className={`mt-3 inline-flex min-h-11 items-center gap-2 font-semibold ${meadow ? "text-magenta" : "text-ink-soft"}`}>
                     {t(ui.discover)}
                     <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
@@ -178,40 +180,21 @@ export function Book() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <TiltCover />
         <div className="min-w-0">
-          <p className="text-[0.95rem] font-semibold text-violet">
+          <h2 className="display text-[clamp(2.3rem,8.5vw,4rem)] font-[380] text-ink">{t(book.title)}</h2>
+          <p className="display mt-3 text-[1.3rem] leading-snug italic text-ink-soft">{t(book.subtitle)}</p>
+          <p className="mt-3 text-[0.95rem] font-semibold text-violet">
             {t(book.audience)} · {book.year} · „{t(site.series)}”
           </p>
-          <h2 className="display mt-3 text-[clamp(2.3rem,8.5vw,4rem)] font-[380] text-ink">{t(book.title)}</h2>
-          <p className="display mt-3 text-[1.3rem] leading-snug italic text-ink-soft">{t(book.subtitle)}</p>
           <div className="mt-6 max-w-[58ch] space-y-4 text-[1.05rem] leading-relaxed text-ink-soft">
             {book.blurb.map((p, i) => (
               <p key={i}>{t(p)}</p>
             ))}
           </div>
-          <div className="mt-8 flex flex-wrap gap-3">
-            {book.stores.map((s) => (
-              <a
-                key={s.name}
-                href={s.href}
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex min-h-12 items-center gap-3 rounded-full bg-ink py-1.5 pr-1.5 pl-5 font-medium text-cream shadow-soft transition-transform duration-150 active:scale-[0.97]"
-              >
-                <span>
-                  {t(ui.buyAt)} <strong className="font-bold">{s.name}</strong>
-                </span>
-                <span className="grid size-9 place-items-center rounded-full bg-cream/15 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                  <ArrowUpRight size={17} />
-                </span>
-              </a>
-            ))}
-          </div>
-          <p className="mt-5 text-[0.92rem] text-ink-soft">
-            {t(ui.formats)} <span className="tabular-nums">ISBN {book.isbn}</span>
-          </p>
-          <TextLink href="carte.html" className="mt-4">
+          <PillLink href="carte.html" icon={<ArrowRight size={17} />} className="mt-8">
             {t(ui.aboutBook)}
-          </TextLink>
+          </PillLink>
+          <BuySoon link={false} className="mt-5" />
+          <p className="mt-3 text-[0.92rem] text-ink-soft tabular-nums">ISBN {book.isbn}</p>
         </div>
       </div>
     </section>

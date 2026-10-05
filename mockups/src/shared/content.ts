@@ -11,8 +11,8 @@ const t = (ro: string, en: string): Text => ({ ro, en });
 export const site = {
   name: "Ramona Nichifor",
   roles: t(
-    "Autor · Ilustrator · Antreprenor · Consilier pentru dezvoltare personală",
-    "Author · Illustrator · Entrepreneur · Personal development counsellor",
+    "Autor · Ilustrator · Consilier pentru dezvoltare personală",
+    "Author · Illustrator · Personal development counsellor",
   ),
   rolesShort: t("Autor · Ilustrator · Consilier", "Author · Illustrator · Counsellor"),
   series: t("Magia suntem noi", "The Magic Is Us"),
@@ -20,11 +20,13 @@ export const site = {
     "O serie de povești blânde despre acceptare, iubire, curiozitate și emoții adevărate.",
     "A series of gentle stories about acceptance, love, curiosity and honest feelings.",
   ),
+  /** The Universuri page's line under the series title */
+  universesLead: t("Colecții pentru copii", "Collections for children"),
   souls: t("Povești pentru suflete mici și mari", "Stories for small and grown-up souls"),
   whisper: t("O poveste pentru copii… o șoaptă pentru adulți", "A story for children… a whisper for grown-ups"),
   intro: t(
-    "Scriu povești, le pictez în acuarelă și însoțesc oameni în drumul spre ei înșiși.",
-    "I write stories, paint them in watercolour, and walk alongside people on their way back to themselves.",
+    "Scriu povești, le pictez și însoțesc oameni în drumul spre ei înșiși.",
+    "I write stories, paint them, and walk alongside people on their way back to themselves.",
   ),
   /** Three lines; the middle item of each triple is the emphasised word. */
   manifesto: [
@@ -55,8 +57,12 @@ export const nav = {
 
 export const ui = {
   comingSoon: t("În curând", "Coming soon"),
-  available: t("Disponibilă", "Available"),
-  buyAt: t("Cumpără de pe", "Buy on"),
+  inProgress: t("În lucru", "In the works"),
+  /** A book that is out (no book can be bought online yet) */
+  available: t("Apărută", "Out now"),
+  bookOut: t("Cartea a apărut", "Book out now"),
+  buySoon: t("Comenzile online se pregătesc.", "Online orders are being set up."),
+  detailsSoon: t("Detalii în curând", "Details coming soon"),
   discover: t("Descoperă universul", "Explore the universe"),
   enterStory: t("Intră în poveste", "Step into the story"),
   readMore: t("Citește mai mult", "Read more"),
@@ -113,10 +119,13 @@ export const universes: Universe[] = [
     id: "buburuza",
     name: t("Universul Buburuzei", "The Ladybird Universe"),
     book: t("Buburuza rotunjoară", "The Roly-Poly Ladybird"),
-    hook: t("Povestea prinde contur în atelier.", "The story is taking shape in the studio."),
-    status: "soon",
+    hook: t(
+      "O buburuză rotunjoară care descoperă că adevărata magie izvorăște din iubirea și acceptarea de sine.",
+      "A roly-poly ladybird who discovers that real magic springs from love and self-acceptance.",
+    ),
+    status: "available",
     tint: ["#FBE1DA", "#EE9B8C", "#A8483C"],
-    items: [{ name: t("Cartea", "The book"), status: "soon" }, ...soonItems],
+    items: [{ name: t("Cartea", "The book"), status: "available" }, ...soonItems],
   },
   {
     id: "tantar",
@@ -153,10 +162,6 @@ export const book = {
       "Pentru copii, o poveste blândă despre încrederea în sine și curajul de a fi diferit. Pentru adulți, o reflecție despre a privi dincolo de frică, așteptări și tipare vechi.",
       "For children, a gentle story about self-belief and the courage to be different. For grown-ups, a reflection on looking past fear, expectations and old patterns.",
     ),
-  ],
-  stores: [
-    { name: "eMAG", href: "https://www.emag.ro/" },
-    { name: "Amazon", href: "https://www.amazon.com/" },
   ],
 };
 
@@ -210,7 +215,7 @@ export const art = {
   ),
   pieces: [
     { src: "cover-fluturele.webp", title: t("Poiana fluturelui", "The butterfly's meadow"), kind: t("Ilustrația de copertă", "Cover illustration") },
-    { src: "mug.webp", title: t("Cană din atelier", "Studio mug"), kind: t("Ceramică lucrată manual", "Handmade ceramic") },
+    { src: "cover-buburuza.webp", title: t("Buburuza rotunjoară", "The roly-poly ladybird"), kind: t("Ilustrația de copertă", "Cover illustration") },
     { src: "butterfly.webp", title: t("Fluturele", "The butterfly"), kind: t("Detaliu de copertă", "Cover detail") },
   ],
 };

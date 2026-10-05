@@ -121,9 +121,28 @@ wide.putalpha(feather.resize(wide.size))
 save(meadow_rgba, "meadow.webp", 82)
 save(wide, "meadow-wide.webp", 80)
 
-# --- Portrait, the handmade mug, the watercolor wash
+# --- Portrait, the watercolor wash
 portrait = Image.open(SRC / "portrait.webp").convert("RGB")
 save(portrait, "portrait.webp", 84)
-mug = Image.open(SRC / "mug.jpg").convert("RGB")
-save(mug.crop((0, 360, 900, 1260)), "mug.webp", 84)
 save(Image.open(SRC / "watercolor-wash.webp").convert("RGB"), "wash.webp", 80)
+
+
+# --- Book covers and pages, from the printer's PDFs. Render them first (native PDFKit, no installs):
+#   swift scripts/pdf-pages.swift "<Fluturele_interior.pdf>" assets-src/pages/fluturele 4 9
+#   swift scripts/pdf-pages.swift "<Buburuza_interior.pdf>" assets-src/pages/buburuza 8 12
+#   swift scripts/pdf-pages.swift "<Fluturele_cop.pdf>" assets-src/pages/fluturele-cop 1   (same for Buburuza)
+def tall(img: Image.Image, h: int) -> Image.Image:
+    return img.resize((round(img.width * h / img.height), h), Image.LANCZOS)
+
+
+PAGES = SRC / "pages"
+if PAGES.exists():
+    (OUT / "pages").mkdir(exist_ok=True)
+    front = (1724, 139, 3120, 2201)  # the front board, inside the printer's guide lines, right of the spine
+    for book, numbers in (("fluturele", (4, 9)), ("buburuza", (8, 12))):
+        cover = Image.open(PAGES / f"{book}-cop-p1.png").convert("RGB").crop(front)
+        save(tall(cover, 1300), f"pages/{book}-coperta.webp", 82)
+        for n in numbers:
+            save(tall(Image.open(PAGES / f"{book}-p{n}.png").convert("RGB"), 1300), f"pages/{book}-p{n}.webp", 82)
+    buburuza = Image.open(PAGES / "buburuza-cop-p1.png").convert("RGB").crop(front)
+    save(tall(buburuza, 1120), "cover-buburuza.webp", 84)

@@ -3,6 +3,7 @@ import { site, ui, universes } from "../../shared/content";
 import { bookOf, booksPage, itemHref, productKinds, productPage, products, type Product } from "../../shared/content-pages";
 import { ArrowRight, Instagram } from "../../shared/icons";
 import { useLang } from "../../shared/lang";
+import { toTop } from "../../site/mount";
 import { delay, PillLink, SiteShell, TextLink } from "../../site/Layout";
 import { BookCover, ProductArt } from "../../site/Painted";
 import { StatusChip } from "../../site/StatusChip";
@@ -20,7 +21,7 @@ export default function App() {
   useEffect(() => {
     const onHash = () => {
       setP(pick());
-      window.scrollTo({ top: 0 });
+      toTop(); // another book or product is another page: open it at its top
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
@@ -61,9 +62,7 @@ export default function App() {
                 </h1>
                 <p className="fade-up mt-5 flex flex-wrap items-center gap-3 text-[0.95rem] text-ink-soft" style={delay(0.35)}>
                   <StatusChip>{t(ui.comingSoon)}</StatusChip>
-                  <span>
-                    {t(productPage.pricePending)} <strong className="font-semibold text-ink tabular-nums">{p.price}</strong>
-                  </span>
+                  <span>{t(productPage.priceSoon)}</span>
                 </p>
                 <div className="fade-up mt-6 max-w-[56ch] space-y-4 text-[1.06rem] leading-[1.75] text-ink-soft" style={delay(0.4)}>
                   {p.description.map((d, i) => (

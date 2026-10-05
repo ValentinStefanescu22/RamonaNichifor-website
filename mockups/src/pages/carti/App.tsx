@@ -1,15 +1,16 @@
 import { useRef, useState, type KeyboardEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ages, book, nav, site, ui } from "../../shared/content";
+import { ages, nav, site, ui } from "../../shared/content";
 import { booksPage, shelf, type AgeId, type ShelfBook } from "../../shared/content-pages";
-import { ArrowRight, ArrowUpRight } from "../../shared/icons";
+import { img } from "../../shared/assets";
+import { ArrowRight } from "../../shared/icons";
 import { useLang } from "../../shared/lang";
-import { PageOpener, SiteShell } from "../../site/Layout";
+import { BuySoon, PageOpener, Reveal, SiteShell, TextLink } from "../../site/Layout";
 import { BookCover } from "../../site/Painted";
 import { StatusChip } from "../../site/StatusChip";
 
 function CoverStack() {
-  const fan = [shelf[4], shelf[1], shelf[0]];
+  const fan = [shelf[2], shelf[1], shelf[0]];
   const pose = [
     "left-[2%] top-[10%] -rotate-[9deg]",
     "right-[0%] top-[4%] rotate-[8deg]",
@@ -42,11 +43,11 @@ function ShelfItem({ b }: { b: ShelfBook }) {
         <h3 className="display text-[1.25rem] leading-tight text-ink">{t(b.title)}</h3>
         <p className="mt-1 text-[0.95rem] leading-snug text-ink-soft">{t(b.line)}</p>
         <div className="mt-2.5 flex flex-wrap items-center gap-2">
-          <StatusChip live={b.status === "available"}>{t(booksPage.status[b.status])}</StatusChip>
+          <StatusChip tint={b.status === "published" ? b.tint[2] : undefined}>{t(booksPage.status[b.status])}</StatusChip>
           {b.year && <span className="text-[0.88rem] text-ink-soft tabular-nums">{b.year}</span>}
         </div>
         {href && (
-          <span className={`mt-1 inline-flex min-h-11 items-center gap-1.5 font-semibold ${b.status === "available" ? "text-magenta" : "text-ink-soft"}`}>
+          <span className={`mt-1 inline-flex min-h-11 items-center gap-1.5 font-semibold underline decoration-lilac decoration-2 underline-offset-[6px] ${b.status === "published" ? "text-ink" : "text-ink-soft"}`}>
             {t(ui.aboutBook)}
             <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
           </span>
@@ -55,6 +56,51 @@ function ShelfItem({ b }: { b: ShelfBook }) {
     </>
   );
   return <li>{href ? <a href={href} className="group block">{body}</a> : <div className="group">{body}</div>}</li>;
+}
+
+/** „Despre autor”, the last word before the footer: the books first, then the person behind them */
+function AboutAuthor() {
+  const { t } = useLang();
+  const a = booksPage.author;
+  const [first, ...rest] = a.paragraphs;
+  const name = "Ramona Nichifor";
+  return (
+    <section aria-labelledby="despre-autor" className="relative overflow-hidden bg-cream px-4 pb-16 sm:px-6 lg:pb-20">
+      <div className="mx-auto grid max-w-6xl items-start gap-10 pt-6 lg:grid-cols-[0.62fr_1.38fr] lg:gap-20 lg:pt-10">
+        <Reveal i={0} className="relative mx-auto w-[min(58vw,260px)] pt-4 lg:sticky lg:top-28 lg:mx-0 lg:w-full lg:max-w-[300px]">
+          <span className="paint-edge absolute -inset-x-3 top-1 -bottom-3 rounded-[999px_999px_2.5rem_2.5rem] bg-petal" aria-hidden="true" />
+          <img src={img("portrait.webp")} alt="Ramona Nichifor" loading="lazy" className="arch relative aspect-[4/5] w-full object-cover object-[50%_22%]" />
+        </Reveal>
+        <div className="max-w-[58ch]">
+          <Reveal i={0}>
+            <h2 id="despre-autor" className="display text-[clamp(2.2rem,8.5vw,3.6rem)] font-[380] text-ink">
+              {t(a.title)}
+            </h2>
+          </Reveal>
+          <div className="mt-6 space-y-5 text-[1.08rem] leading-[1.65] text-ink">
+            <Reveal i={1}>
+              <p className="text-[1.2rem] leading-[1.65] text-ink">
+                {/* her name opens the text in her own weight, as on the printed page */}
+                <strong className="font-bold">{name}</strong>
+                {t(first).slice(name.length)}
+              </p>
+            </Reveal>
+            {rest.map((p, i) => (
+              <Reveal key={i} i={i + 2}>
+                <p>{t(p)}</p>
+              </Reveal>
+            ))}
+            <Reveal i={2}>
+              <p className="display !mt-9 text-[clamp(1.45rem,4.6vw,1.9rem)] leading-[1.25] font-[360] text-violet italic text-balance">{t(a.statement)}</p>
+            </Reveal>
+          </div>
+          <TextLink href="despre.html" className="mt-6">
+            {t(ui.myStory)}
+          </TextLink>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 /** Copii · Adolescenți · Adulți as tabs: the pill slides with a critically damped spring */
@@ -93,7 +139,7 @@ function AgeTabs({ value, onChange }: { value: AgeId; onChange: (a: AgeId) => vo
           >
             {on && <motion.span layoutId="age-pill" className="absolute inset-0 -z-10 rounded-full bg-ink" transition={{ type: "spring", bounce: 0, duration: 0.4 }} />}
             {t(a.label)}
-            <span className="text-[0.8rem] tabular-nums opacity-70">{count}</span>
+            {count > 0 && <span className="text-[0.8rem] tabular-nums opacity-70">{count}</span>}
           </button>
         );
       })}
@@ -112,7 +158,7 @@ export default function App() {
         <PageOpener
           title={t(nav.books)}
           tagline={t(site.souls)}
-          lead={<p>{t(booksPage.formats)}</p>}
+          lead={<p>{t(site.whisper)}</p>}
           background="linear-gradient(180deg, #f9e8ef 0%, var(--color-petal) 46%, var(--color-cream) 96%)"
           aside={<CoverStack />}
         />
@@ -132,13 +178,16 @@ export default function App() {
                   {age === "copii" ? (
                     <p className="display text-[1.35rem] italic text-violet">„{t(site.series)}”</p>
                   ) : (
-                    <p className="text-[1.05rem] text-ink-soft">{t(ageLine)}</p>
+                    <p className="flex flex-wrap items-center gap-3 text-[1.05rem] text-ink-soft">
+                      <StatusChip>{t(ui.inProgress)}</StatusChip>
+                      {t(ageLine)}
+                    </p>
                   )}
-                  <ul className="mt-6 grid grid-cols-2 gap-x-5 gap-y-12 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-8">
+                  {books.length > 0 && <ul className="mt-6 grid grid-cols-2 gap-x-5 gap-y-12 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-8">
                     {books.map((b) => (
                       <ShelfItem key={b.id} b={b} />
                     ))}
-                  </ul>
+                  </ul>}
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -146,28 +195,23 @@ export default function App() {
         </section>
 
         <section className="bg-cream px-4 pb-20 sm:px-6">
-          <div className="mx-auto flex max-w-6xl flex-col gap-5 border-t border-ink/10 pt-10 lg:flex-row lg:items-center lg:justify-between">
+          <div className="mx-auto grid max-w-6xl gap-6 border-y border-ink/10 py-10 lg:grid-cols-[0.62fr_1.38fr] lg:gap-20">
             <h2 className="display text-[1.8rem] text-ink">{t(booksPage.where)}</h2>
-            <div className="flex flex-wrap gap-3">
-              {book.stores.map((s) => (
-                <a
-                  key={s.name}
-                  href={s.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group inline-flex min-h-12 items-center gap-3 rounded-full bg-ink py-1.5 pr-1.5 pl-5 font-medium text-cream shadow-soft transition-transform duration-150 active:scale-[0.97]"
-                >
-                  <span>
-                    {t(ui.buyAt)} <strong className="font-bold">{s.name}</strong>
-                  </span>
-                  <span className="grid size-9 place-items-center rounded-full bg-cream/15">
-                    <ArrowUpRight size={17} />
-                  </span>
-                </a>
-              ))}
+            <div className="space-y-4">
+              <BuySoon />
+              {/* her own sentences already say „în curând” and „planificată” */}
+              <dl className="grid gap-x-8 gap-y-3 text-[1rem] sm:grid-cols-[auto_1fr]">
+                {booksPage.author.formats.map((f) => (
+                  <div key={f.name.ro} className="contents">
+                    <dt className="font-bold text-ink">{t(f.name)}</dt>
+                    <dd className="max-w-[52ch] text-ink-soft">{t(f.line)}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           </div>
         </section>
+        <AboutAuthor />
       </main>
     </SiteShell>
   );

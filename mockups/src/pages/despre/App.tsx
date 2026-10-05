@@ -1,11 +1,11 @@
 import { motion, useReducedMotion } from "motion/react";
 import { img } from "../../shared/assets";
 import { Butterfly } from "../../shared/Butterfly";
-import { site, ui } from "../../shared/content";
+import { site, ui, type Text } from "../../shared/content";
 import { about } from "../../shared/content-pages";
 import { ArrowRight } from "../../shared/icons";
 import { useLang } from "../../shared/lang";
-import { PageOpener, SectionTitle, SiteShell } from "../../site/Layout";
+import { PageOpener, Reveal, SectionTitle, SiteShell } from "../../site/Layout";
 
 function Portrait() {
   return (
@@ -51,6 +51,57 @@ function Craft({ name, line, href, tint, index }: { name: string; line: string; 
   );
 }
 
+type Beat = { text: Text; kind?: "quote" | "questions" | "close" };
+
+function Beat({ beat, i }: { beat: Beat; i: number }) {
+  const { t } = useLang();
+  const text = t(beat.text);
+  if (beat.kind === "quote")
+    return (
+      <Reveal i={i} className="!mt-10 lg:-ml-[0.4em]">
+        <p className="display text-[clamp(1.7rem,5.6vw,2.35rem)] leading-[1.15] font-[360] text-violet italic">{text}</p>
+      </Reveal>
+    );
+  if (beat.kind === "questions")
+    // one question per line, the way they arrive
+    return (
+      <Reveal i={i} className="!my-9">
+        <p className="display flex flex-col gap-2 text-[clamp(1.4rem,4.4vw,1.85rem)] leading-[1.22] font-[360] text-ink">
+          {text.split(/(?<=\?)\s+/).map((q) => (
+            <span key={q} className="text-balance">{q}</span>
+          ))}
+        </p>
+      </Reveal>
+    );
+  if (beat.kind === "close")
+    return (
+      <Reveal i={i} className="!mt-16">
+        <p className="display text-[clamp(1.6rem,6vw,2.6rem)] leading-[1.15] font-[360] text-ink text-balance">{text}</p>
+      </Reveal>
+    );
+  return (
+    <Reveal i={i}>
+      <p>{text}</p>
+    </Reveal>
+  );
+}
+
+/** Her name in her own hand: the stroke is revealed left to right, as if written, when it comes into view */
+function Signature({ name }: { name: string }) {
+  const reduce = useReducedMotion();
+  return (
+    <motion.p
+      className="font-script mt-10 inline-block -rotate-3 pr-4 text-[clamp(3.2rem,11vw,4.4rem)] leading-none text-violet"
+      initial={reduce ? false : { clipPath: "inset(-20% 100% -20% 0)" }}
+      whileInView={{ clipPath: "inset(-20% 0% -20% 0)" }}
+      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+      transition={{ duration: reduce ? 0.4 : 1.3, ease: [0.77, 0, 0.175, 1], delay: 0.25 }}
+    >
+      {name}
+    </motion.p>
+  );
+}
+
 export default function App() {
   const { t } = useLang();
   return (
@@ -63,24 +114,24 @@ export default function App() {
           background="linear-gradient(180deg, #ece4f6 0%, #f4eef6 40%, var(--color-cream) 78%)"
           aside={<Portrait />}
         >
-          <p className="text-[1rem] text-ink-soft">{t(site.roles)}</p>
+          <p className="max-w-[40ch] text-[1.02rem] text-ink-soft">{t(about.role)}</p>
         </PageOpener>
 
-        {/* PLACEHOLDER bio: the reading measure and rhythm are real, the words are stand-ins */}
+        {/* Her story, in four movements: the words are hers, the breath between them is the layout */}
         <section className="bg-cream px-4 py-16 sm:px-6 lg:py-24">
           <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.6fr_1.4fr] lg:gap-16">
             <h2 className="display text-[clamp(2.2rem,8.5vw,3.8rem)] font-[380] text-ink lg:sticky lg:top-28 lg:self-start">
               {t(ui.myStory)}
             </h2>
-            <div className="max-w-[62ch] space-y-5 text-[1.08rem] leading-[1.75] text-ink">
-              {about.bio.map((p, i) => (
-                <p key={i} className={i === 0 ? "text-[1.22rem] leading-[1.6]" : "text-ink-soft"}>
-                  {t(p)}
-                </p>
+            <div className="max-w-[58ch] text-[1.08rem] leading-[1.65] text-ink">
+              {about.story.map((movement, m) => (
+                <div key={m} className={`space-y-5 ${m > 0 ? "mt-16 lg:mt-20" : ""}`}>
+                  {movement.map((beat, i) => (
+                    <Beat key={i} beat={beat} i={i} />
+                  ))}
+                </div>
               ))}
-              <p className="display display-wonk !mt-8 -rotate-2 text-[2.2rem] italic text-violet">
-                {about.signature}
-              </p>
+              <Signature name={about.signature} />
             </div>
           </div>
         </section>
@@ -95,7 +146,6 @@ export default function App() {
             </ul>
           </div>
         </section>
-
       </main>
     </SiteShell>
   );

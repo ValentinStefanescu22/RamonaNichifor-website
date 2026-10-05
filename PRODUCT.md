@@ -51,14 +51,14 @@ One person behind every piece: the same hand writes the stories, paints the illu
 - Voice: warm, gentle, lyrical, intimate; speaks to children and adults at once.
 - Confirmed lines: „O poveste pentru copii… o șoaptă pentru adulți”, „Povești pentru suflete mici și mari”, „Între rațiune și intuiție. Între cuvânt și imagine. Între ceea ce știm și ceea ce simțim.”
 - **Do not use** „Bine ai revenit acasă, puiule!” / "Welcome home, baby".
-- Roles line: Autor · Ilustrator · Antreprenor · Consilier pentru dezvoltare personală.
+- Roles line: Autor · Ilustrator · Consilier pentru dezvoltare personală (Antreprenor dropped, 2026-10-05).
 - Colour cues from the client's own material (to recycle): lavender, blush pink, powder blue, sage, cream, deep plum ink, butterfly magenta.
 
 ## Evidence on Hand
 
 - `mockups/assets-src/cover-fluturele-spread.jpg` — full cover spread of *Fluturele dansator de step* (2026, ISBN 978-973-0-44382-0) incl. back-cover blurb and series list.
 - `mockups/assets-src/portrait.webp` — portrait photo (low-res, ~900px).
-- `mockups/assets-src/mug.jpg` — handmade ceramic mug (her own work, assumed).
+- Printer PDFs for both books (covers + interiors) and her „Despre mine” / „Despre autor” texts (2026-10-03). Ceramics are not part of the site.
 - `mockups/assets-src/watercolor-wash.webp` — watercolor floral background she supplied.
 - `mockups/assets-src/client-hero-mockup.jpg` — her AI-made hero idea (reference for mood only, not to copy).
 - **Absent — never fabricate:** her paintings, illustrations for the other three universes, testimonials, prices, store URLs, social handles, credentials/certifications, press.

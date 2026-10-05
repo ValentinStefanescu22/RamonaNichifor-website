@@ -5,7 +5,7 @@ import { nav, site } from "../shared/content";
 import { Facebook, Instagram, WhatsApp } from "../shared/icons";
 import { LangToggle, useLang } from "../shared/lang";
 import { easeOut } from "../shared/motion";
-import { homeHref, pages, type PageId } from "./pages";
+import { homeHref, menu, type PageId } from "./pages";
 
 /** SVG filters for the watercolour edges; rendered once per page. */
 export function PaintDefs() {
@@ -48,7 +48,7 @@ export function MenuButton({ open, onClick }: { open: boolean; onClick: () => vo
 
 export function Wordmark({ className = "" }: { className?: string }) {
   return (
-    <a href={homeHref} className={`display display-wonk inline-flex min-h-11 items-center italic leading-none whitespace-nowrap text-ink ${className}`}>
+    <a href={homeHref} className={`font-script inline-flex min-h-11 items-center leading-none whitespace-nowrap text-ink ${className}`}>
       Ramona Nichifor
     </a>
   );
@@ -59,9 +59,10 @@ export function TopBar({ current, menuOpen, onMenu }: { current: PageId; menuOpe
   const { t } = useLang();
   return (
     <header className="relative z-30 mx-auto flex max-w-[75rem] items-center justify-between gap-4 px-4 pt-4 sm:px-6 lg:pt-6">
-      <Wordmark className="text-[1.35rem] sm:text-2xl" />
+      {/* On Acasă the hero already says her name, large: the header stays quiet until the floating bar takes over */}
+      {current === "home" ? <span aria-hidden="true" /> : <Wordmark className="text-[1.7rem] sm:text-[1.95rem]" />}
       <nav aria-label="Principal" className="hidden items-center gap-6 text-[0.95rem] font-medium text-ink-soft xl:flex">
-        {pages.map((p) => (
+        {menu.map((p) => (
           <a
             key={p.id}
             href={p.href}
@@ -110,9 +111,9 @@ export function FloatingBar({
           style={{ top: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
         >
           <div className="flex w-full max-w-3xl items-center xl:max-w-5xl justify-between gap-3 rounded-full bg-cream/75 py-1.5 pr-1.5 pl-5 shadow-soft ring-1 ring-ink/5 backdrop-blur-xl backdrop-saturate-150">
-            <Wordmark className="text-lg" />
+            <Wordmark className="text-[1.45rem]" />
             <nav aria-label="Secțiuni" className="hidden items-center gap-5 text-[0.9rem] font-medium text-ink-soft xl:flex">
-              {pages.map((p) => (
+              {menu.map((p) => (
                 <a
                   key={p.id}
                   href={p.href}
@@ -149,8 +150,6 @@ export function MenuSheet({ current, open, onClose }: { current: PageId; open: b
     };
   }, [open, onClose]);
 
-  const items = [{ id: "home" as const, label: nav.home, href: homeHref }, ...pages];
-
   return (
     <AnimatePresence>
       {open && (
@@ -169,7 +168,7 @@ export function MenuSheet({ current, open, onClose }: { current: PageId; open: b
           <img src={img("meadow.webp")} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 w-full" />
           <nav className="relative flex min-h-full flex-col px-6 pt-24 pb-56">
             <ul className="flex flex-col">
-              {items.map((p, i) => (
+              {menu.map((p, i) => (
                 <motion.li
                   key={p.id}
                   initial={{ y: 28, opacity: 0 }}

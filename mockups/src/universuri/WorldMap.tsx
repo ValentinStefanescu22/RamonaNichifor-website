@@ -101,7 +101,7 @@ export function OrbArt({
         aria-hidden="true"
       />
       <span className="relative grid w-[64%] place-items-center">
-        {live ? <Butterfly width="100%" tempo={1.1} /> : <Creature id={u.id as "buburuza"} size="78%" style={{ color: u.tint[2] }} />}
+        {u.id === "fluture" ? <Butterfly width="100%" tempo={1.1} /> : <Creature id={u.id} size="78%" style={{ color: u.tint[2] }} />}
       </span>
     </div>
   );
@@ -153,12 +153,11 @@ export function Orb({
       <span
         className="orb-label relative mt-1.5 rounded-full px-2.5 py-0.5 text-[0.78rem] font-bold"
         style={
-          live
-            ? { background: "var(--color-magenta)", color: "var(--color-cream)" }
-            : { background: "rgb(52 34 74 / 0.1)", color: "var(--color-ink-soft)" }
+          // each world's own deep tint, so two published books never compete as two magenta sparks
+          live ? { background: u.tint[2], color: "var(--color-cream)" } : { background: "rgb(52 34 74 / 0.1)", color: "var(--color-ink-soft)" }
         }
       >
-        {t(live ? ui.available : ui.comingSoon)}
+        {t(live ? ui.bookOut : ui.comingSoon)}
       </span>
     </button>
   );

@@ -15,6 +15,8 @@
 
   --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --font-sans: "Alegreya Sans", "Gill Sans", "Segoe UI", system-ui, sans-serif;
+  /* Her hand: only the wordmark and the signature, never running text */
+  --font-script: "Parisienne", "Snell Roundhand", "Apple Chancery", cursive;
 
   --ease-bloom: cubic-bezier(0.16, 1, 0.3, 1);
 }

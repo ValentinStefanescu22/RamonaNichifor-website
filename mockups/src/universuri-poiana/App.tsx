@@ -3,10 +3,10 @@ import { flushSync } from "react-dom";
 import { useReducedMotion } from "motion/react";
 import { img } from "../shared/assets";
 import type { UniverseId } from "../shared/content";
-import { book, nav, site, ui, universes } from "../shared/content";
-import { ArrowRight, ArrowUpRight, Instagram } from "../shared/icons";
+import { nav, site, ui, universes } from "../shared/content";
+import { ArrowRight, Instagram } from "../shared/icons";
 import { LangToggle, useLang } from "../shared/lang";
-import { SiteShell, washMask } from "../site/Layout";
+import { BuySoon, SiteShell, washMask } from "../site/Layout";
 import { bookOf, itemHref, productKinds } from "../shared/content-pages";
 import { BookCover, ProductArt } from "../site/Painted";
 import { Pollen } from "../universuri/Pollen";
@@ -91,9 +91,9 @@ function UniversePage({ id, onBack, onSwitch }: { id: UniverseId; onBack: () => 
           <p className="display mt-2 text-[1.3rem] italic text-ink-soft">{t(u.book)}</p>
           <span
             className="mt-4 rounded-full px-3 py-1 text-[0.85rem] font-bold"
-            style={live ? { background: "var(--color-magenta)", color: "var(--color-cream)" } : { background: "rgb(52 34 74 / 0.1)", color: "var(--color-ink-soft)" }}
+            style={live ? { background: u.tint[2], color: "var(--color-cream)" } : { background: "rgb(52 34 74 / 0.1)", color: "var(--color-ink-soft)" }}
           >
-            {t(live ? ui.available : ui.comingSoon)}
+            {t(live ? ui.bookOut : ui.comingSoon)}
           </span>
           <p className="mt-5 max-w-[46ch] text-[1.1rem] leading-relaxed text-ink-soft">{t(u.hook)}</p>
         </header>
@@ -133,23 +133,7 @@ function UniversePage({ id, onBack, onSwitch }: { id: UniverseId; onBack: () => 
           </ul>
 
           {live ? (
-            <div className="mt-6">
-              <p className="text-[0.95rem] font-bold text-ink">{t(ui.buyAt)}</p>
-              <div className="mt-2 flex flex-wrap gap-3">
-                {book.stores.map((s) => (
-                  <a
-                    key={s.name}
-                    href={s.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex min-h-12 items-center gap-2 rounded-full bg-ink px-6 font-medium text-cream shadow-soft transition-transform active:scale-[0.97]"
-                  >
-                    {s.name}
-                    <ArrowUpRight size={17} />
-                  </a>
-                ))}
-              </div>
-            </div>
+            <BuySoon className="mt-6" />
           ) : (
             <a
               href={site.contact.instagram.href}
@@ -270,7 +254,7 @@ export default function App() {
               „{t(site.series)}”
             </p>
             <p className="fade-up mt-2 max-w-[36ch] text-[1.05rem] text-ink-soft" style={{ "--d": "0.3s" } as CSSProperties}>
-              {t(site.seriesLead)}
+              {t(site.universesLead)}
             </p>
             <p className="fade-up mt-4 flex items-center gap-2 text-[0.95rem] font-bold text-magenta" style={{ "--d": "0.4s" } as CSSProperties}>
               <span className="size-2 animate-pulse rounded-full bg-magenta" aria-hidden="true" />
