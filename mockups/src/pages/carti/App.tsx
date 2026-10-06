@@ -43,7 +43,8 @@ function ShelfItem({ b }: { b: ShelfBook }) {
         <h3 className="display text-[1.25rem] leading-tight text-ink">{t(b.title)}</h3>
         <p className="mt-1 text-[0.95rem] leading-snug text-ink-soft">{t(b.line)}</p>
         <div className="mt-2.5 flex flex-wrap items-center gap-2">
-          <StatusChip tint={b.status === "published" ? b.tint[2] : undefined}>{t(booksPage.status[b.status])}</StatusChip>
+          {/* a book that is out shows only its year */}
+          {b.status !== "published" && <StatusChip>{t(booksPage.status[b.status])}</StatusChip>}
           {b.year && <span className="text-[0.88rem] text-ink-soft tabular-nums">{b.year}</span>}
         </div>
         {href && (
@@ -199,7 +200,6 @@ export default function App() {
             <h2 className="display text-[1.8rem] text-ink">{t(booksPage.where)}</h2>
             <div className="space-y-4">
               <BuySoon />
-              {/* her own sentences already say „în curând” and „planificată” */}
               <dl className="grid gap-x-8 gap-y-3 text-[1rem] sm:grid-cols-[auto_1fr]">
                 {booksPage.author.formats.map((f) => (
                   <div key={f.name.ro} className="contents">

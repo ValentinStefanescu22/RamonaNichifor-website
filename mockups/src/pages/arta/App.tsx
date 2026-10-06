@@ -29,14 +29,14 @@ const dotColor: Record<Artwork["availability"], string> = { preorder: "#6f8a5a",
 function Availability({ a }: { a: Artwork }) {
   const { t } = useLang();
   return (
-    <span className="inline-flex items-center gap-1.5 text-[0.9rem] text-ink-soft">
-      <span className="size-2 rounded-full" style={{ background: dotColor[a.availability] }} aria-hidden="true" />
-      {t(artPage.availability[a.availability])}
+    // two short lines, never broken mid-phrase in a narrow column: the state, then the price
+    <span className="flex flex-col gap-0.5 text-[0.9rem] text-ink-soft">
+      <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+        <span className="size-2 rounded-full" style={{ background: dotColor[a.availability] }} aria-hidden="true" />
+        {t(artPage.availability[a.availability])}
+      </span>
       {a.availability === "preorder" && (
-        <>
-          <span aria-hidden="true">·</span>
-          <span>{t(a.price ? { ro: a.price, en: a.price } : artPage.priceSoon)}</span>
-        </>
+        <span className="pl-3.5 whitespace-nowrap">{t(a.price ? { ro: a.price, en: a.price } : artPage.priceSoon)}</span>
       )}
     </span>
   );

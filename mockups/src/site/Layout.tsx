@@ -5,17 +5,11 @@ import { ui } from "../shared/content";
 import { useLang } from "../shared/lang";
 import { easeOut } from "../shared/motion";
 import { StatusChip } from "./StatusChip";
-import { FloatingBar, MenuSheet, PaintDefs, TopBar } from "./Chrome";
+import { FloatingBar, MenuSheet, PaintDefs, TopBar, washMask } from "./Chrome";
 import { Footer, type Ground } from "./Footer";
 import type { PageId } from "./pages";
 
 export const delay = (s: number) => ({ "--d": `${s}s` }) as CSSProperties;
-
-/** Fades a watercolour wash out on every side so no image edge ever shows */
-export function washMask(shape: string): CSSProperties {
-  const m = `radial-gradient(${shape}, #000 30%, transparent 100%)`;
-  return { maskImage: m, WebkitMaskImage: m };
-}
 
 /**
  * Every page: the header over the page's own ground, the floating bar and phone menu,

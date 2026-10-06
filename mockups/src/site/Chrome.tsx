@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import { img } from "../shared/assets";
 import { nav, site } from "../shared/content";
@@ -6,6 +6,18 @@ import { Facebook, Instagram, WhatsApp } from "../shared/icons";
 import { LangToggle, useLang } from "../shared/lang";
 import { easeOut } from "../shared/motion";
 import { homeHref, menu, type PageId } from "./pages";
+
+/** Fades a watercolour wash out on every side so no image edge ever shows */
+export function washMask(shape: string): CSSProperties {
+  const m = `radial-gradient(${shape}, #000 30%, transparent 100%)`;
+  return { maskImage: m, WebkitMaskImage: m };
+}
+
+// Feathers the top of a meadow strip into whatever sits above it
+const meadowMask: CSSProperties = {
+  maskImage: "linear-gradient(180deg, transparent 0%, #000 26%)",
+  WebkitMaskImage: "linear-gradient(180deg, transparent 0%, #000 26%)",
+};
 
 /** SVG filters for the watercolour edges; rendered once per page. */
 export function PaintDefs() {
@@ -32,7 +44,7 @@ export function MenuButton({ open, onClick }: { open: boolean; onClick: () => vo
       onClick={onClick}
       aria-expanded={open}
       aria-label={t(open ? nav.close : nav.menu)}
-      className="relative grid size-11 place-items-center rounded-full bg-ink text-cream transition-transform duration-150 active:scale-[0.94] xl:hidden"
+      className="relative grid size-11 place-items-center rounded-full bg-ink text-cream transition-transform duration-150 active:scale-[0.94]"
     >
       <span
         className="absolute h-[1.5px] w-5 rounded-full bg-current transition-transform duration-500 ease-(--ease-bloom)"
@@ -61,13 +73,13 @@ export function TopBar({ current, menuOpen, onMenu }: { current: PageId; menuOpe
     <header className="relative z-30 mx-auto flex max-w-[75rem] items-center justify-between gap-4 px-4 pt-4 sm:px-6 lg:pt-6">
       {/* On Acasă the hero already says her name, large: the header stays quiet until the floating bar takes over */}
       {current === "home" ? <span aria-hidden="true" /> : <Wordmark className="text-[1.7rem] sm:text-[1.95rem]" />}
-      <nav aria-label="Principal" className="hidden items-center gap-6 text-[0.95rem] font-medium text-ink-soft xl:flex">
+      <nav aria-label="Principal" className="hidden items-center gap-5 text-[0.95rem] font-medium text-ink-soft lg:flex xl:gap-6">
         {menu.map((p) => (
           <a
             key={p.id}
             href={p.href}
             aria-current={p.id === current ? "page" : undefined}
-            className="inline-flex min-h-11 items-center decoration-lilac decoration-2 underline-offset-[6px] hover:text-ink hover:underline aria-[current=page]:text-ink aria-[current=page]:underline"
+            className="inline-flex min-h-11 items-center whitespace-nowrap decoration-lilac decoration-2 underline-offset-[6px] hover:text-ink hover:underline aria-[current=page]:text-ink aria-[current=page]:underline"
           >
             {t(p.label)}
           </a>
@@ -110,15 +122,15 @@ export function FloatingBar({
           className="fixed inset-x-0 z-50 flex justify-center px-3"
           style={{ top: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
         >
-          <div className="flex w-full max-w-3xl items-center xl:max-w-5xl justify-between gap-3 rounded-full bg-cream/75 py-1.5 pr-1.5 pl-5 shadow-soft ring-1 ring-ink/5 backdrop-blur-xl backdrop-saturate-150">
+          <div className="flex w-full max-w-3xl items-center justify-between lg:max-w-5xl gap-3 rounded-full bg-cream/75 py-1.5 pr-1.5 pl-5 shadow-soft ring-1 ring-ink/5 backdrop-blur-xl backdrop-saturate-150">
             <Wordmark className="text-[1.45rem]" />
-            <nav aria-label="Secțiuni" className="hidden items-center gap-5 text-[0.9rem] font-medium text-ink-soft xl:flex">
+            <nav aria-label="Secțiuni" className="hidden items-center gap-5 text-[0.9rem] font-medium text-ink-soft lg:flex">
               {menu.map((p) => (
                 <a
                   key={p.id}
                   href={p.href}
                   aria-current={p.id === current ? "page" : undefined}
-                  className="inline-flex min-h-11 items-center hover:text-ink aria-[current=page]:text-ink"
+                  className="inline-flex min-h-11 items-center whitespace-nowrap hover:text-ink aria-[current=page]:text-ink"
                 >
                   {t(p.label)}
                 </a>
@@ -158,43 +170,65 @@ export function MenuSheet({ current, open, onClose }: { current: PageId; open: b
           role="dialog"
           aria-modal="true"
           aria-label={t(nav.menu)}
-          className="fixed inset-0 z-[45] overflow-y-auto bg-cream xl:hidden"
+          className="fixed inset-0 z-[45] overflow-y-auto bg-cream"
           initial={{ clipPath: "circle(0% at calc(100% - 38px) 38px)" }}
           animate={{ clipPath: "circle(150% at calc(100% - 38px) 38px)" }}
           exit={{ clipPath: "circle(0% at calc(100% - 38px) 38px)" }}
           transition={{ duration: 0.7, ease: easeOut }}
         >
-          <img src={img("wash.webp")} alt="" className="pointer-events-none absolute top-0 right-0 h-full w-auto opacity-70" />
-          <img src={img("meadow.webp")} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 w-full" />
-          <nav className="relative flex min-h-full flex-col px-6 pt-24 pb-56">
-            <ul className="flex flex-col">
-              {menu.map((p, i) => (
-                <motion.li
-                  key={p.id}
-                  initial={{ y: 28, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 + i * 0.045, duration: 0.6, ease: easeOut }}
-                >
-                  <a
-                    href={p.href}
-                    onClick={onClose}
-                    aria-current={p.id === current ? "page" : undefined}
-                    className="display block py-1.5 text-[2.35rem] text-ink aria-[current=page]:italic aria-[current=page]:text-violet"
+          {/* the light of the page: the wash fades out on every side; the meadow is the last thing in the
+              column, so on a short screen it moves below the words instead of behind them */}
+          <img
+            src={img("wash.webp")}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-[4%] -right-[30%] h-[72%] w-auto max-w-none opacity-55 mix-blend-multiply sm:-right-[6%]"
+            style={washMask("ellipse 60% 55% at 70% 40%")}
+          />
+          <div className="relative flex min-h-full flex-col">
+            <nav className="relative mx-auto w-full max-w-[75rem] px-6 pt-24 pb-10 lg:pt-24">
+              <ul className="flex flex-col">
+                {menu.map((p, i) => (
+                  <motion.li
+                    key={p.id}
+                    initial={{ y: 28, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.1 + i * 0.045, duration: 0.6, ease: easeOut }}
                   >
-                    {t(p.label)}
-                  </a>
-                </motion.li>
-              ))}
-            </ul>
-            <motion.div
-              className="mt-8 flex items-center gap-2 text-ink-soft"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.45, duration: 0.5 }}
-            >
-              <SocialLinks />
-            </motion.div>
-          </nav>
+                    <a
+                      href={p.href}
+                      onClick={onClose}
+                      aria-current={p.id === current ? "page" : undefined}
+                      className="group display block py-1.5 text-[2.35rem] text-ink aria-[current=page]:italic aria-[current=page]:text-violet lg:text-[2.6rem]"
+                    >
+                      {/* grows from its left edge: on hover where there is a mouse, while pressed on a phone */}
+                      <span className="inline-block origin-left transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-[1.08] group-active:scale-[1.08]">
+                        {t(p.label)}
+                      </span>
+                    </a>
+                  </motion.li>
+                ))}
+              </ul>
+              <motion.div
+                className="mt-8 flex items-center gap-2 text-ink-soft"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.45, duration: 0.5 }}
+              >
+                <SocialLinks />
+              </motion.div>
+            </nav>
+            <picture className="mt-auto block">
+              <source media="(min-width: 1024px)" srcSet={img("meadow-wide.webp")} />
+              <img
+                src={img("meadow.webp")}
+                alt=""
+                aria-hidden="true"
+                className="pointer-events-none block h-[28svh] w-full object-cover object-bottom lg:h-[30svh]"
+                style={meadowMask}
+              />
+            </picture>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

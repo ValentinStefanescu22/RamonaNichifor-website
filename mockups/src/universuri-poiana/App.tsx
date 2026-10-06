@@ -6,7 +6,8 @@ import type { UniverseId } from "../shared/content";
 import { nav, site, ui, universes } from "../shared/content";
 import { ArrowRight, Instagram } from "../shared/icons";
 import { LangToggle, useLang } from "../shared/lang";
-import { BuySoon, SiteShell, washMask } from "../site/Layout";
+import { washMask } from "../site/Chrome";
+import { BuySoon, SiteShell } from "../site/Layout";
 import { bookOf, itemHref, productKinds } from "../shared/content-pages";
 import { BookCover, ProductArt } from "../site/Painted";
 import { Pollen } from "../universuri/Pollen";
@@ -122,7 +123,7 @@ function UniversePage({ id, onBack, onSwitch }: { id: UniverseId; onBack: () => 
                     <div className="flex items-end justify-between gap-2 px-4 py-3">
                       <span className="min-w-0">
                         <span className="block font-bold text-ink">{t(item.name)}</span>
-                        <span className="block text-[0.9rem] text-ink-soft">{t(ready ? ui.available : ui.comingSoon)}</span>
+                        <span className="block text-[0.9rem] text-ink-soft tabular-nums">{ready && i === 0 ? bookOf(u.id).year : t(ready ? ui.available : ui.comingSoon)}</span>
                       </span>
                       <ArrowRight size={17} className="mb-1 shrink-0 text-ink-soft transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-ink" />
                     </div>
@@ -236,12 +237,13 @@ export default function App() {
           className="pointer-events-none absolute -top-[4%] -right-[30%] -z-10 h-[70%] w-auto max-w-none opacity-60 mix-blend-multiply sm:-right-[8%]"
           style={washMask("ellipse 60% 55% at 72% 38%")}
         />
+        {/* its mask fades out fully before the section's bottom edge, so no line shows above the footer */}
         <img
           src={img("wash.webp")}
           alt=""
           aria-hidden="true"
           className="pointer-events-none absolute bottom-0 -left-[35%] -z-10 h-[55%] w-auto max-w-none scale-x-[-1] opacity-45 mix-blend-multiply sm:-left-[12%]"
-          style={washMask("ellipse 58% 52% at 68% 62%")}
+          style={washMask("ellipse 58% 44% at 68% 52%")}
         />
 
         {/* Phones pick the world nearest mid-screen, so the page needs room for the last world to reach the middle */}

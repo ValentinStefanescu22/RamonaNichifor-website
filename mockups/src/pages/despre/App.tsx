@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import { img } from "../../shared/assets";
 import { Butterfly } from "../../shared/Butterfly";
+import { Ladybird } from "../../shared/Ladybird";
 import { site, ui, type Text } from "../../shared/content";
 import { about } from "../../shared/content-pages";
 import { ArrowRight } from "../../shared/icons";
@@ -15,6 +16,10 @@ function Portrait() {
       {/* the cover butterfly rests on the top of the arch */}
       <div className="absolute top-0 right-[6%] w-[30%] rotate-[14deg]">
         <Butterfly width="100%" tempo={1.7} />
+      </div>
+      {/* and Buburuza climbs the frame at the opposite corner, so the two read as one diagonal */}
+      <div className="absolute -bottom-5 -left-2 w-[22%] -rotate-[16deg]">
+        <Ladybird width="100%" sway={5.6} />
       </div>
     </div>
   );
@@ -51,17 +56,11 @@ function Craft({ name, line, href, tint, index }: { name: string; line: string; 
   );
 }
 
-type Beat = { text: Text; kind?: "quote" | "questions" | "close" };
+type Beat = { text: Text; kind?: "questions" | "close" };
 
 function Beat({ beat, i }: { beat: Beat; i: number }) {
   const { t } = useLang();
   const text = t(beat.text);
-  if (beat.kind === "quote")
-    return (
-      <Reveal i={i} className="!mt-10 lg:-ml-[0.4em]">
-        <p className="display text-[clamp(1.7rem,5.6vw,2.35rem)] leading-[1.15] font-[360] text-violet italic">{text}</p>
-      </Reveal>
-    );
   if (beat.kind === "questions")
     // one question per line, the way they arrive
     return (

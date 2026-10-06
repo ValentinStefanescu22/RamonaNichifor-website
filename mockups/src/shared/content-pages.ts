@@ -35,7 +35,7 @@ export const about = {
         "Mi-ar fi plăcut să rămân în lumea aceea, să învăț să ofer și eu, să… exprim, prin artă, ceea ce simțeam. Am fost însă îndrumată către un liceu cu profil real, cu multă matematică și fizică. Poate din grijă, poate din teama că pasiunea mea nu mi-ar fi putut oferi o viață sigură. Nu privesc astăzi acea alegere ca fiind corectă sau greșită. Știu doar că nu se alinia cu ceea ce simțeam eu atunci.",
         "I would have liked to stay in that world, to learn to give something too, to… express through art what I felt. Instead, I was steered towards a science high school, with a great deal of maths and physics. Perhaps out of care, perhaps out of fear that my passion could not give me a secure life. Today I don't see that choice as right or wrong. I only know it didn't match what I felt back then.",
       ) },
-      { text: t("Am urmat drumul propus. Eram un copil.", "I followed the path laid out for me. I was a child."), kind: "quote" as const },
+      { text: t("Am urmat drumul propus. Eram un copil.", "I followed the path laid out for me. I was a child.") },
     ],
     [
       { text: t(
@@ -83,7 +83,7 @@ export const about = {
         "Today I paint, write and illustrate. I honour my creative nature, my past and the journey.",
       ), kind: "close" as const },
     ],
-  ] as { text: Text; kind?: "quote" | "questions" | "close" }[][],
+  ] as { text: Text; kind?: "questions" | "close" }[][],
   signature: "Ramona",
   crafts: {
     title: t("Trei meșteșuguri, o singură mână", "Three crafts, one hand"),
@@ -247,7 +247,7 @@ export const booksPage = {
     ],
     statement: t("Cărțile ei sunt menite să fie citite cu voce tare, împărtășite și simțite.", "Her books are meant to be read aloud, shared and felt."),
     formats: [
-      { name: t("E-book", "E-book"), line: t("În curând, disponibile și ebook.", "Coming soon as e-books too.") },
+      { name: t("E-book", "E-book"), line: t("În curând", "Coming soon") },
       {
         name: t("Audiobook", "Audiobook"),
         line: t(
@@ -579,7 +579,6 @@ export const community = {
   eventsLead: t("Ce facem împreună. Anunț fiecare întâlnire pe Instagram.", "What we do together. I announce every gathering on Instagram."),
   join: t("Vreau să particip", "I'd like to come"),
   projectsTitle: t("Proiecte cu sens", "Projects with meaning"),
-  projectsLead: t("Povești care ajung acolo unde e cea mai mare nevoie de ele.", "Stories that reach the places that need them most."),
   ctaTitle: t("Vreau să aflu primul", "Tell me first"),
   ctaLine: t(
     "Anunț întâlnirile noi pe Instagram. Ai o idee de proiect? Scrie-mi.",
@@ -634,31 +633,6 @@ export const community = {
     },
   ],
   datesSoon: t("Datele, în curând", "Dates coming soon"),
-  // PLACEHOLDER: projects
-  projects: [
-    {
-      id: "carte-clasa",
-      title: t("O carte pentru fiecare clasă", "A book for every classroom"),
-      line: t(
-        "Pentru fiecare carte vândută, o carte ajunge într-o școală din mediul rural, împreună cu un ghid pentru învățători.",
-        "For every book sold, one goes to a rural school, together with a guide for teachers.",
-      ),
-      status: t("În lucru", "In the works"),
-      wash: ["#fbe3c9", "#f3b9c9", "#e6dcf5"] as [string, string, string],
-      placeholder: true,
-    },
-    {
-      id: "centre-zi",
-      title: t("Ateliere în centre de zi și orfelinate", "Workshops in day centres and orphanages"),
-      line: t(
-        "Întâlniri despre emoții, prin povești și culoare, pentru copiii din centre de zi și orfelinate.",
-        "Sessions on feelings, through stories and colour, for children in day centres and orphanages.",
-      ),
-      status: t("În lucru", "In the works"),
-      wash: ["#dfe7d4", "#a9be95", "#f6dde6"] as [string, string, string],
-      placeholder: true,
-    },
-  ],
 };
 
 /* ---------------------------------------------------------------- Programări (booking) */

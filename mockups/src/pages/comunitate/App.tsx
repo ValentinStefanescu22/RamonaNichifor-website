@@ -1,9 +1,8 @@
-import { site } from "../../shared/content";
+import { site, ui } from "../../shared/content";
 import { community } from "../../shared/content-pages";
 import { ArrowUpRight, Brush, Instagram, OpenBook, Pen, Speech } from "../../shared/icons";
 import { useLang } from "../../shared/lang";
 import { PageOpener, PillLink, Reveal, SectionTitle, SiteShell, TextLink } from "../../site/Layout";
-import { Wash } from "../../site/Painted";
 import { StatusChip } from "../../site/StatusChip";
 import { GatheringCircle } from "./Circle";
 
@@ -38,26 +37,6 @@ function Events() {
           </li>
         );
       })}
-    </ul>
-  );
-}
-
-function Projects() {
-  const { t } = useLang();
-  return (
-    <ul className="mt-12 flex flex-col gap-14 lg:gap-20">
-      {community.projects.map((p, i) => (
-        <li key={p.id} className={`grid items-center gap-6 sm:gap-10 ${i % 2 ? "sm:grid-cols-[1.2fr_0.8fr]" : "sm:grid-cols-[0.8fr_1.2fr]"}`}>
-          <Wash colors={p.wash} seed={p.id} className={`arch aspect-[4/5] w-[min(70vw,300px)] shadow-soft ${i % 2 ? "sm:order-2 sm:justify-self-end" : ""}`} />
-          <div className="min-w-0">
-            <h3 className="display text-[clamp(1.8rem,6.4vw,2.6rem)] leading-[1.08] font-[380] text-ink">{t(p.title)}</h3>
-            <p className="mt-3 max-w-[48ch] text-[1.06rem] leading-relaxed text-ink-soft">{t(p.line)}</p>
-            <div className="mt-4">
-              <StatusChip>{t(p.status)}</StatusChip>
-            </div>
-          </div>
-        </li>
-      ))}
     </ul>
   );
 }
@@ -117,11 +96,13 @@ export default function App() {
           </div>
         </section>
 
-        {/* Both projects are „În lucru”: the texts are working descriptions */}
+        {/* No project is announced yet (client, 2026-10-05): only the promise, said large */}
         <section className="bg-cream px-4 pb-24 sm:px-6 lg:pb-32">
           <div className="mx-auto max-w-6xl">
-            <SectionTitle lead={t(community.projectsLead)}>{t(community.projectsTitle)}</SectionTitle>
-            <Projects />
+            <SectionTitle>{t(community.projectsTitle)}</SectionTitle>
+            <Reveal i={1}>
+              <p className="display display-wonk mt-6 text-[clamp(2.6rem,9vw,4.4rem)] leading-none font-[360] text-violet italic lg:mt-8">{t(ui.comingSoon)}</p>
+            </Reveal>
           </div>
         </section>
 

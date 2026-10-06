@@ -142,13 +142,13 @@ Chosen 2026-10-01 over SaaS: Cal.com is closing its EU region on 1 Nov 2026, Cal
 - **Later (M7):** optional Stripe payment at booking for paid formats.
 
 ### 5.7 About `/despre`
-Arched portrait, her role line, her long story (rich text, set in movements with a pull line, her questions and a closing line; final text received 2026-10-03), the Parisienne signature, the three crafts, and links to all her profiles. These are the same links as `sameAs` in the Person JSON-LD. JSON-LD `ProfilePage` → `Person`.
+Arched portrait, her role line, her long story (rich text, set in movements with her questions and a closing line; final text received 2026-10-03), the Parisienne signature, the three crafts, and links to all her profiles. These are the same links as `sameAs` in the Person JSON-LD. JSON-LD `ProfilePage` → `Person`.
 
 ### 5.7b Comunitate cu sens `/comunitate`
 A page for gatherings and good works around the stories (mocked up 2026-10-01; content is placeholder).
 - **Opener:** „Comunitate / cu sens”, a lead on why, and **butterflies gathering**: the real cover butterfly several times over, flying in from every side and settling above the meadow inside an arch window (each with its own wingbeat and drift; still under reduced motion).
 - **Întâlniri:** the four kinds of gathering she runs (client, 2026-10-05): ateliere de pictură, lansări de carte, sesiuni de autografe, ateliere de citit. Each row: icon on a painted seed, title, audience, kind and „Datele, în curând” until an event has a date; then date, place and „Vreau să particip” → contact form, subject Comunitate.
-- **Proiecte cu sens:** projects with a painted image, title, line and a status: „Ateliere în centre de zi și orfelinate” and „O carte pentru fiecare clasă”, both „În lucru”. No hospital project.
+- **Proiecte cu sens:** no project is announced yet (client, 2026-10-05): the section shows its title and a large „În curând”. When projects arrive they get a painted image, title, line and a status. No hospital project.
 - **Parteneri:** partner cards (logo or a painted initial, name, one line, link to their page, opening in a new tab) and „Vrei să fim parteneri? Scrie-mi” → contact. First partner: AVA Art & Soul (instagram.com/ava.art.soul); logo and description to come from the client.
 - **Close:** „Vreau să aflu primul” (follow on Instagram) and „Propune un proiect” → contact.
 - JSON-LD `Event` for each upcoming event.

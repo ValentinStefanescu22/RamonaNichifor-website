@@ -104,7 +104,9 @@ export default function App() {
                   {t(d ? d.subtitle : b.line)}
                 </p>
                 <p className="fade-up mt-4 flex flex-wrap items-center gap-2 text-[0.95rem] text-ink-soft" style={delay(0.35)}>
-                  <StatusChip tint={live ? b.tint[2] : undefined}>{t(booksPage.status[b.status])}</StatusChip>
+                  {/* a book that is out just says when; one still coming says so */}
+                  {live ? <span className="tabular-nums">{b.year}</span> : <StatusChip>{t(booksPage.status[b.status])}</StatusChip>}
+                  {live && b.universe && <span aria-hidden="true">·</span>}
                   {b.universe && <>„{t(site.series)}”</>}
                 </p>
                 <div className="fade-up mt-6 max-w-[58ch] space-y-4 text-[1.06rem] leading-[1.75] text-ink-soft" style={delay(0.4)}>
@@ -183,7 +185,7 @@ export default function App() {
                           <BookCover book={r} />
                         </div>
                         <p className="display mt-3 text-[1rem] leading-tight text-ink sm:text-[1.1rem]">{t(r.title)}</p>
-                        <p className="mt-1 text-[0.85rem] text-ink-soft">{t(booksPage.status[r.status])}</p>
+                        <p className="mt-1 text-[0.85rem] text-ink-soft tabular-nums">{r.status === "published" ? r.year : t(booksPage.status[r.status])}</p>
                       </a>
                     </li>
                   ))}

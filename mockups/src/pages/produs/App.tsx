@@ -105,7 +105,7 @@ export default function App() {
                       )}
                     </div>
                     <p className="display mt-3 text-[1.05rem] leading-tight text-ink sm:text-[1.2rem]">{i === 0 ? t(book.title) : t(item.name)}</p>
-                    <p className="mt-1 text-[0.88rem] text-ink-soft">{i === 0 ? t(booksPage.status[book.status]) : t(ui.comingSoon)}</p>
+                    <p className="mt-1 text-[0.88rem] text-ink-soft">{i === 0 ? (book.status === "published" ? book.year : t(booksPage.status[book.status])) : t(ui.comingSoon)}</p>
                   </a>
                 </li>
               ))}
