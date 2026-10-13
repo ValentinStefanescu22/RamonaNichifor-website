@@ -7,7 +7,7 @@ import { toTop } from "../../site/mount";
 import { delay, PillLink, SiteShell, TextLink } from "../../site/Layout";
 import { BookCover, ProductArt } from "../../site/Painted";
 import { StatusChip } from "../../site/StatusChip";
-import { DeckFan, DeckSections } from "./Deck";
+import { BookmarkFan, BookmarkSections, DeckFan, DeckSections } from "./Deck";
 
 // One page for every universe keepsake (bookmark, playing cards, puzzle, family game), chosen by the link's
 // #id, e.g. produs.html#fluture-semn. Only the Fluturele deck is real so far; the rest are placeholders.
@@ -36,6 +36,7 @@ export default function App() {
   const book = bookOf(u.id);
   // the Fluturele deck is real: its own fan, pairs and rules
   const realDeck = p.id === "fluture-carti";
+  const realMarks = p.id === "fluture-semn";
   const others = u.items.map((item, i) => ({ item, i, href: itemHref(u.id, i) })).filter((x) => x.href !== `produs.html#${p.id}`);
 
   return (
@@ -52,7 +53,7 @@ export default function App() {
             </a>
             <div className="mt-6 grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
               <div className="fade-up" style={delay(0.1)}>
-                {realDeck ? <DeckFan key={p.id} /> : <ProductArt key={p.id} kind={p.kind} universe={u.id} tint={u.tint} className="mx-auto w-[min(78vw,420px)]" />}
+                {realDeck ? <DeckFan key={p.id} /> : realMarks ? <BookmarkFan key={p.id} /> : <ProductArt key={p.id} kind={p.kind} universe={u.id} tint={u.tint} className="mx-auto w-[min(78vw,420px)]" />}
               </div>
               <div className="min-w-0">
                 <h1 className="display text-[clamp(2.6rem,10vw,4.6rem)] font-[380] text-ink">
@@ -92,6 +93,7 @@ export default function App() {
         </section>
 
         {realDeck && <DeckSections key={p.id} />}
+        {realMarks && <BookmarkSections key={p.id} />}
 
         <section className="bg-cream px-4 pt-6 pb-24 sm:px-6">
           <div className="mx-auto max-w-6xl">

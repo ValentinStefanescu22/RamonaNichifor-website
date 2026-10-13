@@ -26,6 +26,13 @@ export function toTop() {
   document.documentElement.scrollIntoView({ block: "start", behavior: "instant" });
 }
 
+/** No „Save image as…” menu on her illustrations (the © stamp and screen-sized files do the rest) */
+function guardArt() {
+  addEventListener("contextmenu", (e) => {
+    if (e.target instanceof Element && e.target.closest("img.art")) e.preventDefault();
+  });
+}
+
 function openAtTop() {
   forgetHostScroll();
   // the host flushes the position on pagehide; ours runs after it, so the next page starts clean too
@@ -51,6 +58,7 @@ function openAtTop() {
 /** Boots a page: language, reduced-motion preference and the app. */
 export function mount(App: ComponentType) {
   openAtTop();
+  guardArt();
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
       <MotionConfig reducedMotion="user">

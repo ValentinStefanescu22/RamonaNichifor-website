@@ -1,7 +1,7 @@
 import { useEffect, useId, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Lang } from "../../shared/content";
-import { availability, booking, contactPage, type FormatId } from "../../shared/content-pages";
+import { availability, booking, contactPage, counsellingPage, type FormatId } from "../../shared/content-pages";
 import { ArrowRight } from "../../shared/icons";
 import { useLang } from "../../shared/lang";
 import { useAntiSpam } from "../../site/antispam";
@@ -218,8 +218,13 @@ export function Booking() {
   const nameRef = useRef<HTMLInputElement>(null);
   const doneRef = useRef<HTMLHeadingElement>(null);
 
+  const [length, setLength] = useState(60);
   const f = booking.formats.find((x) => x.id === format)!;
-  const slots = day ? slotsFor(day, f.minutes) : [];
+  // the first conversation is a fixed 15 min; a session lasts what the visitor picks
+  const minutesFor = (id: FormatId, len = length) => (id === "intro" ? booking.formats[0].minutes : len);
+  const minutes = minutesFor(format);
+  const price = counsellingPage.prices.find((p) => p.minutes === minutes);
+  const slots = day ? slotsFor(day, minutes) : [];
 
   const validate = (v = form): Errors => ({
     ...(v.name.trim() ? {} : { name: true }),
@@ -239,7 +244,11 @@ export function Booking() {
   const pickFormat = (id: FormatId) => {
     setFormat(id);
     // the day may no longer fit a longer session
-    if (day && time !== null && !slotsFor(day, booking.formats.find((x) => x.id === id)!.minutes).includes(time)) setTime(null);
+    if (day && time !== null && !slotsFor(day, minutesFor(id)).includes(time)) setTime(null);
+  };
+  const pickLength = (len: number) => {
+    setLength(len);
+    if (day && time !== null && !slotsFor(day, len).includes(time)) setTime(null);
   };
   const pickDay = (d: Date) => {
     setDay(d);
@@ -282,13 +291,13 @@ export function Booking() {
         <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[1.02rem]">
           <dt className="text-ink-soft">{t(booking.steps.format)}</dt>
           <dd className="text-ink">
-            {t(f.title)} · {t(f.detail)}
+            {t(f.title)} · {minutes} min{price ? ` · ${price.eur} €` : ""}
           </dd>
           <dt className="text-ink-soft">{t(booking.steps.day)}</dt>
           <dd className="text-ink">{longDate(day, lang)}</dd>
           <dt className="text-ink-soft">{t(booking.steps.time)}</dt>
           <dd className="text-ink tabular-nums">
-            {hhmm(time)}–{hhmm(time + f.minutes)} <span className="text-ink-soft">({t(booking.timezone)})</span>
+            {hhmm(time)}–{hhmm(time + minutes)} <span className="text-ink-soft">({t(booking.timezone)})</span>
           </dd>
         </dl>
         <p className="mt-5 text-[1rem] leading-relaxed text-ink">{t(booking.success.body)}</p>
@@ -334,12 +343,44 @@ export function Booking() {
         </div>
       </fieldset>
 
+      {/* 1b · length and price, for a session (the first conversation is fixed) */}
+      <AnimatePresence initial={false}>
+        {format !== "intro" && (
+          <motion.fieldset
+            key="length"
+            className="overflow-hidden"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <legend className="pt-6 font-semibold text-ink">{t(booking.length)}</legend>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {counsellingPage.prices.map((p) => {
+                const on = p.minutes === length;
+                return (
+                  <label key={p.minutes} className="relative cursor-pointer">
+                    <input type="radio" name="length" value={p.minutes} checked={on} onChange={() => pickLength(p.minutes)} className="peer absolute inset-0 opacity-0" />
+                    <span
+                      className="flex min-h-11 items-center gap-1.5 rounded-full px-4 tabular-nums ring-1 transition-colors duration-200 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-magenta"
+                      style={on ? { background: "var(--color-sage)", color: "var(--color-ink)", boxShadow: "inset 0 0 0 1.5px var(--color-leaf)" } : { color: "var(--color-ink-soft)", boxShadow: "inset 0 0 0 1px rgb(52 34 74 / 0.15)" }}
+                    >
+                      {p.minutes} min · <span className="font-semibold text-ink">{p.eur} €</span>
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </motion.fieldset>
+        )}
+      </AnimatePresence>
+
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-12">
         {/* 2 · day */}
         <div>
           <p className="font-semibold text-ink">2 · {t(booking.steps.day)}</p>
           <div className="mt-2">
-            <Calendar key={format} minutes={f.minutes} selected={day} onSelect={pickDay} />
+            <Calendar key={format} minutes={minutes} selected={day} onSelect={pickDay} />
           </div>
         </div>
 

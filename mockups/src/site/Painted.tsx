@@ -1,113 +1,119 @@
 import type { CSSProperties, ReactNode } from "react";
 import { img } from "../shared/assets";
-import type { UniverseId } from "../shared/content";
+import { ui, type Text, type UniverseId } from "../shared/content";
 import type { ProductKind, ShelfBook } from "../shared/content-pages";
 import { Creature } from "../shared/creatures";
 import { useLang } from "../shared/lang";
 
-// PLACEHOLDER artwork, painted in code: soft watercolour washes in the Poiana palette.
-// They stand in for Ramona's real paintings and covers until those arrive, and are deliberately
-// abstract so nobody mistakes them for her work.
+// PLACEHOLDER visuals: flat paper, a hairline inner frame and a small "coming soon" note.
+// They hold the place of Ramona's real paintings, covers and products until those arrive,
+// and are deliberately plain so nobody mistakes them for her work.
 
-/** Small deterministic random from a string, so a placeholder always paints the same way */
-function seeded(key: string) {
-  let h = 2166136261;
-  for (let i = 0; i < key.length; i++) h = Math.imul(h ^ key.charCodeAt(i), 16777619);
-  return () => {
-    h = Math.imul(h ^ (h >>> 15), 2246822507);
-    h = Math.imul(h ^ (h >>> 13), 3266489909);
-    return ((h ^= h >>> 16) >>> 0) / 4294967296;
-  };
+const PAPER = "#fffdf9";
+const imageSoon: Text = { ro: "Imagine în curând", en: "Image coming soon" };
+const coverSoon: Text = { ro: "Copertă în curând", en: "Cover coming soon" };
+
+/** A very pale paper tinted with a universe or wash colour */
+const paperOf = (color: string, amount = 40) => `color-mix(in oklab, ${color} ${amount}%, ${PAPER})`;
+
+function SoonLabel({ children }: { children: ReactNode }) {
+  return <span className="text-[0.72rem] leading-tight font-bold tracking-[0.08em] text-balance text-ink-soft uppercase">{children}</span>;
 }
 
-export function Wash({
-  colors,
-  seed,
-  className = "",
-  style,
-  children,
-}: {
-  colors: [string, string, string];
-  seed: string;
-  className?: string;
-  style?: CSSProperties;
-  children?: ReactNode;
-}) {
-  const r = seeded(seed);
-  // Pigment pools: flat colour that pales towards a slightly darker rim, the way watercolour dries
-  const blobs = Array.from({ length: 6 }, (_, i) => ({
-    x: 14 + r() * 72,
-    y: 12 + r() * 72,
-    w: 30 + r() * 44,
-    h: 24 + r() * 36,
-    c: colors[i % 3],
-    o: 0.5 + r() * 0.35,
-    rot: Math.round(r() * 60 - 30),
-  }));
+/** Picture-frame glyph: a rounded frame, a small sun and one mountain line */
+function FrameGlyph() {
   return (
-    <div className={`relative overflow-hidden ${className}`} style={{ background: "#fffaf3", ...style }} aria-hidden={children ? undefined : true}>
-      <div className="paint-edge absolute inset-[-4%]">
-        {blobs.map((b, i) => (
-          <span
-            key={i}
-            className="absolute rounded-[50%] mix-blend-multiply blur-[1.5px]"
-            style={{
-              left: `${b.x - b.w / 2}%`,
-              top: `${b.y - b.h / 2}%`,
-              width: `${b.w}%`,
-              height: `${b.h}%`,
-              transform: `rotate(${b.rot}deg)`,
-              background: `radial-gradient(closest-side, color-mix(in oklab, ${b.c} 70%, white) 0%, ${b.c} 78%, color-mix(in oklab, ${b.c} 82%, #34224a) 96%, transparent 100%)`,
-              opacity: b.o,
-            }}
-          />
-        ))}
+    <svg viewBox="0 0 24 24" className="w-7 text-ink-soft/50" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="4.5" width="18" height="15" rx="2.5" />
+      <circle cx="9" cy="9.5" r="1.6" />
+      <path d="M4 17.5 9.5 12.5 13 15.5 15.5 13.5 20 17.5" />
+    </svg>
+  );
+}
+
+/** Provisional image: fills its parent box (the caller sets shape and aspect via className) */
+export function Placeholder({ label, tint = "#fbf7f1", className = "", children }: { label?: string; tint?: string; className?: string; children?: ReactNode }) {
+  const { t } = useLang();
+  return (
+    <div className={`@container relative overflow-hidden ${className}`} style={{ background: tint }}>
+      <div className="absolute inset-[6cqi] flex flex-col items-center justify-center gap-2.5 border border-[rgb(52_34_74/0.18)] p-[6cqi] text-center">
+        {children ?? (
+          <>
+            <FrameGlyph />
+            <SoonLabel>{label ?? t(imageSoon)}</SoonLabel>
+          </>
+        )}
       </div>
-      {children}
     </div>
   );
 }
 
-/** A book cover: the real image when there is one, otherwise a painted stand-in with the title. */
+// Natural sizes of the real covers, so they render uncropped and without layout shift
+const coverSize: Record<string, [number, number]> = {
+  "cover-fluturele.webp": [766, 1120],
+  "cover-buburuza.webp": [758, 1120],
+};
+
+/** A book cover: the real image when there is one, otherwise a paper placeholder with the title. */
 export function BookCover({ book, className = "", style }: { book: ShelfBook; className?: string; style?: CSSProperties }) {
   const { t } = useLang();
-  const shape = `aspect-[766/1120] rounded-r-[10px] rounded-l-[4px] shadow-book ${className}`;
+  const shape = `rounded-r-[10px] rounded-l-[4px] shadow-book ${className}`;
   if (book.cover) {
-    return <img src={img(book.cover)} alt={t(book.title)} className={`${shape} w-full object-cover`} style={style} />;
+    const [width, height] = coverSize[book.cover] ?? [766, 1120];
+    return (
+      <img
+        src={img(book.cover)}
+        alt={t(book.title)}
+        width={width}
+        height={height}
+        draggable={false}
+        className={`art ${shape} block h-auto w-full`}
+        style={style}
+      />
+    );
   }
-  const [light, mid, deep] = book.tint;
+  const [light, , deep] = book.tint;
   return (
-    <div role="img" aria-label={t(book.title)} className={`${shape} @container relative isolate w-full overflow-hidden`} style={style}>
-      <Wash colors={[light, mid, light]} seed={book.id} className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${light}, #fffaf3 70%)` }} />
-      {/* the spine's soft fold */}
-      <span className="absolute inset-y-0 left-0 w-[7%] bg-gradient-to-r from-[rgb(52_34_74/0.12)] to-transparent" aria-hidden="true" />
-      <div className="absolute inset-0 flex flex-col items-center justify-between px-[10%] pt-[12%] pb-[9%] text-center">
-        <span className="display text-[9.5cqw] leading-[1.05]" style={{ color: deep }}>
-          {t(book.title)}
-        </span>
-        {book.universe && book.universe !== "fluture" ? (
-          <Creature id={book.universe} size="46%" style={{ color: deep }} />
-        ) : (
-          <span className="paint-edge block aspect-square w-[42%] rounded-full opacity-80" style={{ background: `radial-gradient(circle at 40% 35%, #fff8f1, ${mid} 75%)` }} />
-        )}
-        <span className="text-[4.6cqw] font-semibold tracking-[0.1em] whitespace-nowrap uppercase" style={{ color: deep, opacity: 0.75 }}>
-          Ramona Nichifor
-        </span>
-      </div>
+    <div role="img" aria-label={t(book.title)} className={`${shape} aspect-[766/1120] w-full overflow-hidden`} style={style}>
+      <Placeholder tint={paperOf(light)} className="h-full w-full">
+        <div className="flex h-full w-full flex-col items-center justify-between">
+          <span className="display text-[9.5cqw] leading-[1.05]" style={{ color: deep }}>
+            {t(book.title)}
+          </span>
+          {book.universe && <Character universe={book.universe} color={deep} className="w-[34%] opacity-70" />}
+          <SoonLabel>{t(coverSoon)}</SoonLabel>
+        </div>
+      </Placeholder>
     </div>
   );
 }
 
 /** The universe's character: the real cover butterfly for Fluture, the line-drawn stand-ins for the rest */
 function Character({ universe, color, className = "" }: { universe: UniverseId; color: string; className?: string }) {
-  if (universe === "fluture") return <img src={img("butterfly.webp")} alt="" className={`h-auto ${className}`} draggable={false} />;
+  if (universe === "fluture") return <img src={img("butterfly.webp")} alt="" className={`art h-auto ${className}`} draggable={false} />;
   return <Creature id={universe} size="100%" className={className} style={{ color }} />;
 }
 
+/** The frame glyph's sun and mountain, drawn inside a product silhouette at (x, y) */
+function Motif({ x, y, s = 1, color }: { x: number; y: number; s?: number; color: string }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s}) translate(-12 -13)`} stroke={color} strokeOpacity="0.4">
+      <circle cx="9" cy="9.5" r="1.6" />
+      <path d="M4 17.5 9.5 12.5 13 15.5 15.5 13.5 20 17.5" />
+    </g>
+  );
+}
+
+// Real Fluture products, fanned like a hand: the playing cards and the bookmarks
+const fans = {
+  carti: { files: ["03", "01", "05"].map((n) => `cards/fluturele-${n}.webp`), box: "h-[66%] aspect-[63/88]", round: "rounded-[7px]", deg: 13 },
+  semn: { files: ["01", "04", "08"].map((n) => `bookmarks/fluture-${n}.webp`), box: "h-[72%] aspect-[345/1036]", round: "rounded-[5px]", deg: 10 },
+} as const;
+
 /**
- * Product visual. The Fluture deck shows its real cards; everything else is a PLACEHOLDER painted in code
- * in the universe's colours (a bookmark with its ribbon, fanned cards, a puzzle, a little board game)
- * until real product photos arrive.
+ * Product visual. Fluture's cards and bookmarks show the real thing; everything else is a PLACEHOLDER
+ * silhouette in hairlines on paper (a bookmark, fanned cards, a puzzle, a little board game)
+ * in the universe's tint, until real product photos arrive.
  */
 export function ProductArt({
   kind,
@@ -120,98 +126,101 @@ export function ProductArt({
   tint: [string, string, string];
   className?: string;
 }) {
+  const { t } = useLang();
+  const fan = universe === "fluture" && (kind === "carti" || kind === "semn") ? fans[kind] : null;
+  if (fan) {
+    return (
+      <div className={`relative grid aspect-[4/5] place-items-center ${className}`} aria-hidden="true">
+        <div className={`relative ${fan.box}`}>
+          {fan.files.map((file, i) => (
+            <img
+              key={file}
+              src={img(file)}
+              alt=""
+              draggable={false}
+              className={`art absolute inset-0 h-full w-full origin-bottom object-cover shadow-soft ${fan.round}`}
+              style={{ transform: `rotate(${(i - 1) * fan.deg}deg) translateY(${i === 1 ? -4 : 0}%)`, zIndex: i === 1 ? 2 : 1 }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   const [light, mid, deep] = tint;
-  const wash: [string, string, string] = [light, mid, light];
+  const wash = paperOf(light, 45);
+  const line = { stroke: deep, strokeOpacity: 0.35 };
+  const hair = { stroke: deep, strokeOpacity: 0.18 };
   return (
-    <div className={`relative grid aspect-[4/5] place-items-center ${className}`} aria-hidden="true">
-      {kind === "semn" && (
-        <div className="relative h-[84%] w-[30%] -rotate-[4deg]">
-          <Wash colors={wash} seed={`${universe}-semn`} className="h-full w-full rounded-t-[999px] rounded-b-[6px] shadow-soft">
-            <div className="absolute inset-x-[18%] top-[16%]">
-              <Character universe={universe} color={deep} className="w-full" />
-            </div>
-            <span className="absolute inset-x-[22%] bottom-[8%] h-px" style={{ background: deep, opacity: 0.35 }} />
-          </Wash>
-          {/* the ribbon */}
-          <span className="absolute top-full left-1/2 h-[14%] w-[3px] -translate-x-1/2 rounded-full" style={{ background: mid }} />
-          <span className="absolute top-[112%] left-1/2 size-2.5 -translate-x-1/2 rounded-full" style={{ background: deep, opacity: 0.8 }} />
-        </div>
-      )}
-      {kind === "carti" &&
-        (universe === "fluture" ? (
-          // the real deck: three cards from the printer file, fanned like a hand
-          <div className="relative h-[66%] w-[50%]">
-            {(["02", "01", "04"] as const).map((n, i) => (
-              <img
-                key={n}
-                src={img(`cards/fluturele-${n}.webp`)}
-                alt=""
-                draggable={false}
-                className="absolute inset-0 h-full w-full origin-bottom rounded-[7px] object-cover shadow-soft"
-                style={{ transform: `rotate(${(i - 1) * 13}deg) translateY(${i === 1 ? -4 : 0}%)`, zIndex: i === 1 ? 2 : 1 }}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="relative h-[62%] w-[44%]">
-            {[-14, 0, 14].map((deg, i) => (
-              <div
-                key={deg}
-                className="absolute inset-0 origin-bottom rounded-[10px] bg-[#fffdf9] p-[6%] shadow-soft"
-                style={{ transform: `rotate(${deg}deg) translateY(${i === 1 ? -4 : 0}%)`, zIndex: i === 1 ? 2 : 1 }}
-              >
-                <div className="h-full w-full rounded-[6px]" style={{ boxShadow: `inset 0 0 0 1.5px ${mid}` }}>
-                  {i === 1 && (
-                    <div className="grid h-full place-items-center p-[14%]">
-                      <Character universe={universe} color={deep} className="w-full" />
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        ))}
-      {kind === "puzzle" && (
-        // a painted square cut into four pieces, one lifted out
-        <div className="relative w-[66%] rotate-[-2deg]">
-          <Wash colors={wash} seed={`${universe}-puzzle`} className="aspect-square w-full rounded-[6px] shadow-soft">
-            <div className="absolute inset-[20%]">
-              <Character universe={universe} color={deep} className="w-full" />
-            </div>
-            <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" fill="none" stroke="#fffdf9" strokeWidth="1.4" strokeLinecap="round">
-              <path d="M50 0 V20 C43 20 43 32 50 32 V68 C57 68 57 80 50 80 V100" />
-              <path d="M0 50 H20 C20 57 32 57 32 50 H68 C68 43 80 43 80 50 H100" />
-            </svg>
-          </Wash>
-          <svg viewBox="0 0 60 60" className="absolute -top-[14%] -right-[12%] w-[38%] rotate-[14deg] drop-shadow-md">
-            <path d="M6 6 H24 C24 0 36 0 36 6 H54 V24 C60 24 60 36 54 36 V54 H6 Z" fill={mid} stroke="#fffdf9" strokeWidth="1.5" />
-          </svg>
-        </div>
-      )}
-      {kind === "joc" && (
-        // a little board: a winding path of coloured stops toward the character, and a die
-        <div className="relative w-[72%]">
-          <div className="aspect-square w-full rounded-[14px] bg-[#fffdf9] p-[6%] shadow-soft">
-            <Wash colors={wash} seed={`${universe}-joc`} className="h-full w-full rounded-[8px]">
-              <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full">
-                <path d="M12 88 C 40 88, 30 64, 56 64 S 88 52, 78 34 S 40 30, 46 16" fill="none" stroke="#fffdf9" strokeWidth="7" strokeLinecap="round" />
-                {[[12, 88], [26, 84], [38, 72], [56, 64], [72, 58], [80, 44], [70, 32], [54, 28]].map(([x, y], i) => (
-                  <circle key={i} cx={x} cy={y} r="3.6" fill={i % 2 ? deep : mid} opacity="0.85" />
-                ))}
-              </svg>
-              <div className="absolute top-[4%] left-[34%] w-[26%]">
-                <Character universe={universe} color={deep} className="w-full" />
-              </div>
-            </Wash>
-          </div>
-          <svg viewBox="0 0 40 40" className="absolute -right-[8%] -bottom-[6%] w-[22%] rotate-[12deg] drop-shadow-md">
-            <rect x="2" y="2" width="36" height="36" rx="8" fill="#fffdf9" stroke={mid} strokeWidth="1.5" />
-            {[[12, 12], [28, 12], [20, 20], [12, 28], [28, 28]].map(([x, y]) => (
-              <circle key={`${x}-${y}`} cx={x} cy={y} r="3" fill={deep} />
-            ))}
-          </svg>
-        </div>
-      )}
+    <div className={`relative aspect-[4/5] ${className}`} aria-hidden="true">
+      <svg
+        viewBox="0 0 100 125"
+        className="absolute inset-0 h-full w-full [&_*]:[vector-effect:non-scaling-stroke]"
+        fill="none"
+        strokeWidth="1"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {kind === "semn" && (
+          // a bookmark with a punched hole and its thread
+          <g transform="rotate(-4 50 64)">
+            <path d="M50 36 C 45 28, 56 23, 52 16" stroke={mid} strokeWidth="1.5" />
+            <circle cx="52" cy="16" r="1.6" fill={mid} stroke="none" />
+            <rect x="37" y="28" width="26" height="74" rx="2.5" fill={wash} {...line} />
+            <rect x="40" y="31" width="20" height="68" rx="1" {...hair} />
+            <circle cx="50" cy="36" r="1.8" fill={PAPER} {...line} />
+            <Motif x={50} y={70} s={0.8} color={deep} />
+          </g>
+        )}
+        {kind === "carti" &&
+          // three card outlines, fanned like a hand
+          [-13, 13, 0].map((deg) => (
+            <g key={deg} transform={`rotate(${deg} 50 92) translate(0 ${deg ? 0 : -3})`}>
+              <rect x="32" y="40" width="36" height="52" rx="3" fill={PAPER} {...line} />
+              <rect x="35" y="43" width="30" height="46" rx="1.5" fill={deg ? undefined : wash} {...hair} />
+              {!deg && <Motif x={50} y={66} s={0.8} color={deep} />}
+            </g>
+          ))}
+        {kind === "puzzle" && (
+          // a square cut into four pieces, one lifted out
+          <>
+            <g transform="rotate(-2 50 64)">
+              <rect x="20" y="34" width="60" height="60" rx="2" fill={wash} {...line} />
+              <path transform="translate(20 34) scale(0.6)" d="M50 0 V20 C43 20 43 32 50 32 V68 C57 68 57 80 50 80 V100 M0 50 H20 C20 57 32 57 32 50 H68 C68 43 80 43 80 50 H100" {...line} />
+              <Motif x={35} y={79} s={0.7} color={deep} />
+            </g>
+            <path
+              transform="translate(64 16) rotate(14 9 9) scale(0.32)"
+              d="M6 6 H24 C24 0 36 0 36 6 H54 V24 C60 24 60 36 54 36 V54 H6 Z"
+              fill={paperOf(mid, 45)}
+              {...line}
+            />
+          </>
+        )}
+        {kind === "joc" && (
+          // a little board: a winding path of stops, and a die
+          <>
+            <rect x="14" y="22" width="72" height="72" rx="4" fill={PAPER} {...line} />
+            <rect x="18" y="26" width="64" height="64" rx="2" fill={wash} {...hair} />
+            <g transform="translate(18 26) scale(0.64)">
+              <path d="M12 88 C 40 88, 30 64, 56 64 S 88 52, 78 34 S 40 30, 46 16" stroke={mid} strokeDasharray="1 4" strokeWidth="1.5" />
+              {[[12, 88], [26, 84], [38, 72], [56, 64], [72, 58], [80, 44], [70, 32], [54, 28], [46, 16]].map(([x, y], i, all) => {
+                const end = i === 0 || i === all.length - 1;
+                return <circle key={i} cx={x} cy={y} r={end ? 4.2 : 2.8} fill={end ? PAPER : mid} fillOpacity={end ? 1 : 0.7} {...(end ? line : { stroke: "none" })} />;
+              })}
+            </g>
+            <g transform="translate(74 84) rotate(12)">
+              <rect x="-7" y="-7" width="14" height="14" rx="3" fill={PAPER} {...line} />
+              {[[-3, -3], [3, -3], [0, 0], [-3, 3], [3, 3]].map(([x, y]) => (
+                <circle key={`${x}-${y}`} cx={x} cy={y} r="0.9" fill={deep} fillOpacity="0.55" stroke="none" />
+              ))}
+            </g>
+          </>
+        )}
+      </svg>
+      <span className="absolute inset-x-0 bottom-[7%] text-center">
+        <SoonLabel>{t(ui.comingSoon)}</SoonLabel>
+      </span>
     </div>
   );
 }

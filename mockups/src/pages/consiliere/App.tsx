@@ -21,7 +21,13 @@ function Formats() {
             <span className="min-w-0">
               <span className="display block text-[1.4rem] leading-tight text-ink">{t(f.title)}</span>
               <span className="mt-1 block text-[0.98rem] leading-snug text-ink-soft">{t(f.line)}</span>
-              <span className="mt-2 block font-semibold text-ink tabular-nums">{t(f.detail)}</span>
+              <span className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-[0.95rem] tabular-nums">
+                {counsellingPage.prices.map((p) => (
+                  <span key={p.minutes} className="whitespace-nowrap text-ink-soft">
+                    {p.minutes} min · <span className="font-semibold text-ink">{p.eur} €</span>
+                  </span>
+                ))}
+              </span>
             </span>
           </li>
         );

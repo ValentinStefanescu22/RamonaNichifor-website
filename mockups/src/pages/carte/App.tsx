@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { img } from "../../shared/assets";
 import { site, ui, universes, type Text } from "../../shared/content";
-import { bookPage, booksPage, shelf, type ShelfBook } from "../../shared/content-pages";
+import { bookPage, booksPage, coverRatio, shelf, type ShelfBook } from "../../shared/content-pages";
 import { ArrowRight, Instagram } from "../../shared/icons";
 import { useLang } from "../../shared/lang";
 import { toTop } from "../../site/mount";
@@ -35,7 +35,7 @@ function OpeningCover({ b }: { b: ShelfBook }) {
         </span>
       </span>
       {b.cover ? (
-        <img src={img(b.cover)} alt="" className={`shadow-book aspect-[766/1120] w-full rounded-r-[10px] rounded-l-[4px] object-cover ${hinge}`} />
+        <img src={img(b.cover)} alt="" draggable={false} className={`art shadow-book w-full rounded-r-[10px] rounded-l-[4px] object-cover ${hinge}`} style={{ aspectRatio: coverRatio[b.cover!] ?? "766 / 1120" }} />
       ) : (
         <div className={hinge} aria-hidden="true">
           <BookCover book={b} />

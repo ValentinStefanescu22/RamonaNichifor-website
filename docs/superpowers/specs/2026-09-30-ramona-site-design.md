@@ -214,7 +214,7 @@ Collections (lists of entries) and globals (single pages):
 | `availability` | global | weekly hours per format, buffer, minimum notice, horizon, blocked dates |
 | `bookings` | collection | format, start, end, name, email, phone, note, status, cancel token, consent (16+), created at |
 | `legal-pages` | collection | kind (privacy / terms), rich text, last-updated date |
-| `media` | upload collection | the image file, alt text (localised, **required**), focal point and crop; Payload generates the resized versions on upload |
+| `media` | upload collection | the image file, alt text (localised, **required**), focal point and crop, a „her illustration” flag; Payload generates the resized versions on upload, and illustrations get the © Ramona Nichifor stamp and a screen-size cap automatically (client request 2026-10-13) |
 | `users` | auth collection | Ramona's (and the developer's) admin login; `maxLoginAttempts` + `lockTime` against password guessing |
 
 - **Rich text:** Payload's Lexical editor, limited to the formatting the design uses (paragraphs, emphasis, links, lists, headings level 2–3).

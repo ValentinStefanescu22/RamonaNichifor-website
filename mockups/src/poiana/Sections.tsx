@@ -171,7 +171,8 @@ export function TiltCover() {
       <motion.img
         src={img("cover-fluturele.webp")}
         alt={t(book.title)}
-        className="shadow-book aspect-[766/1120] w-full rounded-r-[10px] rounded-l-[4px] object-cover"
+        draggable={false}
+        className="art shadow-book aspect-[766/1120] w-full rounded-r-[10px] rounded-l-[4px] object-cover"
         style={{ rotateX: rx, rotateY: ry, rotateZ: -2.5 }}
       />
     </div>
@@ -239,28 +240,35 @@ export function About() {
 export function Art() {
   const { t } = useLang();
   return (
-    <section id="arta" className="relative scroll-mt-20 overflow-hidden bg-mist py-20 lg:py-28">
-      <div className="mx-auto max-w-[75rem] px-4 sm:px-6">
-        <SectionTitle lead={t(art.lead)}>{t(art.title)}</SectionTitle>
-      </div>
-      <ul className="snap-row mt-12 flex gap-5 overflow-x-auto px-[max(1rem,calc((100vw-72rem)/2))] sm:px-[max(1.5rem,calc((100vw-72rem)/2))] pb-4 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible">
-        {art.pieces.map((p, i) => (
-          <li key={p.src} className={`w-[70vw] max-w-[320px] shrink-0 lg:w-auto lg:max-w-none ${i === 1 ? "lg:mt-16" : ""}`}>
-            <figure>
-              <div className="rounded-[4px] bg-[#fffdf9] p-3 shadow-soft">
-                <img src={img(p.src)} alt={t(p.title)} className="aspect-[4/5] w-full object-cover" />
-              </div>
-              <figcaption className="px-1 pt-4">
-                <span className="display block text-[1.25rem] text-ink">{t(p.title)}</span>
-                <span className="text-[0.95rem] text-ink-soft">{t(p.kind)}</span>
-              </figcaption>
-            </figure>
-          </li>
-        ))}
-      </ul>
-      <div className="mx-auto mt-8 flex max-w-[75rem] flex-wrap items-center justify-between gap-4 px-4 sm:px-6">
-        <p className="text-[0.92rem] italic text-ink-soft">{t(ui.exampleNote)}</p>
-        <TextLink href="arta.html">{t(ui.seeGallery)}</TextLink>
+    <section id="arta" className="relative scroll-mt-20 overflow-hidden bg-mist px-4 py-20 sm:px-6 lg:py-28">
+      {/* two whole covers beside the words (client, 2026-10-13): the text column leads, the paintings answer it */}
+      <div className="mx-auto grid max-w-[75rem] gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-16">
+        <div className="min-w-0">
+          <SectionTitle lead={t(art.lead)}>{t(art.title)}</SectionTitle>
+          <div className="mt-6 hidden flex-col items-start gap-3 lg:flex">
+            <TextLink href="arta.html">{t(ui.seeGallery)}</TextLink>
+            <p className="text-[0.92rem] italic text-ink-soft">{t(ui.exampleNote)}</p>
+          </div>
+        </div>
+        <ul className="grid grid-cols-2 gap-4 sm:gap-8 lg:gap-10">
+          {art.pieces.map((p, i) => (
+            <li key={p.src} className={i === 1 ? "mt-10 sm:mt-16" : ""}>
+              <figure>
+                <div className="rounded-[4px] bg-[#fffdf9] p-2 shadow-soft sm:p-3">
+                  <img src={img(p.src)} alt={t(p.title)} width={p.w} height={p.h} draggable={false} className="art block h-auto w-full" />
+                </div>
+                <figcaption className="px-0.5 pt-3 sm:pt-4">
+                  <span className="display block text-[1.05rem] leading-tight text-ink sm:text-[1.25rem]">{t(p.title)}</span>
+                  <span className="text-[0.88rem] text-ink-soft sm:text-[0.95rem]">{t(p.kind)}</span>
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+        <div className="flex flex-col items-start gap-3 lg:hidden">
+          <TextLink href="arta.html">{t(ui.seeGallery)}</TextLink>
+          <p className="text-[0.92rem] italic text-ink-soft">{t(ui.exampleNote)}</p>
+        </div>
       </div>
     </section>
   );

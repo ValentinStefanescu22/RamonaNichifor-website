@@ -3,11 +3,12 @@
 Run from mockups/: `npm run images`. Everything here is derived from her own
 material; nothing is generated or stock.
 """
+import urllib.request
 from collections import deque
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageOps
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 SRC = Path("assets-src")
 OUT = Path("public/img")
@@ -19,6 +20,52 @@ spread = Image.open(SRC / "cover-fluturele-spread.jpg").convert("RGB")
 def save(img: Image.Image, name: str, quality: int = 84) -> None:
     img.save(OUT / name, "WEBP", quality=quality, method=6)
     print(f"{name:28} {img.size[0]}x{img.size[1]}")
+
+
+# --- Copyright stamp, baked into every illustration shown whole (covers, pages, cards, bookmarks);
+# decorative cut-outs and scenes stay clean. Font fetched once into assets-src/fonts/ (gitignored).
+FONT = SRC / "fonts" / "AlegreyaSans-Medium.ttf"
+if not FONT.exists():
+    try:
+        FONT.parent.mkdir(exist_ok=True)
+        urllib.request.urlretrieve(
+            "https://github.com/google/fonts/raw/main/ofl/alegreyasans/AlegreyaSans-Medium.ttf", FONT
+        )
+    except OSError:
+        FONT = Path("/System/Library/Fonts/Supplemental/Georgia.ttf")
+INK, HALO = (0x34, 0x22, 0x4A), (0xFF, 0xFB, 0xF2)
+
+
+def stamp(img: Image.Image) -> Image.Image:
+    """One faint diagonal line across the middle plus a small solid mark bottom-right, in ink with a
+    thin cream halo so it still reads where it crosses dark paint (and vanishes into pale paper)."""
+    w, h = img.size
+    # 5.2% of the width: the line then runs ~84% of the width (~77% once tilted)
+    big = ImageFont.truetype(str(FONT), round(w * 0.052))
+    small = ImageFont.truetype(str(FONT), max(11, round(w * 0.026)))
+    text = "\u00a9 Ramona Nichifor \u00b7 ramonanichifor.com"
+    margin = round(w * 0.03)
+
+    def marks(stroke: float) -> Image.Image:
+        l, t, r, b = big.getbbox(text)
+        pad = 4 + round(big.size * stroke)
+        line = Image.new("L", (r - l + 2 * pad, b - t + 2 * pad), 0)
+        ImageDraw.Draw(line).text((pad - l, pad - t), text, font=big, fill=round(255 * 0.16),
+                                  stroke_width=round(big.size * stroke), stroke_fill=round(255 * 0.16))
+        line = line.rotate(24, resample=Image.BICUBIC, expand=True)  # rising left to right, like CSS rotate(-24deg)
+        mask = Image.new("L", img.size, 0)
+        mask.paste(line, ((w - line.width) // 2, (h - line.height) // 2))
+        ImageDraw.Draw(mask).text((w - margin, h - margin), "\u00a9 Ramona Nichifor", font=small, anchor="rd",
+                                  fill=round(255 * 0.45), stroke_width=round(small.size * stroke),
+                                  stroke_fill=round(255 * 0.45))
+        return mask
+
+    out = img.convert("RGBA")
+    for colour, mask in ((HALO, marks(0.06)), (INK, marks(0))):
+        layer = Image.new("RGBA", img.size, colour + (0,))
+        layer.putalpha(mask)
+        out = Image.alpha_composite(out, layer)
+    return out.convert(img.mode)
 
 
 def largest_component(mask: np.ndarray) -> np.ndarray:
@@ -82,7 +129,7 @@ save(upright.crop((body_x, 0, upright.width, upright.height)), "butterfly-wing-r
 print(f"butterfly body split at {body_x / upright.width:.4f} of width")
 
 # --- Front cover
-save(spread.crop((812, 28, 1578, 1148)), "cover-fluturele.webp", 86)
+save(stamp(spread.crop((812, 28, 1578, 1148))), "cover-fluturele.webp", 86)
 
 # --- Meadow band from the cover: publisher text cloned out, top feathered into the sky
 meadow = spread.crop((852, 560, 1497, 1065)).copy()
@@ -143,11 +190,11 @@ if PAGES.exists():
     for book, numbers in (("fluturele", (4, 9)), ("buburuza", (8, 12))):
         spread = Image.open(PAGES / f"{book}-cop-p1.png").convert("RGB")
         # „Răsfoiește” opens on the back cover, exactly as printed
-        save(tall(spread.crop(back), 1300), f"pages/{book}-coperta-spate.webp", 82)
+        save(stamp(tall(spread.crop(back), 1300)), f"pages/{book}-coperta-spate.webp", 82)
         for n in numbers:
-            save(tall(Image.open(PAGES / f"{book}-p{n}.png").convert("RGB"), 1300), f"pages/{book}-p{n}.webp", 82)
+            save(stamp(tall(Image.open(PAGES / f"{book}-p{n}.png").convert("RGB"), 1300)), f"pages/{book}-p{n}.webp", 82)
     buburuza = Image.open(PAGES / "buburuza-cop-p1.png").convert("RGB").crop(front)
-    save(tall(buburuza, 1120), "cover-buburuza.webp", 84)
+    save(stamp(tall(buburuza, 1120)), "cover-buburuza.webp", 84)  # the scene below is cut from the clean one
 
     # --- Buburuza's window on Acasă: the cover painting below the title (ladybird, grass, yellow wash),
     # stopping above the „Băuțar 2026” mark, its top feathered into the window's sky like the meadow
@@ -245,5 +292,48 @@ if PAGES.exists():
 CARDS = SRC / "cards"
 if CARDS.exists():
     (OUT / "cards").mkdir(exist_ok=True)
-    for n in range(1, 25):
-        save(Image.open(CARDS / f"fluturele-p{n}.png").convert("RGB"), f"cards/fluturele-{n:02d}.webp", 82)
+    # only a handful, at screen size (460px wide): fine to look at, too soft to print
+    for old in (OUT / "cards").glob("fluturele-*.webp"):
+        old.unlink()
+    for n in (1, 2, 3, 4, 5, 14, 15, 23, 24):
+        card = Image.open(CARDS / f"fluturele-p{n}.png").convert("RGB")
+        card = card.resize((460, round(card.height * 460 / card.width)), Image.LANCZOS)
+        save(stamp(card), f"cards/fluturele-{n:02d}.webp", 78)
+
+
+# --- Fluture bookmarks, from the printer's PDF (page 1 is the blank lilac back, 2–10 the nine designs):
+#   P="<MOTTO in RO semne de carte Fluture 13 OCT  (6 x 17 cm) (1).pdf>"
+#   swift scripts/pdf-pages.swift "$P" assets-src/bookmarks/fluture $(seq 2 10)
+#   SCALE=3.6 swift scripts/pdf-pages.swift "$P" assets-src/bookmarks/fluture-hi 10   (for the butterfly cut-out)
+BOOKMARKS = SRC / "bookmarks"
+if BOOKMARKS.exists():
+    (OUT / "bookmarks").mkdir(exist_ok=True)
+    size = Image.open(BOOKMARKS / "fluture-p3.png").size
+    for i, n in enumerate(range(2, 11), 1):
+        mark = Image.open(BOOKMARKS / f"fluture-p{n}.png").convert("RGB")
+        # page 2 has no trim box (a full 6×17 cm page): fit it to the others' 2×6 in by height, centre-cropped
+        mark = ImageOps.fit(mark, size, Image.LANCZOS)
+        save(stamp(mark), f"bookmarks/fluture-{i:02d}.webp", 80)
+
+    # --- The big profile butterfly of the last bookmark, cut off its white paper
+    crop = Image.open(BOOKMARKS / "fluture-hi-p10.png").convert("RGB").crop((95, 505, 465, 965))
+    px = np.asarray(crop).astype(int)
+    lum = px @ np.array([0.299, 0.587, 0.114])
+    sat = px.max(-1) - px.min(-1)
+    body = largest_component((lum < 246) | (sat > 10))  # the motto, dragonfly and flowers are separate islands
+    w, h = crop.size
+    padded = Image.new("L", (w + 2, h + 2), 0)
+    padded.paste(Image.fromarray(body.astype(np.uint8) * 255), (1, 1))
+    ImageDraw.floodfill(padded, (0, 0), 128)
+    filled = Image.fromarray((np.asarray(padded)[1:-1, 1:-1] != 128).astype(np.uint8) * 255)
+    matte = np.asarray(
+        filled.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.9))
+    ) / 255
+    # antennae, legs and the outer rim: alpha from how far the ink is from the white paper and the
+    # colour un-mixed from that white, so no pale fringe shows on a dark background
+    core = np.asarray(filled.filter(ImageFilter.MinFilter(5))) > 0
+    c2a = np.clip((255 - px.min(-1) - 6) / 70, 0, 1)
+    alpha = np.where(core, matte, np.minimum(matte, c2a))
+    rgb = np.where(core[..., None], px, 255 - (255 - px) / np.maximum(c2a, 1e-3)[..., None])
+    cut = Image.fromarray(np.dstack([rgb.clip(0, 255), alpha * 255]).astype(np.uint8), "RGBA")
+    save(cut.crop(cut.getbbox()), "butterfly-bookmark.webp", 90)

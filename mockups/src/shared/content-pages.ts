@@ -21,66 +21,67 @@ export const about = {
   // Ramona's own text (final, 2026-10-03). Only diacritics were restored; the words are hers.
   // English is a working translation awaiting her approval.
   // The story is set in four movements; `quote` and `questions` are its two display moments.
+  // EN is Ramona's own translation (2026-10-14); \n\n marks her paragraph breaks inside a beat
   story: [
     [
       { text: t(
         "Din copilărie, picturile au fost pentru mine, uși întredeschise, prin care simțeam secole întregi de iubiri, de suferințe, de nevoi de apartenență.",
-        "Since childhood, paintings have been, for me, half-open doors through which I felt whole centuries of love, of suffering, of the need to belong.",
+        "Ever since I was a child, paintings have felt like doors left slightly ajar, inviting me to glimpse centuries of love, sorrow, and the timeless human longing to belong.",
       ) },
       { text: t(
         "Stăruiam în fața lor, analizând și căutând, cu admirație și curiozitate, culorile, umbrele, tehnicile prin care erau transmise emoții atât de puternice și de profunde.",
-        "I would linger in front of them, studying and searching, with admiration and curiosity, for the colours, the shadows, the techniques that carried such strong and deep feelings.",
+        "I would linger before them, captivated, searching with admiration and curiosity through colors, shadows, and brushstrokes, trying to understand how something so still could hold emotions so powerful, so profoundly alive.",
       ) },
       { text: t(
         "Mi-ar fi plăcut să rămân în lumea aceea, să învăț să ofer și eu, să… exprim, prin artă, ceea ce simțeam. Am fost însă îndrumată către un liceu cu profil real, cu multă matematică și fizică. Poate din grijă, poate din teama că pasiunea mea nu mi-ar fi putut oferi o viață sigură. Nu privesc astăzi acea alegere ca fiind corectă sau greșită. Știu doar că nu se alinia cu ceea ce simțeam eu atunci.",
-        "I would have liked to stay in that world, to learn to give something too, to… express through art what I felt. Instead, I was steered towards a science high school, with a great deal of maths and physics. Perhaps out of care, perhaps out of fear that my passion could not give me a secure life. Today I don't see that choice as right or wrong. I only know it didn't match what I felt back then.",
+        "I longed to remain in that world. To learn how to give something of myself, too. To find, through art, a way of expressing what I felt but could not always put into words.\n\nYet life led me elsewhere.\n\nI was guided towards a high school focused on mathematics and physics. Perhaps out of love, perhaps out of fear that my passion would never provide me with a secure future.\n\nLooking back, I no longer see that choice as right or wrong. I simply recognize that it was not aligned with how I felt, or who I was, at the time.",
       ) },
-      { text: t("Am urmat drumul propus. Eram un copil.", "I followed the path laid out for me. I was a child.") },
+      { text: t("Am urmat drumul propus. Eram un copil.", "I followed the path chosen for me.\n\nI was only a child.") },
     ],
     [
       { text: t(
         "Dorința de a studia psihologia, câțiva ani mai târziu, a venit firesc, în adolescență, când devenisem confidenta prietenelor mele. Veneau la mine cu situații apăsătoare, cu frici, blocaje, furie sau sentimentul că fuseseră nedreptățite. Găseau un spațiu în care puteau vorbi fără să fie judecate. Le ascultam cu discreție, răbdare și empatie.",
-        "The wish to study psychology came naturally a few years later, in my teens, when I had become my friends' confidante. They came to me with heavy situations, with fears, blocks, anger or the feeling they had been wronged. They found a space where they could speak without being judged. I listened with discretion, patience and empathy.",
+        "A few years later, during my teenage years, another calling began to take shape: psychology.\n\nI had naturally become the confidante of my friends. They would come to me carrying their worries, fears, frustrations, anger, or the pain of having been treated unfairly. Sometimes they felt trapped, unable to find a way forward.\n\nWith me, they found a space where they could speak freely, without fear of judgement. And I listened, with patience, discretion, and empathy.",
       ) },
       { text: t(
         "Și acest drum s-a oprit în fața unei temeri ce nu-mi aparținea. Auzisem deja că „pictorii mor de foame”. Acum și psihologia era percepută la fel de nesigură deoarece „rufele se spălau în familie”.",
-        "This path, too, stopped in front of a fear that wasn't mine. I had already heard that „painters starve”. Now psychology was seen as just as unsafe, because „dirty laundry was washed at home”.",
+        "But this path, too, came to a halt before a fear that was never truly mine.\n\nI had already been told that “artists starve.” Now psychology seemed equally uncertain, in a world where “dirty laundry was meant to be washed at home.”",
       ) },
       { text: t(
         "Așa s-a declanșat în mine justițiarul, salvatorul. Am luat, în felul meu, sabia lui Don Quijote pornind către Facultatea de Drept, înainte să învăț să o ridic și în apărarea mea și ale propriilor alegeri.",
-        "That is how the champion of justice, the rescuer, woke up in me. In my own way, I took up Don Quixote's sword and set off for Law School, before I learned to raise it in my own defence and that of my own choices.",
+        "And so, somewhere within me, the defender of justice awakened. The rescuer. The savior!\n\nIn my own way, I picked up Don Quijote's sword and set off towards law school, ready to defend others, long before I had learned to raise that same sword in defense of myself and my own choices.",
       ) },
     ],
     [
       { text: t(
         "Ca angajat, antreprenor și jurist, am experimentat, am construit, am greșit, am pierdut, am corectat și am început din nou. Unele capitole s-au închis prea brusc, prea dur, înainte să fi înțeles pe deplin ce se întâmplase.",
-        "As an employee, an entrepreneur and a lawyer, I experimented, built, got things wrong, lost, corrected and started again. Some chapters closed too suddenly, too harshly, before I had fully understood what had happened.",
+        "Over the years, as an employee, an entrepreneur, and a legal professional, I explored, built, made mistakes, lost, learned, made amends, and began again.\n\nSome chapters ended brutally, too painfully, before I had even found the time to fully understand what had happened.",
       ) },
       { text: t(
         "În mijlocul acestor tumultoase schimbări, am devenit mamă. Maternitatea m-a făcut să privesc altfel natura creatoare.",
-        "In the middle of all that upheaval, I became a mother. Motherhood made me see creative nature differently.",
+        "And somewhere in the midst of all those turbulent changes, I became a mother.\n\nMotherhood brought a new perspective to my creative nature, and to the meaning of creation itself.",
       ) },
       { text: t(
         "Întrebările care mă însoțeau din copilărie au devenit atunci mai stăruitoare.",
-        "The questions that had followed me since childhood grew more insistent.",
+        "The questions that had quietly accompanied me since childhood began to ask for answers with a new insistence.",
       ) },
       { text: t(
         "Cine sunt? Cât din ceea ce cred îmi aparține? Ce le ofer fiicelor mele dincolo de lucrurile materiale și ce las, prin alegerile mele, în lumea în care vor crește?",
-        "Who am I? How much of what I believe is truly mine? What do I give my daughters beyond material things, and what do I leave, through my choices, in the world they will grow up in?",
+        "Who am I? How much of what I believe truly belongs to me? What am I giving my daughters beyond material things? And what am I leaving behind, through my own choices, in the world in which they will grow?",
       ), kind: "questions" as const },
       { text: t(
         "Am înțeles treptat că unele îndrumări primite încercaseră să mă protejeze de un trecut trăit de altcineva, nu să mă pregătească pentru viitorul meu.",
-        "Slowly I understood that some of the guidance I had been given had tried to protect me from a past lived by someone else, not to prepare me for my own future.",
+        "Little by little, I came to understand that some of the guidance I had received was never really meant to prepare me for my own future.\n\nIt had been an attempt to protect me from someone else's past and someone else’s fears.",
       ) },
       { text: t(
         "Înțelegerea aceasta m-a condus către lucrul interior și către formarea prin care am devenit consilier pentru dezvoltare personală.",
-        "That understanding led me to inner work, and to the training through which I became a personal development counsellor.",
+        "That realization opened the door to a deeper journey within myself, to inner exploration, and eventually to the training through which I became a personal development counsellor.",
       ) },
     ],
     [
       { text: t(
         "Astăzi pictez, scriu și însoțesc oameni în procesul de reconectare cu ei înșiși. Îmi onorez natura creatoare, trecutul și călătoria.",
-        "Today I paint, write and walk alongside people as they reconnect with themselves. I honour my creative nature, my past and the journey.",
+        "Today, I paint. I write. And I walk alongside others as they find their way back to themselves.\n\nI honor my creative nature, the past that shaped me, and my journey.",
       ), kind: "close" as const },
     ],
   ] as { text: Text; kind?: "questions" | "close" }[][],
@@ -222,21 +223,22 @@ export const counsellingPage = {
       "And if you recognize yourself in these words, if you feel the need for someone who will listen to you calmly and patiently, without rushing you or telling you who you should be, perhaps this is a place for you. A space where you can feel safe, where confidentiality is respected, and where you are free to explore your own thoughts, feelings, and possibilities, at your own pace. A space where you can begin to understand yourself a little better. And if this is what you have been looking for, I am here.",
     ),
   },
-  // Durations from Ramona (60–120 min); prices still „în curând”
+  // Ramona, 2026-10-13: the same prices online and in person
+  prices: [
+    { minutes: 60, eur: 25 },
+    { minutes: 90, eur: 40 },
+    { minutes: 120, eur: 50 },
+  ],
   formats: [
     {
       id: "online",
       title: t("Online", "Online"),
       line: t("Prin apel video, de oriunde ai fi.", "By video call, wherever you are."),
-      detail: t("60–120 min · prețul, în curând", "60–120 min · price coming soon"),
-      placeholder: true,
     },
     {
       id: "fata",
       title: t("Față în față", "In person"),
-      line: t("Într-un cadru cald și discret, în București.", "In a warm, private setting in Bucharest."),
-      detail: t("60–120 min · prețul, în curând", "60–120 min · price coming soon"),
-      placeholder: true,
+      line: t("Într-un cadru cald și discret.", "In a warm, private setting."),
     },
   ],
   stepsTitle: t("Cum decurge", "How it goes"),
@@ -256,7 +258,7 @@ export const counsellingPage = {
     },
     {
       q: t("Cât costă?", "How much does it cost?"),
-      a: t("Prețurile sunt în lucru și le anunț aici în curând.", "Prices are being finalised and will be announced here soon."),
+      a: t("O ședință de 60 de minute costă 25 €, de 90 de minute 40 €, iar de 120 de minute 50 €. Prima discuție, telefonică, este fără cost.", "A 60-minute session costs €25, a 90-minute one €40 and a 120-minute one €50. The first conversation, by phone, is free."),
     },
     {
       q: t("Cum se desfășoară ședințele online?", "How do online sessions work?"),
@@ -295,7 +297,7 @@ export type ShelfBook = {
     blurb: Text[];
     pages: number;
     isbn: string;
-    leaf: { src: string; label: Text }[];
+    leaf: { src: string; label: Text; ratio?: string }[];
   };
   placeholder?: boolean;
 };
@@ -360,7 +362,7 @@ export const shelf: ShelfBook[] = [
       pages: 40,
       isbn: "978-973-0-44382-0",
       leaf: [
-        { src: "pages/fluturele-coperta-spate.webp", label: t("Coperta spate", "Back cover") },
+        { src: "pages/fluturele-coperta-spate.webp", ratio: "880 / 1300", label: t("Coperta spate", "Back cover") },
         { src: "pages/fluturele-p4.webp", label: t("Pagina 4", "Page 4") },
         { src: "pages/fluturele-p9.webp", label: t("Pagina 9", "Page 9") },
       ],
@@ -396,7 +398,7 @@ export const shelf: ShelfBook[] = [
       pages: 28,
       isbn: "978-973-0-44383-7",
       leaf: [
-        { src: "pages/buburuza-coperta-spate.webp", label: t("Coperta spate", "Back cover") },
+        { src: "pages/buburuza-coperta-spate.webp", ratio: "880 / 1300", label: t("Coperta spate", "Back cover") },
         { src: "pages/buburuza-p8.webp", label: t("Pagina 8", "Page 8") },
         { src: "pages/buburuza-p12.webp", label: t("Pagina 12", "Page 12") },
       ],
@@ -426,6 +428,12 @@ export const shelf: ShelfBook[] = [
 for (const b of shelf) b.href = b.id === "fluturele" ? "carte.html" : `carte.html#${b.id}`;
 
 export const bookOf = (u: UniverseId) => shelf.find((b) => b.universe === u)!;
+
+/** Real cover sizes, so a cover is always shown whole (never cropped to a common box) */
+export const coverRatio: Record<string, string> = {
+  "cover-fluturele.webp": "766 / 1120",
+  "cover-buburuza.webp": "758 / 1120",
+};
 
 /* ---------------------------------------------------------------- Products (universe keepsakes) */
 
@@ -495,17 +503,9 @@ export const deck = {
   ratio: 63 / 88,
   winner: { n: 1, name: t("Fluturele dansator", "The tap-dancing butterfly") },
   pairs: [
+    // only two pairs are shown (Ramona, 2026-10-13): the deck is for buying, not printing
     t("Broscuță și Broscoi", "Little frog and Big frog"),
     t("Ciripel și Ciripica", "Ciripel and Ciripica"),
-    t("Dragonel și Dragonela", "Dragonel and Dragonela"),
-    t("Fetiță și Tătic", "Little girl and Daddy"),
-    t("Bondărel și Albinuță", "Bumblebee and Little bee"),
-    t("Scenă fluture și Scenă fetiță", "Butterfly's stage and Girl's stage"),
-    t("Flori adăpost și Flori căsuțe", "Shelter flowers and Little-house flowers"),
-    t("Căsuță jucărie și Căsuță oameni", "Toy house and People's house"),
-    t("Concurs TV", "TV contest"),
-    t("Prieteni și Prietenă", "Friends and Girlfriend"),
-    t("Cântăreți", "Singers"),
   ],
   /** names for each card, for alt text and the reader caption (cards 2–23) */
   cardNames: [
@@ -515,7 +515,7 @@ export const deck = {
   ],
   rulesCard: 24,
   title: t("Perechile", "The pairs"),
-  lead: t("Unsprezece perechi și o carte câștigătoare. Atinge o carte ca s-o vezi mare.", "Eleven pairs and one winning card. Tap a card to see it large."),
+  lead: t("Două dintre perechi, ca să vezi cum arată. Atinge o carte ca s-o vezi mare.", "Two of the pairs, so you can see what they look like. Tap a card to see it large."),
   winnerTitle: t("Cartea câștigătoare", "The winning card"),
   winnerLine: t("Cine rămâne cu Fluturele dansator câștigă.", "Whoever is left holding the tap-dancing butterfly wins."),
   rulesTitle: t("Cum se joacă", "How to play"),
@@ -541,15 +541,46 @@ export const deck = {
   fanLabel: t("Pachetul, ca o mână de cărți", "The deck, held like a hand of cards"),
 };
 
+/* The Fluture bookmarks (printer file „MOTTO in RO semne de carte Fluture 13 OCT (6 x 17 cm)”, 2026-10-13):
+   nine designs, each with its motto; the blank back is not shown. */
+export const bookmarks = {
+  src: (n: number) => `bookmarks/fluture-${String(n).padStart(2, "0")}.webp`,
+  ratio: "345 / 1036",
+  mottos: [
+    t("Magia suntem noi!", "We are the magic!"),
+    t("Crede în tine! Curaj!", "Believe in yourself! Courage!"),
+    t("Crede în tine! Curaj!", "Believe in yourself! Courage!"),
+    t("Urmează-ți visul. Fii autentic!", "Follow your dream. Be yourself!"),
+    t("Eu cred în tine! Găsim o cale!", "I believe in you! We'll find a way!"),
+    t("Totul e posibil! Împreună reușim!", "Anything is possible! Together we can!"),
+    t("Împreună reușim!", "Together we can!"),
+    t("Împreună reușim!", "Together we can!"),
+    t("Împreună reușim!", "Together we can!"),
+  ],
+  title: t("Toate semnele", "All the bookmarks"),
+  lead: t("Nouă modele, fiecare cu gândul lui bun. Atinge un semn ca să-l vezi mare.", "Nine designs, each with its own kind thought. Tap a bookmark to see it large."),
+  fanLabel: t("Semnele de carte, în evantai", "The bookmarks, fanned out"),
+  prev: t("Semnul anterior", "Previous bookmark"),
+  next: t("Semnul următor", "Next bookmark"),
+};
+
 export const products: Product[] = universes.flatMap((u) =>
   productKinds.map((k) => {
     const real = u.id === "fluture" && k === "carti";
+    const realSemn = u.id === "fluture" && k === "semn";
     return {
       id: `${u.id}-${k}`,
       universe: u.id,
       kind: k,
       name: kindCopy[k].name,
-      description: real
+      description: realSemn
+        ? [
+            t(
+              "Nouă semne de carte cu personajele din „Fluturele dansator de step” și câte un gând bun pentru cine citește: „Crede în tine!”, „Totul e posibil!”, „Împreună reușim!”.",
+              "Nine bookmarks with the characters of „The Tap-Dancing Butterfly” and a kind thought for whoever reads: „Believe in yourself!”, „Anything is possible!”, „Together we can!”.",
+            ),
+          ]
+        : real
         ? [
             t(
               "Un pachet de 24 de cărți cu personajele din „Fluturele dansator de step”: unsprezece perechi de găsit și o singură carte câștigătoare, Fluturele dansator. Un joc de perechi pentru toată familia.",
@@ -557,7 +588,12 @@ export const products: Product[] = universes.flatMap((u) =>
             ),
           ]
         : kindCopy[k].description,
-      specs: real
+      specs: realSemn
+        ? [
+            { label: productPage.labels.contents, value: t("9 modele", "9 designs") },
+            { label: productPage.labels.size, value: t("6 × 17 cm", "6 × 17 cm") },
+          ]
+        : real
         ? [
             { label: productPage.labels.contents, value: t("24 de cărți", "24 cards") },
             { label: productPage.labels.size, value: t("88 × 63 mm", "88 × 63 mm") },
@@ -565,7 +601,7 @@ export const products: Product[] = universes.flatMap((u) =>
           ]
         : [{ label: productPage.labels.details, value: detailsSoon }],
       status: "soon" as const,
-      placeholder: !real,
+      placeholder: !real && !realSemn,
     };
   }),
 );
@@ -654,6 +690,7 @@ export const artPage = {
   priceSoon: t("Preț în curând", "Price coming soon"),
   close: t("Închide", "Close"),
   commissionTitle: t("Lucrări la comandă", "Commissions"),
+  commissionCta: t("Comandă o lucrare", "Commission a piece"),
   // PLACEHOLDER: commission note
   commission: t(
     "Pictez și la comandă: un portret al copilului tău într-un univers de poveste sau o ilustrație pentru o ocazie specială.",
@@ -666,7 +703,7 @@ export const artworks: Artwork[] = [
   // PLACEHOLDER: artworks from here on
   { id: "dimineata", title: t("Lumină de dimineață", "Morning light"), kind: "original", technique: t("Acuarelă pe hârtie", "Watercolour on paper"), size: "30 × 40 cm", year: 2025, availability: "preorder", wash: ["#fbe3c9", "#f3b9c9", "#c9b8e6"], ratio: 3 / 4, placeholder: true },
   { id: "lavanda", title: t("Ploaie de lavandă", "Lavender rain"), kind: "original", technique: t("Acuarelă și tuș", "Watercolour and ink"), size: "40 × 30 cm", year: 2025, availability: "sold", wash: ["#e6dcf5", "#b9a3e0", "#7a5fb0"], ratio: 4 / 3, placeholder: true },
-  { id: "zbor", title: t("Liniștea dinaintea zborului", "The quiet before flight"), kind: "original", technique: t("Acuarelă pe hârtie", "Watercolour on paper"), size: "24 × 32 cm", year: 2026, availability: "preorder", src: "butterfly.webp", ratio: 4 / 5, placeholder: true },
+  { id: "zbor", title: t("Liniștea dinaintea zborului", "The quiet before flight"), kind: "original", technique: t("Acuarelă pe hârtie", "Watercolour on paper"), size: "24 × 32 cm", year: 2026, availability: "preorder", src: "butterfly.webp", ratio: 447 / 406, placeholder: true },
   { id: "gradina", title: t("Grădina bunicii", "Grandma's garden"), kind: "print", technique: t("Print giclée", "Giclée print"), size: "A3", year: 2025, availability: "preorder", wash: ["#dfe7d4", "#a9be95", "#f6dde6"], ratio: 3 / 4, placeholder: true },
   { id: "nor", title: t("Norul timid", "The shy cloud"), kind: "print", technique: t("Print după acuarelă", "Print of a watercolour"), size: "A4", year: 2026, availability: "preorder", wash: ["#dce9f6", "#97bce0", "#f6dde6"], ratio: 1, placeholder: true },
   { id: "apus", title: t("Poiana la apus", "Meadow at dusk"), kind: "original", technique: t("Acuarelă pe hârtie", "Watercolour on paper"), size: "50 × 35 cm", year: 2026, availability: "onRequest", wash: ["#f6dde6", "#e58fbf", "#7a5fb0"], ratio: 10 / 7, placeholder: true },
@@ -723,12 +760,33 @@ export const contactPage = {
 
 export const community = {
   title: [t("Comunitate", "Community"), t("cu sens", "with meaning")] as const,
+  // Ramona's text (2026-10-13), her words exactly, spread over the page's sections
+  tagline: t(
+    "Oameni care inspiră. Întâlniri care ne apropie. Experiențe care lasă ceva bun în urmă.",
+    "People who inspire. Gatherings that bring us closer. Experiences that leave something good behind.",
+  ),
   lead: t(
-    "Un loc în care poveștile ies din cărți: ne adunăm să citim, să desenăm, să vorbim despre emoții și să facem lucruri bune împreună.",
-    "A place where stories step out of the books: we gather to read, draw, talk about feelings and do good things together.",
+    "Cred că fiecare om are ceva valoros de dăruit, o poveste de împărtășit sau un dar prin care poate aduce mai mult sens în viața celorlalți.",
+    "I believe every person has something valuable to give, a story to share or a gift through which they can bring more meaning into other people's lives.",
+  ),
+  intro: t(
+    "Comunitate cu sens este un spațiu dedicat oamenilor, proiectelor și inițiativelor care aduc împreună arta, educația, creativitatea, dezvoltarea personală și grija pentru suflet. Un loc în care îmi doresc să aduc aproape oameni frumoși, profesioniști pasionați și colaboratori care cred în puterea întâlnirilor autentice și în transformarea pe care o pot aduce experiențele trăite împreună.",
+    "Comunitate cu sens is a space for the people, projects and initiatives that bring together art, education, creativity, personal growth and care for the soul. A place where I want to bring close beautiful people, passionate professionals and collaborators who believe in the power of real encounters and in the change that experiences lived together can bring.",
   ),
   eventsTitle: t("Întâlniri", "Gatherings"),
-  eventsLead: t("Ce facem împreună. Anunț fiecare întâlnire pe Instagram.", "What we do together. I announce every gathering on Instagram."),
+  eventsLead: t(
+    "Tot aici voi împărtăși momente din lumea cărților mele: lansări, întâlniri cu cititorii, sesiuni de autografe, vizite în școli și grădinițe, ateliere pentru copii și proiecte desfășurate în cadrul programelor Școala Altfel și Școala Verde. Sunt întâlniri în care poveștile ies din pagini și devin experiențe, dialoguri și amintiri.",
+    "Here, too, I will share moments from the world of my books: launches, meetings with readers, signing sessions, visits to schools and kindergartens, workshops for children and projects within the Școala Altfel and Școala Verde programmes. They are gatherings where stories step off the page and become experiences, conversations and memories.",
+  ),
+  projectsLead: t(
+    "Aici vei descoperi oameni și proiecte care merită cunoscute: ateliere de ceramică și terapie prin artă, experiențe de conectare cu natura și animalele, inițiative educaționale pentru copii, activități dedicate dezvoltării personale, precum și alte forme de explorare, învățare și creativitate.",
+    "Here you will discover people and projects worth knowing: ceramics workshops and art therapy, experiences of connecting with nature and animals, educational initiatives for children, activities for personal growth, and other ways of exploring, learning and creating.",
+  ),
+  closing: t(
+    "Pentru că o comunitate nu înseamnă doar oameni adunați laolaltă, ci oameni care se întâlnesc în jurul unor valori, care se susțin, se inspiră și contribuie, fiecare în felul său, la o lume mai atentă, mai creativă și mai conectată.",
+    "Because a community is not just people gathered together, but people who meet around shared values, who support and inspire one another and contribute, each in their own way, to a more attentive, more creative and more connected world.",
+  ),
+  welcome: t("Bine ai venit în Comunitate cu sens!", "Welcome to Comunitate cu sens!"),
   join: t("Vreau să particip", "I'd like to come"),
   projectsTitle: t("Proiecte cu sens", "Projects with meaning"),
   ctaTitle: t("Vreau să aflu primul", "Tell me first"),
@@ -739,7 +797,16 @@ export const community = {
   follow: t("Urmărește pe Instagram", "Follow on Instagram"),
   propose: t("Propune un proiect", "Suggest a project"),
   partnersTitle: t("Parteneri", "Partners"),
-  partnersLead: t("Oameni și locuri alături de care poveștile ajung mai departe.", "People and places that help the stories travel further."),
+  partnersLead: [
+    t(
+      "Îmi doresc ca acest spațiu să crească firesc, odată cu oamenii pe care îi întâlnesc și cu proiectele în care cred. Să fie o punte între cei care creează și cei care caută, între cei care oferă și cei care au nevoie să descopere, să învețe sau pur și simplu să se bucure.",
+      "I want this space to grow naturally, along with the people I meet and the projects I believe in. To be a bridge between those who create and those who search, between those who give and those who need to discover, to learn or simply to enjoy.",
+    ),
+    t(
+      "Voi aduce aici poveștile colaboratorilor mei, activitățile lor și locurile în care îi poți descoperi, prin prezentări, fotografii și linkuri către proiectele lor.",
+      "I will bring here the stories of my collaborators, their activities and the places where you can find them, through introductions, photographs and links to their projects.",
+    ),
+  ],
   partnerInvite: t("Vrei să fim parteneri? Scrie-mi", "Want to partner up? Write to me"),
   partners: [
     {
@@ -810,6 +877,7 @@ export const booking = {
     { id: "online" as FormatId, title: t("Online", "Online"), detail: t("60–120 min", "60–120 min"), minutes: 60 },
     { id: "fata" as FormatId, title: t("Față în față", "In person"), detail: t("60–120 min", "60–120 min"), minutes: 60 },
   ],
+  length: t("Durata", "Length"),
   timezone: t("Ora României", "Romania time"),
   prev: t("Luna anterioară", "Previous month"),
   next: t("Luna următoare", "Next month"),

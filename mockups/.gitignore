@@ -4,4 +4,6 @@ artifact
 # rendered from the printer PDFs by scripts/pdf-pages.swift; regenerate, never commit (27 MB)
 assets-src/pages/
 assets-src/cards/
+assets-src/bookmarks/
+assets-src/fonts/
 .playwright-cli/

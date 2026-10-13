@@ -61,6 +61,8 @@ type Beat = { text: Text; kind?: "questions" | "close" };
 function Beat({ beat, i }: { beat: Beat; i: number }) {
   const { t } = useLang();
   const text = t(beat.text);
+  // a beat can hold several of her paragraphs (the English is split finer than the Romanian)
+  const paras = text.split("\n\n");
   if (beat.kind === "questions")
     // one question per line, the way they arrive
     return (
@@ -75,12 +77,20 @@ function Beat({ beat, i }: { beat: Beat; i: number }) {
   if (beat.kind === "close")
     return (
       <Reveal i={i} className="!mt-16">
-        <p className="display text-[clamp(1.6rem,6vw,2.6rem)] leading-[1.15] font-[360] text-ink text-balance">{text}</p>
+        <div className="space-y-4">
+          {paras.map((x) => (
+            <p key={x} className="display text-[clamp(1.6rem,6vw,2.6rem)] leading-[1.15] font-[360] text-ink text-balance">
+              {x}
+            </p>
+          ))}
+        </div>
       </Reveal>
     );
   return (
-    <Reveal i={i}>
-      <p>{text}</p>
+    <Reveal i={i} className="space-y-5">
+      {paras.map((x) => (
+        <p key={x}>{x}</p>
+      ))}
     </Reveal>
   );
 }

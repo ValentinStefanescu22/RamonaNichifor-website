@@ -84,12 +84,20 @@ export default function App() {
         <PageOpener
           title={t(community.title[0])}
           italic={t(community.title[1])}
+          tagline={t(community.tagline)}
           lead={<p>{t(community.lead)}</p>}
           background="linear-gradient(180deg, #f7e3eb 0%, #efe6f5 52%, #e4ecf6 100%)"
           aside={<GatheringCircle />}
         />
 
-        <section className="px-4 pt-10 pb-20 sm:px-6 lg:pb-28" style={{ background: "linear-gradient(180deg, #e4ecf6 0%, var(--color-cream) 40%)" }}>
+        {/* what the community is, in her words: one calm paragraph before the sections it describes */}
+        <section className="px-4 pt-6 pb-16 sm:px-6 lg:pb-20" style={{ background: "linear-gradient(180deg, #e4ecf6 0%, var(--color-cream) 70%)" }}>
+          <Reveal i={0} className="mx-auto max-w-6xl">
+            <p className="max-w-[58ch] text-[clamp(1.12rem,2.6vw,1.3rem)] leading-[1.65] text-ink">{t(community.intro)}</p>
+          </Reveal>
+        </section>
+
+        <section className="bg-cream px-4 pt-4 pb-20 sm:px-6 lg:pb-28">
           <div className="mx-auto max-w-6xl">
             <SectionTitle lead={t(community.eventsLead)}>{t(community.eventsTitle)}</SectionTitle>
             <Events />
@@ -99,9 +107,9 @@ export default function App() {
         {/* No project is announced yet (client, 2026-10-05): only the promise, said large */}
         <section className="bg-cream px-4 pb-24 sm:px-6 lg:pb-32">
           <div className="mx-auto max-w-6xl">
-            <SectionTitle>{t(community.projectsTitle)}</SectionTitle>
+            <SectionTitle lead={t(community.projectsLead)}>{t(community.projectsTitle)}</SectionTitle>
             <Reveal i={1}>
-              <p className="display display-wonk mt-6 text-[clamp(2.6rem,9vw,4.4rem)] leading-none font-[360] text-violet italic lg:mt-8">{t(ui.comingSoon)}</p>
+              <p className="display display-wonk mt-8 text-[clamp(2.6rem,9vw,4.4rem)] leading-none font-[360] text-violet italic lg:mt-8">{t(ui.comingSoon)}</p>
             </Reveal>
           </div>
         </section>
@@ -109,7 +117,17 @@ export default function App() {
         {/* PLACEHOLDER partner description and logo: AVA Art & Soul sends them */}
         <section className="bg-cream px-4 pb-24 sm:px-6 lg:pb-28">
           <div className="mx-auto max-w-6xl">
-            <SectionTitle lead={t(community.partnersLead)}>{t(community.partnersTitle)}</SectionTitle>
+            <SectionTitle
+              lead={
+                <div className="space-y-3">
+                  {community.partnersLead.map((l) => (
+                    <p key={l.ro}>{t(l)}</p>
+                  ))}
+                </div>
+              }
+            >
+              {t(community.partnersTitle)}
+            </SectionTitle>
             <Partners />
             <TextLink href="contact.html#comunitate" className="mt-6">
               {t(community.partnerInvite)}
@@ -119,6 +137,13 @@ export default function App() {
 
         <section className="px-4 pt-16 pb-6 sm:px-6" style={{ background: "linear-gradient(180deg, var(--color-cream) 0%, var(--color-petal) 100%)" }}>
           <div className="mx-auto max-w-6xl">
+            {/* her closing words, then the welcome */}
+            <Reveal i={0}>
+              <p className="max-w-[58ch] text-[clamp(1.12rem,2.6vw,1.3rem)] leading-[1.65] text-ink">{t(community.closing)}</p>
+            </Reveal>
+            <Reveal i={1} className="mt-6 mb-20 lg:mb-24">
+              <p className="display text-[clamp(1.9rem,6.5vw,3rem)] leading-[1.1] font-[360] text-violet italic text-balance">{t(community.welcome)}</p>
+            </Reveal>
             <SectionTitle lead={t(community.ctaLine)}>{t(community.ctaTitle)}</SectionTitle>
             <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
               <PillLink href={site.contact.instagram.href} external icon={<Instagram size={18} />}>

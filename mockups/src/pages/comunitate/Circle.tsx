@@ -4,18 +4,19 @@ import { Butterfly } from "../../shared/Butterfly";
 import { Ladybird } from "../../shared/Ladybird";
 
 /**
- * Gathering: the real cover butterflies fly in from every side and settle above the meadow inside an
+ * Gathering: the real cover butterflies and two from bookmark #10 fly in from every side and settle above the meadow inside an
  * arch window, the way people gather around a story; then Buburuza and two friends (cut from page 9 of
  * her book) land on the flower line. Butterflies keep their slow wingbeat and drift; ladybirds rock on
  * their feet. Under reduced motion everyone is simply there, still.
  */
 
 // left/top in % of the window, width in %, resting tilt, where it comes in from (px), wingbeat
+// `bookmark`: the butterfly from bookmark #10 (Ramona, 2026-10-13); drawn in profile, so it glides instead of flapping
 const butterflies = [
   { left: 50, top: 20, w: 34, tilt: -6, from: [0, -120], tempo: 0.62 },
-  { left: 20, top: 40, w: 21, tilt: 12, from: [-160, -30], tempo: 0.48 },
+  { left: 21, top: 41, w: 25, tilt: 6, from: [-160, -30], tempo: 0, bookmark: true },
   { left: 80, top: 34, w: 23, tilt: -14, from: [170, -40], tempo: 0.55 },
-  { left: 60, top: 49, w: 14, tilt: -8, from: [150, 60], tempo: 0.42 },
+  { left: 61, top: 50, w: 17, tilt: -4, from: [150, 60], tempo: 0, bookmark: true },
 ];
 // ladybirds land low on the flowers, from the sides; sway = seconds of one rock
 const ladybirds = [
@@ -28,7 +29,7 @@ export function GatheringCircle() {
   const reduce = useReducedMotion();
   const settle = { type: "spring", bounce: 0 } as const;
   return (
-    <div className="relative mx-auto w-[min(80vw,400px)]" aria-hidden="true">
+    <div className="relative mx-auto w-[min(68vw,320px)]" aria-hidden="true">
       <div
         className="arch relative aspect-[4/5] overflow-hidden shadow-soft"
         style={{ background: "linear-gradient(180deg, #dbe7f4 0%, #ece6f5 45%, #f6e2ea 70%, var(--color-cream) 100%)" }}
@@ -49,9 +50,19 @@ export function GatheringCircle() {
             transition={{ ...settle, duration: 1.8, delay: 0.25 + i * 0.22 }}
           >
             {/* once settled, each drifts on its own slow breath */}
-            <div style={reduce ? undefined : { animation: `bob ${4.2 + i * 0.6}s ease-in-out ${i * -0.9}s infinite` }}>
-              <Butterfly width="100%" tempo={b.tempo} />
-            </div>
+            {b.bookmark ? (
+              <img
+                src={img("butterfly-bookmark.webp")}
+                alt=""
+                draggable={false}
+                className="block h-auto w-full"
+                style={reduce ? undefined : { animation: `glide ${5 + i * 0.5}s ease-in-out ${i * -1.1}s infinite` }}
+              />
+            ) : (
+              <div style={reduce ? undefined : { animation: `bob ${4.2 + i * 0.6}s ease-in-out ${i * -0.9}s infinite` }}>
+                <Butterfly width="100%" tempo={b.tempo} />
+              </div>
+            )}
           </motion.div>
         ))}
         {ladybirds.map((l, i) => (

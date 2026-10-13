@@ -59,7 +59,20 @@ button {
 
 /* Buburuza settled on a flower: a slow rock on her feet, transform only */
 .ladybird { transform-origin: 50% 92%; }
+/* a profile butterfly gliding: a slow rise and a tilt, transform only */
+@keyframes glide { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-6px) rotate(4deg); } }
 @keyframes sway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+
+/* Her illustrations (img.art): no drag, no long-press „Save image” on phones, not printed.
+   Screenshots can't be blocked on the web; the © stamp in each image does that job. */
+img.art {
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+@media print {
+  img.art { visibility: hidden; }
+}
 
 /* Language switch cross-fade */
 ::view-transition-old(root),

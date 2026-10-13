@@ -22,7 +22,7 @@ export const site = {
   ),
   /** The Universuri page's line under the series title */
   universesLead: t("Colecții pentru copii", "Collections for children"),
-  souls: t("Povești pentru suflete mici și mari", "Stories for small and grown-up souls"),
+  souls: t("Povești pentru suflete mici și mari", "Stories for young and grown-up souls"),
   whisper: t("O poveste pentru copii… o șoaptă pentru adulți", "A story for children… a whisper for grown-ups"),
   intro: t(
     "Scriu povești, le pictez și însoțesc oameni în drumul spre ei înșiși.",
@@ -215,9 +215,9 @@ export const art = {
     "Originals and prints. Every piece starts from a feeling, just like the stories.",
   ),
   pieces: [
-    { src: "cover-fluturele.webp", title: t("Poiana fluturelui", "The butterfly's meadow"), kind: t("Ilustrația de copertă", "Cover illustration") },
-    { src: "cover-buburuza.webp", title: t("Buburuza rotunjoară", "The roly-poly ladybird"), kind: t("Ilustrația de copertă", "Cover illustration") },
-    { src: "butterfly.webp", title: t("Fluturele", "The butterfly"), kind: t("Detaliu de copertă", "Cover detail") },
+    // real sizes, so each cover is framed whole (Ramona: „să intre toată coperta”)
+    { src: "cover-fluturele.webp", w: 766, h: 1120, title: t("Poiana fluturelui", "The butterfly's meadow"), kind: t("Ilustrația de copertă", "Cover illustration") },
+    { src: "cover-buburuza.webp", w: 758, h: 1120, title: t("Buburuza rotunjoară", "The roly-poly ladybird"), kind: t("Ilustrația de copertă", "Cover illustration") },
   ],
 };
 
@@ -235,7 +235,7 @@ export const counselling = {
 
 export const mockupNote = {
   placeholders: t(
-    "Unele imagini și detalii sunt provizorii.",
-    "Some images and details are placeholders.",
+    "Toate ilustrațiile și textele sunt protejate de drepturi de autor. Unele imagini și detalii sunt provizorii.",
+    "All illustrations and texts are protected by copyright. Some images and details are placeholders.",
   ),
 };

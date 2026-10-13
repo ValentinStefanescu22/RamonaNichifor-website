@@ -7,7 +7,8 @@ import { ArrowRight, Close } from "../../shared/icons";
 import { easeOut, spring } from "../../shared/motion";
 import { useLang } from "../../shared/lang";
 
-export type Page = { src: string; label: Text };
+/** `ratio` when the image isn't an A4 page (the back covers are 880×1300), so it is never cropped */
+export type Page = { src: string; label: Text; ratio?: string };
 
 /**
  * „Răsfoiește”: a few real pages of the book, laid out like pages on a table. Tapping one lifts it
@@ -59,7 +60,7 @@ export function Leaf({ pages, title }: { pages: Page[]; title: string }) {
               {/* the lift lives on the wrapper so it never fights the shared-layout transform below */}
               <div className={`transition-transform duration-500 ease-(--ease-bloom) group-hover:-translate-y-1.5 ${i % 2 ? "group-hover:rotate-[0.8deg]" : "group-hover:-rotate-[0.8deg]"}`}>
                 <motion.div layoutId={layout(i)} transition={layoutTransition} className="shadow-book overflow-hidden rounded-[3px_8px_8px_3px] bg-[#fffdf9]">
-                  <img src={img(p.src)} alt="" loading="lazy" className="aspect-[919/1300] w-full object-cover" />
+                  <img src={img(p.src)} alt="" loading="lazy" draggable={false} className="art w-full object-cover" style={{ aspectRatio: p.ratio ?? "919 / 1300" }} />
                 </motion.div>
               </div>
               <span className="mt-3 block text-[0.95rem] font-medium text-ink-soft group-hover:text-ink">{t(p.label)}</span>
@@ -161,7 +162,7 @@ export function Reader({
           layoutId={layoutId}
           transition={layoutId ? layoutTransition : fade.transition}
           className={`shadow-book relative h-full max-h-[min(78svh,1300px)] overflow-hidden bg-[#fffdf9] ${frame}`}
-          style={{ aspectRatio: ratio }}
+          style={{ aspectRatio: page.ratio ?? ratio }}
           drag={reduce ? false : "x"}
           dragSnapToOrigin
           dragElastic={0.35}
@@ -178,7 +179,7 @@ export function Reader({
               src={img(page.src)}
               alt={`${title}: ${t(page.label)}`}
               draggable={false}
-              className="absolute inset-0 h-full w-full object-cover"
+              className="art absolute inset-0 h-full w-full object-cover"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

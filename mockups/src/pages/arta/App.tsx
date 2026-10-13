@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { AnimatePresence, motion, useDragControls, useReducedMotion } from "motion/react";
 import { img } from "../../shared/assets";
-import { art, nav, ui } from "../../shared/content";
+import { art, nav } from "../../shared/content";
 import { artPage, artworks, type ArtKind, type Artwork } from "../../shared/content-pages";
-import { ArrowRight, Close } from "../../shared/icons";
+import { ArrowRight, Brush, Close } from "../../shared/icons";
 import { useLang } from "../../shared/lang";
-import { PageOpener, PillLink, SiteShell, TextLink } from "../../site/Layout";
-import { Wash } from "../../site/Painted";
+import { PageOpener, PillLink, SiteShell } from "../../site/Layout";
+import { Placeholder } from "../../site/Painted";
 
 type Filter = "all" | ArtKind;
 
@@ -15,11 +15,11 @@ function Picture({ a, className = "", decorative = false }: { a: Artwork; classN
   const { t } = useLang();
   const label = decorative ? undefined : t(a.title);
   if (a.src) {
-    return <img src={img(a.src)} alt={label ?? ""} className={`w-full object-cover ${className}`} style={{ aspectRatio: a.ratio }} />;
+    return <img src={img(a.src)} alt={label ?? ""} draggable={false} className={`art w-full object-cover ${className}`} style={{ aspectRatio: a.ratio }} />;
   }
   return (
     <div role={label ? "img" : undefined} aria-label={label} aria-hidden={label ? undefined : true} className={className} style={{ aspectRatio: a.ratio }}>
-      <Wash colors={a.wash!} seed={a.id} className="h-full w-full" />
+      <Placeholder tint={a.wash ? `color-mix(in oklab, ${a.wash[0]} 35%, #fffdf9)` : undefined} className="h-full w-full" />
     </div>
   );
 }
@@ -51,7 +51,7 @@ function HangingFrame() {
         <circle cx="100" cy="5" r="4" fill="#5e4a75" />
       </svg>
       <div className="origin-top rotate-[1.2deg] rounded-[3px] bg-[#fffdf9] p-3.5 shadow-soft sm:p-4">
-        <img src={img("cover-fluturele.webp")} alt="" className="aspect-[766/1120] w-full object-cover" />
+        <img src={img("cover-fluturele.webp")} alt="" width={766} height={1120} draggable={false} className="art block h-auto w-full" />
       </div>
     </div>
   );
@@ -218,7 +218,16 @@ export default function App() {
           lead={<p>{t(art.lead)}</p>}
           background="linear-gradient(180deg, #e2ecf7 0%, var(--color-mist) 60%)"
           aside={<HangingFrame />}
-        />
+        >
+          {/* commissions, up where a visitor decides (client, 2026-10-13): her offer and one clear action */}
+          <div className="max-w-[30rem] rounded-[1.75rem] bg-cream/80 p-5 shadow-soft ring-1 ring-ink/5 backdrop-blur-sm sm:p-6">
+            <h2 className="display text-[1.55rem] leading-tight text-ink">{t(artPage.commissionTitle)}</h2>
+            <p className="mt-2 text-[1.02rem] leading-relaxed text-ink-soft">{t(artPage.commission)}</p>
+            <PillLink href="contact.html#arta" icon={<Brush size={18} />} className="mt-5 text-[1.05rem] transition-[transform,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-12px_rgb(52_34_74/0.55)] [&>span]:bg-magenta">
+              {t(artPage.commissionCta)}
+            </PillLink>
+          </div>
+        </PageOpener>
 
         <section className="bg-mist px-4 pt-4 pb-20 sm:px-6 lg:pb-28">
           <div className="mx-auto max-w-6xl">
@@ -283,15 +292,6 @@ export default function App() {
           </div>
         </section>
 
-        <section className="bg-mist px-4 pb-16 sm:px-6">
-          <div className="mx-auto flex max-w-6xl flex-col gap-4 border-t border-ink/10 pt-10 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h2 className="display text-[1.9rem] text-ink">{t(artPage.commissionTitle)}</h2>
-              <p className="mt-3 max-w-[56ch] text-[1.05rem] leading-relaxed text-ink-soft">{t(artPage.commission)}</p>
-            </div>
-            <TextLink href="contact.html#arta">{t(ui.writeToMe)}</TextLink>
-          </div>
-        </section>
       </main>
 
       <AnimatePresence>{open && <ArtworkSheet key={open.id} a={open} onClose={close} />}</AnimatePresence>
