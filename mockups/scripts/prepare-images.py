@@ -238,3 +238,12 @@ if PAGES.exists():
     ladybird.putalpha(matte)
     ladybird = ladybird.crop(ladybird.getbbox())
     save(ladybird.resize((ladybird.width * 3 // 2, ladybird.height * 3 // 2), Image.LANCZOS), "ladybird.webp", 90)
+
+
+# --- Fluturele playing cards, from the printer's PDF (24 cards, 88 × 63 mm; page 25 is blank):
+#   SCALE=3.6 swift scripts/pdf-pages.swift "<carti de joc FLUTURELE 88x63 mm.pdf>" assets-src/cards/fluturele $(seq 1 24)
+CARDS = SRC / "cards"
+if CARDS.exists():
+    (OUT / "cards").mkdir(exist_ok=True)
+    for n in range(1, 25):
+        save(Image.open(CARDS / f"fluturele-p{n}.png").convert("RGB"), f"cards/fluturele-{n:02d}.webp", 82)

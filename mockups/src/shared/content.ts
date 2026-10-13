@@ -35,10 +35,10 @@ export const site = {
     { ro: ["Între ceea ce știm și ceea ce ", "simțim", "."], en: ["Between what we know and what we ", "feel", "."] },
   ] satisfies Record<Lang, [string, string, string]>[],
   contact: {
-    email: "contact@ramonanichifor.ro",
-    instagram: { handle: "@ramonanichifor", href: "https://instagram.com/" },
-    facebook: { handle: "Ramona Nichifor", href: "https://facebook.com/" },
-    whatsapp: { label: "WhatsApp", href: "https://wa.me/" },
+    email: "ramona_nichifor@yahoo.com",
+    instagram: { handle: "@ramonanichifor.creations", href: "https://www.instagram.com/ramonanichifor.creations/" },
+    facebook: { handle: "Ramona Nichifor", href: "https://www.facebook.com/ramona.nichifor/" },
+    whatsapp: { label: "WhatsApp", href: "https://wa.me/40730775132", number: "+40 730 775 132" },
   },
 };
 
@@ -99,7 +99,8 @@ export type Universe = {
 const soonItems = [
   { name: t("Semn de carte", "Bookmark"), status: "soon" as const },
   { name: t("Cărți de joc", "Playing cards"), status: "soon" as const },
-  { name: t("Poster ilustrat", "Illustrated poster"), status: "soon" as const },
+  { name: t("Puzzle", "Puzzle"), status: "soon" as const },
+  { name: t("Joc de familie", "Family game"), status: "soon" as const },
 ];
 
 export const universes: Universe[] = [
@@ -234,7 +235,7 @@ export const counselling = {
 
 export const mockupNote = {
   placeholders: t(
-    "Linkurile, adresele și unele imagini sunt provizorii.",
-    "Links, addresses and some images are placeholders.",
+    "Unele imagini și detalii sunt provizorii.",
+    "Some images and details are placeholders.",
   ),
 };

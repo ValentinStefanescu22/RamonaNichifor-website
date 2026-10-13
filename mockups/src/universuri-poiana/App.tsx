@@ -101,7 +101,7 @@ function UniversePage({ id, onBack, onSwitch }: { id: UniverseId; onBack: () => 
 
         <section className="mt-14">
           <h2 className="display text-[1.8rem] text-ink">{t(ui.inThisUniverse)}</h2>
-          <ul className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
             {u.items.map((item, i) => {
               const ready = item.status === "available";
               // every item opens its own page: the book its book page, the keepsakes their product page

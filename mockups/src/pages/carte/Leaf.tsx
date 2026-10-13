@@ -7,7 +7,7 @@ import { ArrowRight, Close } from "../../shared/icons";
 import { easeOut, spring } from "../../shared/motion";
 import { useLang } from "../../shared/lang";
 
-type Page = { src: string; label: Text };
+export type Page = { src: string; label: Text };
 
 /**
  * „Răsfoiește”: a few real pages of the book, laid out like pages on a table. Tapping one lifts it
@@ -77,7 +77,8 @@ export function Leaf({ pages, title }: { pages: Page[]; title: string }) {
   );
 }
 
-function Reader({
+/** The full-screen reader. Also used for the playing cards, which pass their own shape and button labels. */
+export function Reader({
   pages,
   index,
   title,
@@ -85,6 +86,9 @@ function Reader({
   layoutTransition,
   onClose,
   onTurn,
+  ratio = "919 / 1300",
+  frame = "rounded-[3px_8px_8px_3px]",
+  labels = { prev: bookPage.prev, next: bookPage.next },
 }: {
   pages: Page[];
   index: number;
@@ -93,6 +97,11 @@ function Reader({
   layoutTransition: object;
   onClose: () => void;
   onTurn: (step: number) => void;
+  /** CSS aspect-ratio of the item */
+  ratio?: string;
+  /** corner radius classes of the item */
+  frame?: string;
+  labels?: { prev: Text; next: Text };
 }) {
   const { t } = useLang();
   const reduce = useReducedMotion();
@@ -151,8 +160,8 @@ function Reader({
         <motion.div
           layoutId={layoutId}
           transition={layoutId ? layoutTransition : fade.transition}
-          className="shadow-book relative h-full max-h-[min(78svh,1300px)] overflow-hidden rounded-[3px_8px_8px_3px] bg-[#fffdf9]"
-          style={{ aspectRatio: "919 / 1300" }}
+          className={`shadow-book relative h-full max-h-[min(78svh,1300px)] overflow-hidden bg-[#fffdf9] ${frame}`}
+          style={{ aspectRatio: ratio }}
           drag={reduce ? false : "x"}
           dragSnapToOrigin
           dragElastic={0.35}
@@ -180,7 +189,7 @@ function Reader({
       </div>
 
       <motion.div {...fade} className="relative flex items-center gap-4 text-cream">
-        <button type="button" onClick={() => onTurn(-1)} aria-label={t(bookPage.prev)} className={roundBtn}>
+        <button type="button" onClick={() => onTurn(-1)} aria-label={t(labels.prev)} className={roundBtn}>
           <ArrowRight size={18} className="rotate-180" />
         </button>
         <p className="min-w-[9.5rem] text-center text-[1rem]" aria-live="polite">
@@ -190,7 +199,7 @@ function Reader({
             {index + 1} {t(bookPage.pageOf)} {pages.length}
           </span>
         </p>
-        <button type="button" onClick={() => onTurn(1)} aria-label={t(bookPage.next)} className={roundBtn}>
+        <button type="button" onClick={() => onTurn(1)} aria-label={t(labels.next)} className={roundBtn}>
           <ArrowRight size={18} />
         </button>
       </motion.div>

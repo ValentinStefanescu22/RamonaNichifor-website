@@ -101,7 +101,7 @@ Port of `mockups/src/universuri-poiana/`.
 - The sky tinted in the universe colour (`tint`), with pollen in that colour.
 - A back pill „← Universuri” and the language switch.
 - **Hero orb** (the morph target), the universe name as `<h1>`, the book title, a status chip, and a hook paragraph. An optional longer story in rich text.
-- **„În acest univers”**: the book(s) and products (bookmark, cards, poster…), each with an image and a status. **Every item opens its own page**: the book its book page (the same page Cărți links to), each product its product page (image, description, specs, price, status; „în curând” items offer „Anunță-mă” instead of a buy button).
+- **„În acest univers”**: the book(s) and products (carte, semn de carte, cărți de joc, puzzle, joc de familie; client list 2026-10-13), each with an image and a status. **Every item opens its own page**: the book its book page (the same page Cărți links to), each product its product page (image, description, specs, price, status; „în curând” items offer „Anunță-mă” instead of a buy button).
 - Calls to action. If available: store buttons for the book. If „în curând”: „Anunță-mă când apare” (follow on Instagram for now; a newsletter is out of scope).
 - **„Alte universuri”**: small orbs linking to the others.
 - JSON-LD `BreadcrumbList`, plus `Book` when the universe has a published book.
@@ -127,7 +127,8 @@ Port of `mockups/src/universuri-poiana/`.
 
 ### 5.6 Counselling `/consiliere`
 - Hero with the tagline and the session formats beside it; the primary action is „Programează o ședință” (scrolls to the booking), WhatsApp is the secondary link. **No manifesto on this page** (removed 2026-10-01 so the practical sections come sooner).
-- „Cum lucrez” (her approach, in rich text) next to **„Cum decurge”** (a real sequence, so numbered steps are justified).
+- **„Ce se repetă în viața ta?”** (her text, 2026-10-13): her questions, the automatic reactions, the distinction „ce faci și de ce faci”, the path tipare → nevoi → credințe → reacții automate → conștientizare → alegere conștientă, a WhatsApp + Programează call, and what change means to her.
+- **„Cum știi dacă este pentru tine?”** (her text) as its own section, then **„Cum decurge”** (a real sequence, so numbered steps are justified). The first conversation is by phone (15 min, free); sessions last 60–120 min; prices and payment are still open.
 - **„Programează o ședință”**: the booking flow (§5.6b).
 - FAQ as an accordion (JSON-LD `FAQPage`).
 - Price and session length are CMS fields, shown when filled.
@@ -203,7 +204,7 @@ Collections (lists of entries) and globals (single pages):
 | `site-settings` | global | name, roles, taglines (souls, whisper), series name + lead, manifesto (3 lines, each with an emphasised word), contacts (email, WhatsApp, Instagram, Facebook, other profile URLs for `sameAs`), default SEO (title pattern, description, share image), portrait |
 | `universes` | collection | name, slug, character, **tint** (3 colours), orb art (image *or* built-in line drawing), hook, story (rich text), status (available / soon), order, books → `books`, products → `products`, SEO |
 | `books` | collection | title, slug, subtitle, age group (copii / adolescenti / adulti), cover, blurb (rich text), year, ISBN, pages, format, formats, store links [{store, url}] (empty = „comenzile online, în curând”), universe → `universes`, leaf pages [{image, label}], status (published / soon / writing), SEO |
-| `products` | collection | name, slug, kind (semn de carte / cărți de joc / poster / altul), universe → `universes`, images[], description (rich text), specs [{label, value}], optional price, status, optional external link |
+| `products` | collection | name, slug, kind (semn de carte / cărți de joc / puzzle / joc de familie), universe → `universes`, images[], description (rich text), specs [{label, value}], optional price, status, optional external link |
 | `artworks` | collection | title, slug, images[] (**alt required**), kind (original / print), technique, size, year, availability (preorder / sold / onRequest), optional price, description |
 | `counselling-page` | global | intro, approach, formats (online / in person + city), steps[], FAQ[], optional price and duration, CTA copy |
 | `about-page` | global | bio (rich text), portrait, highlights |

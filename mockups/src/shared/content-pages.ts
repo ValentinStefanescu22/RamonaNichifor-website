@@ -79,8 +79,8 @@ export const about = {
     ],
     [
       { text: t(
-        "Astăzi pictez, scriu și ilustrez. Îmi onorez natura creatoare, trecutul și călătoria.",
-        "Today I paint, write and illustrate. I honour my creative nature, my past and the journey.",
+        "Astăzi pictez, scriu și însoțesc oameni în procesul de reconectare cu ei înșiși. Îmi onorez natura creatoare, trecutul și călătoria.",
+        "Today I paint, write and walk alongside people as they reconnect with themselves. I honour my creative nature, my past and the journey.",
       ), kind: "close" as const },
     ],
   ] as { text: Text; kind?: "questions" | "close" }[][],
@@ -118,32 +118,124 @@ export const about = {
 
 export const counsellingPage = {
   tagline: t("Un spațiu liniștit în care să te asculți.", "A quiet space to listen to yourself."),
-  approachTitle: t("Cum lucrez", "How I work"),
-  // PLACEHOLDER: approach
-  approach: [
-    t(
-      "Nu vin cu rețete. Vin cu întrebări, cu răbdare și cu încrederea că știi deja mai mult decât crezi. Lucrăm împreună, în ritmul tău, cu blândețe și claritate.",
-      "I don't bring recipes. I bring questions, patience and the trust that you already know more than you think. We work together, at your pace, with gentleness and clarity.",
+  // „Ce se repetă în viața ta?” (Ramona, 2026-10-13): her words, diacritics only; EN is her translation
+  patterns: {
+    title: t("Ce se repetă în viața ta?", "What keeps repeating in your life?"),
+    questions: [
+      t("Unde te simți blocat?", "Where do you feel stuck?"),
+      t("Te simți neputincios? Vinovat?", "Do you feel helpless? Guilty?"),
+      t(
+        "Ce faci aproape automat atunci când te simți respins, criticat, ignorat sau nesigur?",
+        "What do you do almost automatically when you feel rejected, criticized, ignored, or insecure?",
+      ),
+      t(
+        "Ce se întâmplă în relațiile tale atunci când începi să te apropii de cineva?",
+        "What happens in your relationships when you start getting close to someone?",
+      ),
+      t("Ce faci atunci când apare un conflict?", "What do you do when conflict arises?"),
+    ],
+    reactions: [
+      t("Te retragi?", "Do you withdraw?"),
+      t("Cauți aprobarea?", "Do you seek approval?"),
+      t("Încerci să controlezi?", "Do you try to control things?"),
+      t("Eviți?", "Do you avoid confrontation?"),
+      t("Te sacrifici?", "Do you sacrifice yourself for others?"),
+      t("Îți asumi responsabilitatea pentru tot?", "Do you take responsibility for everything?"),
+      t("Îți este greu să spui „nu”?", "Do you find it difficult to say “no”?"),
+    ],
+    thesis: t(
+      "Te ghidez să faci această diferență importantă: ce faci și de ce faci ceea ce faci.",
+      "I guide you in understanding this important distinction: what you do and why you do what you do.",
     ),
-    t(
-      "Ședințele sunt pentru momentele în care simți că te-ai pierdut puțin pe drum: o schimbare, o decizie grea, o oboseală care nu trece sau dorința de a te cunoaște mai bine.",
-      "Sessions are for the times you feel a little lost along the way: a change, a hard decision, a tiredness that won't lift, or simply the wish to know yourself better.",
+    path: [
+      t("tipare", "patterns"),
+      t("nevoi", "needs"),
+      t("credințe", "beliefs"),
+      t("reacții automate", "automatic reactions"),
+      t("conștientizare", "awareness"),
+      t("alegere conștientă", "conscious choice"),
+    ],
+    pathLabel: t("Drumul, pas cu pas", "The path, step by step"),
+    explain: t(
+      "Hai să îți explic simplu și profesionist ce fac în ședințele de consiliere. Trimite-mi un mesaj.",
+      "Let me explain, simply and professionally, what I do during counselling sessions. Send me a message.",
     ),
-  ],
-  // PLACEHOLDER: durations and prices
+    change: t(
+      "Pentru mine, schimbarea nu înseamnă să te transformi într-o versiune „mai bună” pentru ceilalți.",
+      "For me, change does not mean transforming yourself into a “better” version of yourself for others.",
+    ),
+    closer: t("Înseamnă să te apropii de tine.", "It means getting closer to yourself."),
+    toward: [
+      t("Să îți înțelegi nevoile.", "Understanding your needs."),
+      t("Să îți asculți vocea interioară.", "Listening to your inner voice."),
+      t("Să îți recunoști limitele dar și resursele.", "Recognizing your boundaries as well as your strengths."),
+      t("Să îți clarifici valorile.", "Clarifying your values."),
+      t("Să faci alegeri care au sens pentru tine.", "Making choices that feel right for you."),
+    ],
+  },
+  // „Cum știi dacă este pentru tine?” (Ramona, 2026-10-13): typos fixed only; her EN translation is a little longer
+  rightForYou: {
+    title: t("Cum știi dacă este pentru tine?", "How do you know if it’s right for you?"),
+    maybe: [
+      t("Poți fi un lider înnăscut, care nu primește cu ușurință sfaturi.", "You may be a natural-born leader, someone who does not easily take advice."),
+      t("Poți fi o persoană timidă, care și-ar dori să primească sfaturi bune.", "You may be shy, someone who longs for a little guidance."),
+      t("Poți fi un rebel, care sfidează limitele și autoritatea.", "You may be a rebel, always questioning boundaries and authority."),
+      t("Poți fi temător și anxios.", "Or you may be fearful, anxious, unsure of yourself."),
+    ],
+    body: [
+      t(
+        "Te poți regăsi în oricare dintre aceste ipostaze sau poți oscila între ele, fiind uneori rebel, alteori temător.",
+        "You may recognize yourself in one of these descriptions, or perhaps you move between them—rebellious at times, fearful at others, depending on where life finds you.",
+      ),
+      t(
+        "Indiferent de situație, poate simți nevoia să depășești anumite comportamente ale tale și nu știi de unde să începi.",
+        "Whatever your situation, there may be parts of yourself you feel ready to move beyond, patterns you wish to change, yet you may not know where to begin.",
+      ),
+      t(
+        "Nu ai uneltele, cunoașterea sau timpul necesar să cauți, să citești, să aprofundezi. Poate nu ai energia.",
+        "Perhaps you do not have the tools, the knowledge, or the time to search, read, and explore things more deeply. Perhaps you simply do not have the energy.",
+      ),
+      t(
+        "Poate nu ai oamenii sau relațiile în care să poți discuta deschis.",
+        "Perhaps you do not have the people, or the kind of relationships, in which you can speak openly and be heard.",
+      ),
+      t(
+        "Poate nu ți-ai găsit mediul în care să te simți în siguranță, să explorezi posibilități și variante, în care să vorbești liber, fără să fii judecat, criticat.",
+        "Perhaps you have not yet found a space where you feel safe enough to explore possibilities and alternatives, where you can speak freely without the fear of being judged or criticized.",
+      ),
+      t(
+        "Poate simți nevoia să poți lăsa garda jos, masca, rolul. Să poți fi vulnerabil fără să te afli în pericol.",
+        "Perhaps you long for a moment when you can let your guard down, take off the mask, and step out of the role you have learned to play. A moment when you can be vulnerable without feeling in danger. A moment when you do not have to prove anything, explain everything, or be anything other than who you are.",
+      ),
+    ],
+    simply: t("Pur și simplu să fii.", "Simply to be."),
+    here: t("Și aici intervin eu.", "And this is where I come in."),
+    offer: [
+      t("Îți creez acest spațiu și îți ofer acest timp.", "I create this space for you. I offer you this time."),
+      t(
+        "Cunoașterea mea îți va susține propriul proces de autocunoaștere și descoperire, de înțelegere a reacțiilor și comportamentelor tale, de schimbare a celor care nu îți sunt benefice, dacă simți că este necesar, și de atingere a obiectivelor pe care ți le propui și care îți aduc beneficii.",
+        "My knowledge is here to support your own process of self-awareness and discovery. To help you understand your reactions and behaviors, recognize the patterns that may no longer serve you, and change them if—and when—you feel ready. Not because you have to become someone else, but because you may wish to feel more at ease with who you are. To move towards the goals you set for yourself, in ways that bring meaning, clarity, and benefit to your life.",
+      ),
+    ],
+    close: t(
+      "Iar dacă te regăsești în aceste rânduri și simți nevoia unei persoane care să te asculte în tihnă, cu răbdare, și a unui spațiu în care să te simți în siguranță, în care să ai parte de confidențialitate și să poți parcurge propriul proces de autocunoaștere, sunt aici.",
+      "And if you recognize yourself in these words, if you feel the need for someone who will listen to you calmly and patiently, without rushing you or telling you who you should be, perhaps this is a place for you. A space where you can feel safe, where confidentiality is respected, and where you are free to explore your own thoughts, feelings, and possibilities, at your own pace. A space where you can begin to understand yourself a little better. And if this is what you have been looking for, I am here.",
+    ),
+  },
+  // Durations from Ramona (60–120 min); prices still „în curând”
   formats: [
     {
       id: "online",
       title: t("Online", "Online"),
       line: t("Prin apel video, de oriunde ai fi.", "By video call, wherever you are."),
-      detail: t("Durata și prețul, în curând", "Length and price coming soon"),
+      detail: t("60–120 min · prețul, în curând", "60–120 min · price coming soon"),
       placeholder: true,
     },
     {
       id: "fata",
       title: t("Față în față", "In person"),
       line: t("Într-un cadru cald și discret, în București.", "In a warm, private setting in Bucharest."),
-      detail: t("Durata și prețul, în curând", "Length and price coming soon"),
+      detail: t("60–120 min · prețul, în curând", "60–120 min · price coming soon"),
       placeholder: true,
     },
   ],
@@ -151,20 +243,16 @@ export const counsellingPage = {
   // PLACEHOLDER: steps
   steps: [
     { title: t("Îmi scrii", "You write to me"), line: t("Pe WhatsApp sau pe email, câteva rânduri despre ce te aduce aici.", "On WhatsApp or by email, a few lines about what brings you here.") },
-    { title: t("O primă discuție", "A first conversation"), line: t("15 minute, fără cost, ca să vedem dacă ne potrivim.", "15 minutes, free of charge, to see if we're a good fit.") },
-    { title: t("Ședințele", "The sessions"), line: t("Ne întâlnim online sau față în față, de obicei o dată pe săptămână.", "We meet online or in person, usually once a week.") },
-    { title: t("Pașii tăi", "Your own steps"), line: t("Între ședințe, mici exerciții de scris sau de observat, doar dacă îți folosesc.", "Between sessions, small writing or noticing exercises, only if they help.") },
+    { title: t("O primă discuție", "A first conversation"), line: t("15 minute, telefonic, fără cost, ca să vedem dacă ne potrivim.", "15 minutes on the phone, free of charge, to see if we're a good fit.") },
+    { title: t("Ședințele", "The sessions"), line: t("Ne întâlnim online sau față în față.", "We meet online or in person.") },
+    { title: t("Pașii tăi", "Your own steps"), line: t("Îi stabilim împreună, personalizat, în funcție de ritmul și nevoile tale.", "We set them together, tailored to your pace and your needs.") },
   ],
   faqTitle: t("Întrebări frecvente", "Frequently asked questions"),
   // PLACEHOLDER: FAQ
   faq: [
     {
-      q: t("Cum știu dacă consilierea e pentru mine?", "How do I know if counselling is for me?"),
-      a: t("Dacă simți nevoia să vorbești cu cineva care te ascultă fără să te judece, e un semn bun. Prima discuție e tocmai pentru a afla asta împreună.", "If you feel the need to talk to someone who listens without judging, that's a good sign. The first conversation is there to find out together."),
-    },
-    {
       q: t("Cât durează o ședință?", "How long is a session?"),
-      a: t("Durata ședințelor este în lucru și o anunț aici în curând.", "Session lengths are being finalised and will be announced here soon."),
+      a: t("Ședințele diferă și pot dura între 60 și 120 de minute.", "Sessions vary and can last between 60 and 120 minutes."),
     },
     {
       q: t("Cât costă?", "How much does it cost?"),
@@ -172,15 +260,11 @@ export const counsellingPage = {
     },
     {
       q: t("Cum se desfășoară ședințele online?", "How do online sessions work?"),
-      a: t("Pe un apel video, dintr-un loc liniștit în care te simți în siguranță. Îți trimit linkul cu o zi înainte.", "On a video call, from a quiet place where you feel safe. I send you the link the day before."),
+      a: t("Pe un apel video, dintr-un loc liniștit în care te simți în siguranță. Când programezi pe site, primești linkul pentru întâlnire. Detaliile despre plată, în curând.", "On a video call, from a quiet place where you feel safe. When you book on the site, you receive the link for the meeting. Payment details coming soon."),
     },
     {
       q: t("Ce se întâmplă cu ce îmi împărtășești?", "What happens to what I share?"),
       a: t("Rămâne între noi. Confidențialitatea este baza oricărei ședințe.", "It stays between us. Confidentiality is the ground every session stands on."),
-    },
-    {
-      q: t("Pot reprograma o ședință?", "Can I reschedule a session?"),
-      a: t("Da, cu cel puțin 24 de ore înainte, fără niciun cost.", "Yes, at least 24 hours ahead, at no cost."),
     },
   ],
   ctaTitle: t("Primul pas e o conversație.", "The first step is a conversation."),
@@ -345,8 +429,8 @@ export const bookOf = (u: UniverseId) => shelf.find((b) => b.universe === u)!;
 
 /* ---------------------------------------------------------------- Products (universe keepsakes) */
 
-export type ProductKind = "semn" | "carti" | "poster";
-export const productKinds: ProductKind[] = ["semn", "carti", "poster"];
+export type ProductKind = "semn" | "carti" | "puzzle" | "joc";
+export const productKinds: ProductKind[] = ["semn", "carti", "puzzle", "joc"];
 
 export type Product = {
   id: string;
@@ -356,11 +440,14 @@ export type Product = {
   description: Text[];
   specs: { label: Text; value: Text }[];
   status: "soon";
-  placeholder: true;
+  /** true while the texts and visuals are stand-ins */
+  placeholder: boolean;
 };
 
-// PLACEHOLDER: product texts, materials and sizes (prices are „în curând”)
-const kindCopy: Record<ProductKind, { name: Text; description: Text[]; material: Text; size: Text }> = {
+const detailsSoon = t("Detalii în curând", "Details coming soon");
+
+// Names are the client's list (2026-10-13). Descriptions are PLACEHOLDER until Ramona sends hers; no invented sizes or materials.
+const kindCopy: Record<ProductKind, { name: Text; description: Text[] }> = {
   semn: {
     name: t("Semn de carte", "Bookmark"),
     description: [
@@ -369,58 +456,123 @@ const kindCopy: Record<ProductKind, { name: Text; description: Text[]; material:
         "A bookmark illustrated with the story's character, to keep your place between the pages and remember it between two evenings of reading.",
       ),
     ],
-    material: t("Carton gros, mat, cu panglică", "Thick matte card with a ribbon"),
-    size: t("5 × 18 cm", "5 × 18 cm"),
   },
   carti: {
     name: t("Cărți de joc", "Playing cards"),
     description: [
       t(
-        "Un pachet de cărți cu personajele universului, pentru jocuri în familie și pentru povești inventate împreună, seară de seară.",
-        "A deck with the universe's characters, for family games and for stories made up together, evening after evening.",
+        "Un pachet de cărți cu personajele universului, pentru jocuri în familie, seară de seară.",
+        "A deck with the universe's characters, for family games, evening after evening.",
       ),
     ],
-    material: t("Carton plastifiat, 36 de cărți", "Coated card, 36 cards"),
-    size: t("6 × 9 cm", "6 × 9 cm"),
   },
-  poster: {
-    name: t("Poster ilustrat", "Illustrated poster"),
-    description: [
-      t(
-        "Ilustrația din carte, tipărită pe hârtie de artă, gata să aducă poiana în camera copilului.",
-        "The illustration from the book, printed on art paper, ready to bring the meadow into a child's room.",
-      ),
-    ],
-    material: t("Hârtie de artă, 250 g", "Art paper, 250 gsm"),
-    size: t("A3 · 30 × 42 cm", "A3 · 30 × 42 cm"),
+  puzzle: {
+    name: t("Puzzle", "Puzzle"),
+    description: [t("Un puzzle cu ilustrațiile poveștii. Detaliile, în curând.", "A puzzle with the story's illustrations. Details coming soon.")],
+  },
+  joc: {
+    name: t("Joc de familie", "Family game"),
+    description: [t("Un joc pentru toată familia, în lumea poveștii. Detaliile, în curând.", "A game for the whole family, set in the story's world. Details coming soon.")],
   },
 };
 
 export const productPage = {
-  labels: { material: t("Material", "Material"), size: t("Dimensiuni", "Size"), price: t("Preț", "Price") },
+  labels: {
+    details: t("Detalii", "Details"),
+    contents: t("Conținut", "Contents"),
+    size: t("Dimensiuni", "Size"),
+    players: t("Jucători", "Players"),
+    price: t("Preț", "Price"),
+  },
   sameUniverse: t("Din același univers", "From the same universe"),
   priceSoon: t("Preț în curând", "Price coming soon"),
 };
 
+/* The Fluturele deck (printer file „carti de joc FLUTURELE 88x63 mm”, 2026-10-10): 24 cards.
+   Card 1 is the winner, cards 2–23 are 11 consecutive pairs, card 24 holds the rules. */
+export const deck = {
+  card: (n: number) => `cards/fluturele-${String(n).padStart(2, "0")}.webp`,
+  ratio: 63 / 88,
+  winner: { n: 1, name: t("Fluturele dansator", "The tap-dancing butterfly") },
+  pairs: [
+    t("Broscuță și Broscoi", "Little frog and Big frog"),
+    t("Ciripel și Ciripica", "Ciripel and Ciripica"),
+    t("Dragonel și Dragonela", "Dragonel and Dragonela"),
+    t("Fetiță și Tătic", "Little girl and Daddy"),
+    t("Bondărel și Albinuță", "Bumblebee and Little bee"),
+    t("Scenă fluture și Scenă fetiță", "Butterfly's stage and Girl's stage"),
+    t("Flori adăpost și Flori căsuțe", "Shelter flowers and Little-house flowers"),
+    t("Căsuță jucărie și Căsuță oameni", "Toy house and People's house"),
+    t("Concurs TV", "TV contest"),
+    t("Prieteni și Prietenă", "Friends and Girlfriend"),
+    t("Cântăreți", "Singers"),
+  ],
+  /** names for each card, for alt text and the reader caption (cards 2–23) */
+  cardNames: [
+    "Broscuță", "Broscoi", "Ciripel", "Ciripica", "Dragonel", "Dragonela", "Fetiță", "Tătic", "Bondărel", "Albinuță",
+    "Scenă fluture", "Scenă fetiță", "Flori adăpost", "Flori căsuțe", "Căsuță jucărie", "Căsuță oameni",
+    "Concurs TV", "Concurs TV", "Prieteni", "Prietenă", "Cântăreți", "Cântăreți",
+  ],
+  rulesCard: 24,
+  title: t("Perechile", "The pairs"),
+  lead: t("Unsprezece perechi și o carte câștigătoare. Atinge o carte ca s-o vezi mare.", "Eleven pairs and one winning card. Tap a card to see it large."),
+  winnerTitle: t("Cartea câștigătoare", "The winning card"),
+  winnerLine: t("Cine rămâne cu Fluturele dansator câștigă.", "Whoever is left holding the tap-dancing butterfly wins."),
+  rulesTitle: t("Cum se joacă", "How to play"),
+  rules: [
+    t("maxim 4 jucători cu 1 pachet", "up to 4 players with 1 deck"),
+    t("amestecați toate cărțile", "shuffle all the cards"),
+    t("împarte câte 4 cărți fiecărui jucător", "deal 4 cards to each player"),
+    t("trageți cărți de jos până se termină", "draw from the pile until it runs out"),
+    t("continuați să trageți de la coleg", "keep drawing from the player next to you"),
+    t("formați perechi de câte 2 cărți", "make pairs of 2 cards"),
+    t("perechile le scoateți din joc", "take the pairs out of the game"),
+    t("cine rămâne cu FLUTURELE DANSATOR, CÂȘTIGĂ!", "whoever is left with the TAP-DANCING BUTTERFLY WINS!"),
+  ],
+  packTitle: t("În pachet sunt 24 de cărți", "There are 24 cards in the deck"),
+  pack: [
+    t("22 de cărți ce formează 11 perechi", "22 cards that make 11 pairs"),
+    t("1 carte: Fluturele dansator, câștigătorul", "1 card: the tap-dancing butterfly, the winner"),
+    t("1 card cu informații și reguli de joc", "1 card with information and the rules"),
+  ],
+  rulesCardLabel: t("Cardul cu reguli", "The rules card"),
+  prev: t("Cartea anterioară", "Previous card"),
+  next: t("Cartea următoare", "Next card"),
+  fanLabel: t("Pachetul, ca o mână de cărți", "The deck, held like a hand of cards"),
+};
+
 export const products: Product[] = universes.flatMap((u) =>
-  productKinds.map((k) => ({
-    id: `${u.id}-${k}`,
-    universe: u.id,
-    kind: k,
-    name: kindCopy[k].name,
-    description: kindCopy[k].description,
-    specs: [
-      { label: productPage.labels.material, value: kindCopy[k].material },
-      { label: productPage.labels.size, value: kindCopy[k].size },
-    ],
-    status: "soon" as const,
-    placeholder: true as const,
-  })),
+  productKinds.map((k) => {
+    const real = u.id === "fluture" && k === "carti";
+    return {
+      id: `${u.id}-${k}`,
+      universe: u.id,
+      kind: k,
+      name: kindCopy[k].name,
+      description: real
+        ? [
+            t(
+              "Un pachet de 24 de cărți cu personajele din „Fluturele dansator de step”: unsprezece perechi de găsit și o singură carte câștigătoare, Fluturele dansator. Un joc de perechi pentru toată familia.",
+              "A deck of 24 cards with the characters of „The Tap-Dancing Butterfly”: eleven pairs to find and a single winning card, the tap-dancing butterfly. A pairs game for the whole family.",
+            ),
+          ]
+        : kindCopy[k].description,
+      specs: real
+        ? [
+            { label: productPage.labels.contents, value: t("24 de cărți", "24 cards") },
+            { label: productPage.labels.size, value: t("88 × 63 mm", "88 × 63 mm") },
+            { label: productPage.labels.players, value: t("maxim 4", "up to 4") },
+          ]
+        : [{ label: productPage.labels.details, value: detailsSoon }],
+      status: "soon" as const,
+      placeholder: !real,
+    };
+  }),
 );
 
 export const productHref = (p: { id: string }) => `produs.html#${p.id}`;
 
-/** A universe's items in order (book, bookmark, cards, poster) → the page each one opens */
+/** A universe's items in order (book, bookmark, cards, puzzle, family game) → the page each one opens */
 export const itemHref = (u: UniverseId, index: number) =>
   index === 0 ? bookOf(u).href! : productHref({ id: `${u}-${productKinds[index - 1]}` });
 
@@ -652,11 +804,11 @@ export const booking = {
     time: t("Ora", "Time"),
     details: t("Datele tale", "Your details"),
   },
-  // PLACEHOLDER: durations (prices are „în curând”); minutes only drive the demo calendar
+  // Sessions run 60–120 min (Ramona, 2026-10-10); prices are „în curând”. `minutes` only drives the demo calendar.
   formats: [
-    { id: "intro" as FormatId, title: t("Primă discuție", "First conversation"), detail: t("Detalii în curând", "Details coming soon"), minutes: 15 },
-    { id: "online" as FormatId, title: t("Online", "Online"), detail: t("Detalii în curând", "Details coming soon"), minutes: 50 },
-    { id: "fata" as FormatId, title: t("Față în față", "In person"), detail: t("Detalii în curând", "Details coming soon"), minutes: 60 },
+    { id: "intro" as FormatId, title: t("Primă discuție", "First conversation"), detail: t("15 min, telefonic, fără cost", "15 min, by phone, free"), minutes: 15 },
+    { id: "online" as FormatId, title: t("Online", "Online"), detail: t("60–120 min", "60–120 min"), minutes: 60 },
+    { id: "fata" as FormatId, title: t("Față în față", "In person"), detail: t("60–120 min", "60–120 min"), minutes: 60 },
   ],
   timezone: t("Ora României", "Romania time"),
   prev: t("Luna anterioară", "Previous month"),
@@ -665,6 +817,8 @@ export const booking = {
   pickDay: t("Alege o zi din calendar.", "Pick a day in the calendar."),
   fields: {
     phone: t("Telefon (opțional)", "Phone (optional)"),
+    phoneCall: t("Telefon (te sun eu)", "Phone (I'll call you)"),
+    phoneError: t("Lasă-mi un număr de telefon, ca să te pot suna.", "Leave me a phone number so I can call you."),
     note: t("Câteva rânduri despre ce te aduce (opțional)", "A few lines about what brings you (optional)"),
   },
   submit: t("Confirmă programarea", "Confirm booking"),

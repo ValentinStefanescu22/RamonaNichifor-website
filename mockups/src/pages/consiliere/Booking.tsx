@@ -201,7 +201,7 @@ function Calendar({
 
 /* ------------------------------------------------------------------ the whole booking block */
 
-type Errors = Partial<Record<"name" | "email" | "consent", true>>;
+type Errors = Partial<Record<"name" | "email" | "phone" | "consent", true>>;
 
 export function Booking() {
   const { t, lang } = useLang();
@@ -224,12 +224,14 @@ export function Booking() {
   const validate = (v = form): Errors => ({
     ...(v.name.trim() ? {} : { name: true }),
     ...(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email.trim()) ? {} : { email: true }),
+    // the first conversation is a phone call, so it needs a number
+    ...(format !== "intro" || v.phone.replace(/\D/g, "").length >= 9 ? {} : { phone: true }),
     ...(v.consent ? {} : { consent: true }),
   });
   useEffect(() => {
     if (tried) setErrors(validate());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form, tried]);
+  }, [form, tried, format]);
   useEffect(() => {
     if (done) doneRef.current?.focus();
   }, [done]);
@@ -254,7 +256,7 @@ export function Booking() {
     setTried(true);
     const found = validate();
     setErrors(found);
-    const first = (["name", "email", "consent"] as const).find((k) => found[k]);
+    const first = (["name", "email", "phone", "consent"] as const).find((k) => found[k]);
     if (first) {
       document.getElementById(`${uid}-${first}`)?.focus();
       return;
@@ -398,10 +400,10 @@ export function Booking() {
                     [
                       { k: "name", label: contactPage.fields.name, type: "text", auto: "name", err: contactPage.errors.name },
                       { k: "email", label: contactPage.fields.email, type: "email", auto: "email", err: contactPage.errors.email },
-                      { k: "phone", label: booking.fields.phone, type: "tel", auto: "tel" },
+                      { k: "phone", label: format === "intro" ? booking.fields.phoneCall : booking.fields.phone, type: "tel", auto: "tel", err: booking.fields.phoneError },
                     ] as const
                   ).map((x) => {
-                    const bad = "err" in x && errors[x.k as "name" | "email"];
+                    const bad = "err" in x && errors[x.k as "name" | "email" | "phone"];
                     return (
                       <div key={x.k} className={`flex flex-col gap-2 ${x.k === "phone" ? "sm:col-span-2" : ""}`}>
                         <label htmlFor={field(x.k)} className="font-medium text-ink">

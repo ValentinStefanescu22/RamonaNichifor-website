@@ -226,7 +226,7 @@ function ContactForm() {
 export default function App() {
   const { t } = useLang();
   const channels = [
-    { label: "WhatsApp", href: site.contact.whatsapp.href, Icon: WhatsApp, note: site.contact.whatsapp.label },
+    { label: "WhatsApp", href: site.contact.whatsapp.href, Icon: WhatsApp, note: site.contact.whatsapp.number },
     { label: "Instagram", href: site.contact.instagram.href, Icon: Instagram, note: site.contact.instagram.handle },
     { label: "Facebook", href: site.contact.facebook.href, Icon: Facebook, note: site.contact.facebook.handle },
   ];
@@ -251,7 +251,7 @@ export default function App() {
                   </span>
                   <span>
                     <span className="font-medium">{label}</span>
-                    <span className="ml-2 text-ink-soft">{note !== label ? note : ""}</span>
+                    <span className="ml-2 text-ink-soft tabular-nums">{note}</span>
                   </span>
                 </a>
               </li>

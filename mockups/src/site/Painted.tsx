@@ -105,8 +105,9 @@ function Character({ universe, color, className = "" }: { universe: UniverseId; 
 }
 
 /**
- * PLACEHOLDER product visual, painted in code in the universe's colours: a bookmark with its ribbon,
- * three fanned playing cards, or a framed poster. Real product photos replace these.
+ * Product visual. The Fluture deck shows its real cards; everything else is a PLACEHOLDER painted in code
+ * in the universe's colours (a bookmark with its ribbon, fanned cards, a puzzle, a little board game)
+ * until real product photos arrive.
  */
 export function ProductArt({
   kind,
@@ -136,32 +137,79 @@ export function ProductArt({
           <span className="absolute top-[112%] left-1/2 size-2.5 -translate-x-1/2 rounded-full" style={{ background: deep, opacity: 0.8 }} />
         </div>
       )}
-      {kind === "carti" && (
-        <div className="relative h-[62%] w-[44%]">
-          {[-14, 0, 14].map((deg, i) => (
-            <div
-              key={deg}
-              className="absolute inset-0 origin-bottom rounded-[10px] bg-[#fffdf9] p-[6%] shadow-soft"
-              style={{ transform: `rotate(${deg}deg) translateY(${i === 1 ? -4 : 0}%)`, zIndex: i === 1 ? 2 : 1 }}
-            >
-              <div className="h-full w-full rounded-[6px]" style={{ boxShadow: `inset 0 0 0 1.5px ${mid}` }}>
-                {i === 1 && (
-                  <div className="grid h-full place-items-center p-[14%]">
-                    <Character universe={universe} color={deep} className="w-full" />
-                  </div>
-                )}
+      {kind === "carti" &&
+        (universe === "fluture" ? (
+          // the real deck: three cards from the printer file, fanned like a hand
+          <div className="relative h-[66%] w-[50%]">
+            {(["02", "01", "04"] as const).map((n, i) => (
+              <img
+                key={n}
+                src={img(`cards/fluturele-${n}.webp`)}
+                alt=""
+                draggable={false}
+                className="absolute inset-0 h-full w-full origin-bottom rounded-[7px] object-cover shadow-soft"
+                style={{ transform: `rotate(${(i - 1) * 13}deg) translateY(${i === 1 ? -4 : 0}%)`, zIndex: i === 1 ? 2 : 1 }}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="relative h-[62%] w-[44%]">
+            {[-14, 0, 14].map((deg, i) => (
+              <div
+                key={deg}
+                className="absolute inset-0 origin-bottom rounded-[10px] bg-[#fffdf9] p-[6%] shadow-soft"
+                style={{ transform: `rotate(${deg}deg) translateY(${i === 1 ? -4 : 0}%)`, zIndex: i === 1 ? 2 : 1 }}
+              >
+                <div className="h-full w-full rounded-[6px]" style={{ boxShadow: `inset 0 0 0 1.5px ${mid}` }}>
+                  {i === 1 && (
+                    <div className="grid h-full place-items-center p-[14%]">
+                      <Character universe={universe} color={deep} className="w-full" />
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-      {kind === "poster" && (
-        <div className="w-[70%] rotate-[1.5deg] rounded-[3px] bg-[#fffdf9] p-[5%] shadow-soft">
-          <Wash colors={wash} seed={`${universe}-poster`} className="aspect-[3/4] w-full">
-            <div className="absolute inset-[22%]">
+            ))}
+          </div>
+        ))}
+      {kind === "puzzle" && (
+        // a painted square cut into four pieces, one lifted out
+        <div className="relative w-[66%] rotate-[-2deg]">
+          <Wash colors={wash} seed={`${universe}-puzzle`} className="aspect-square w-full rounded-[6px] shadow-soft">
+            <div className="absolute inset-[20%]">
               <Character universe={universe} color={deep} className="w-full" />
             </div>
+            <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" fill="none" stroke="#fffdf9" strokeWidth="1.4" strokeLinecap="round">
+              <path d="M50 0 V20 C43 20 43 32 50 32 V68 C57 68 57 80 50 80 V100" />
+              <path d="M0 50 H20 C20 57 32 57 32 50 H68 C68 43 80 43 80 50 H100" />
+            </svg>
           </Wash>
+          <svg viewBox="0 0 60 60" className="absolute -top-[14%] -right-[12%] w-[38%] rotate-[14deg] drop-shadow-md">
+            <path d="M6 6 H24 C24 0 36 0 36 6 H54 V24 C60 24 60 36 54 36 V54 H6 Z" fill={mid} stroke="#fffdf9" strokeWidth="1.5" />
+          </svg>
+        </div>
+      )}
+      {kind === "joc" && (
+        // a little board: a winding path of coloured stops toward the character, and a die
+        <div className="relative w-[72%]">
+          <div className="aspect-square w-full rounded-[14px] bg-[#fffdf9] p-[6%] shadow-soft">
+            <Wash colors={wash} seed={`${universe}-joc`} className="h-full w-full rounded-[8px]">
+              <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full">
+                <path d="M12 88 C 40 88, 30 64, 56 64 S 88 52, 78 34 S 40 30, 46 16" fill="none" stroke="#fffdf9" strokeWidth="7" strokeLinecap="round" />
+                {[[12, 88], [26, 84], [38, 72], [56, 64], [72, 58], [80, 44], [70, 32], [54, 28]].map(([x, y], i) => (
+                  <circle key={i} cx={x} cy={y} r="3.6" fill={i % 2 ? deep : mid} opacity="0.85" />
+                ))}
+              </svg>
+              <div className="absolute top-[4%] left-[34%] w-[26%]">
+                <Character universe={universe} color={deep} className="w-full" />
+              </div>
+            </Wash>
+          </div>
+          <svg viewBox="0 0 40 40" className="absolute -right-[8%] -bottom-[6%] w-[22%] rotate-[12deg] drop-shadow-md">
+            <rect x="2" y="2" width="36" height="36" rx="8" fill="#fffdf9" stroke={mid} strokeWidth="1.5" />
+            {[[12, 12], [28, 12], [20, 20], [12, 28], [28, 28]].map(([x, y]) => (
+              <circle key={`${x}-${y}`} cx={x} cy={y} r="3" fill={deep} />
+            ))}
+          </svg>
         </div>
       )}
     </div>

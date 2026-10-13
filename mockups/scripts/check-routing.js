@@ -35,7 +35,7 @@ async (page) => {
     addEventListener("load", () => setTimeout(() => { if (location.hash) return; const y = read(); if (y !== null) scrollTo({ top: y, left: 0, behavior: "instant" }); }, 400), { once: true });
   });
   const base = new URL(page.url()).origin + "/";
-  const pages = ["index.html", "despre.html", "consiliere.html", "carti.html", "carte.html", "carte.html#buburuza", "arta.html", "universuri.html", "comunitate.html", "contact.html", "produs.html#fluture-semn"];
+  const pages = ["index.html", "despre.html", "consiliere.html", "carti.html", "carte.html", "carte.html#buburuza", "arta.html", "universuri.html", "comunitate.html", "contact.html", "produs.html#fluture-semn", "produs.html#fluture-carti"];
   const fails = [];
   let checks = 0;
   const settle = (ms) => page.waitForTimeout(ms);
