@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "home": "Acasă",
+    "universes": "Universuri",
+    "books": "Cărți",
+    "art": "Artă",
+    "counselling": "Consiliere",
+    "about": "Despre mine",
+    "community": "Comunitate",
+    "contact": "Contact",
+    "privacy": "Confidențialitate",
+    "terms": "Termeni",
+    "menu": "Meniu",
+    "close": "Închide",
+    "main": "Principal",
+    "sections": "Secțiuni",
+    "footer": "Subsol"
+  },
+  "ui": {
+    "comingSoon": "În curând",
+    "inProgress": "În lucru",
+    "bookOut": "Cartea a apărut",
+    "buySoon": "Comenzile online se pregătesc.",
+    "discover": "Descoperă universul",
+    "enterStory": "Intră în poveste",
+    "bookConversation": "Programează o discuție",
+    "writeToMe": "Scrie-mi",
+    "copy": "Copiază",
+    "copied": "Copiat",
+    "exampleNote": "Exemplu: picturile reale vin în curând",
+    "languageLabel": "Limba site-ului",
+    "aboutBook": "Despre carte",
+    "myStory": "Povestea mea",
+    "seeGallery": "Vezi toată galeria",
+    "howIWork": "Cum lucrez",
+    "forChildren": "Pentru copii"
+  },
+  "footer": {
+    "placeholders": "Toate ilustrațiile și textele sunt protejate de drepturi de autor. Unele imagini și detalii sunt provizorii."
+  },
+  "stub": {
+    "line": "Pagina aceasta se pregătește."
+  },
+  "notFound": {
+    "title": "Pagina asta s-a rătăcit,",
+    "italic": "ca Musca",
+    "lead": "Adresa nu duce nicăieri. Hai înapoi în poiană.",
+    "home": "Înapoi acasă",
+    "universes": "Vezi universurile",
+    "metaTitle": "Pagina nu există"
+  },
+  "meta": {
+    "homeTitle": "Ramona Nichifor · Autoare, ilustratoare și consilier pentru dezvoltare personală",
+    "description": "Ramona Nichifor: autor, ilustrator și consilier pentru dezvoltare personală. Povești pentru suflete mici și mari.",
+    "ogLocale": "ro_RO"
+  }
+}

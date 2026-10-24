@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "home": "Home",
+    "universes": "Universes",
+    "books": "Books",
+    "art": "Art",
+    "counselling": "Counselling",
+    "about": "About me",
+    "community": "Community",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "menu": "Menu",
+    "close": "Close",
+    "main": "Main",
+    "sections": "Sections",
+    "footer": "Footer"
+  },
+  "ui": {
+    "comingSoon": "Coming soon",
+    "inProgress": "In the works",
+    "bookOut": "Book out now",
+    "buySoon": "Online orders are being set up.",
+    "discover": "Explore the universe",
+    "enterStory": "Step into the story",
+    "bookConversation": "Book a conversation",
+    "writeToMe": "Write to me",
+    "copy": "Copy",
+    "copied": "Copied",
+    "exampleNote": "Example: real paintings coming soon",
+    "languageLabel": "Site language",
+    "aboutBook": "About the book",
+    "myStory": "My story",
+    "seeGallery": "See the whole gallery",
+    "howIWork": "How I work",
+    "forChildren": "For children"
+  },
+  "footer": {
+    "placeholders": "All illustrations and texts are protected by copyright. Some images and details are placeholders."
+  },
+  "stub": {
+    "line": "This page is on its way."
+  },
+  "notFound": {
+    "title": "This page wandered off,",
+    "italic": "like the Fly",
+    "lead": "This address leads nowhere. Let's head back to the meadow.",
+    "home": "Back home",
+    "universes": "See the universes",
+    "metaTitle": "Page not found"
+  },
+  "meta": {
+    "homeTitle": "Ramona Nichifor · Author, illustrator and personal development counsellor",
+    "description": "Ramona Nichifor: author, illustrator and personal development counsellor. Stories for young and grown-up souls.",
+    "ogLocale": "en_US"
+  }
+}

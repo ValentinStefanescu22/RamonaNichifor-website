@@ -29,8 +29,8 @@ The site is done when:
 | Languages | RO default at `/`, EN at `/en`; more languages later |
 | Shop | None yet. Books link out to eMAG, Amazon, etc. Cart and payments come after her PFA is set up, as a later milestone (M7, §13) on Payload's e-commerce plugin. |
 | Copy rule | Never use „Bine ai revenit acasă, puiule!” / "Welcome home, baby" |
-| Hosting | **Open.** Decided before launch (see §12) |
-| Delivery | Six milestones (M1–M6), each with its own plan, preview link and review stop, plus the shop as M7 later (see §13) |
+| Hosting | Previews on Vercel Hobby (free); the launch host is decided in M5 (see §12) |
+| Delivery | Five milestones (M1–M5), each with its own plan, preview link and review stop, plus the shop as M7 later (see §13). Reduced from seven on 2026-10-24 (client), keeping the same quality bar |
 
 ## 3. Audiences (equal weight on the home page)
 
@@ -246,7 +246,7 @@ Collections (lists of entries) and globals (single pages):
 - **Social previews:** an Open Graph and Twitter image for every page, generated from the book cover, the portrait or the universe colour, with the page title in Fraunces.
 - **Images:** descriptive file names (`ramona-nichifor-portret`) and alt text, served through `next/image` (AVIF/WebP, responsive sizes) from the image storage. The hero image loads first.
 - **Identity across the web.** The site links to her Instagram, Facebook, Goodreads, Amazon Author Central, eMAG and publisher pages, and each of those links back. Same name and photo everywhere. This is what earns a Google knowledge panel over time.
-- **At launch (M6):**
+- **At launch (M5):**
   - verify the domain in Google Search Console and Bing Webmaster Tools, submit the sitemap and request indexing
   - set up a Google Business Profile if she sees clients in person
   - track the "Ramona Nichifor" query in Search Console
@@ -259,7 +259,8 @@ Collections (lists of entries) and globals (single pages):
 - Tailwind CSS v4, Motion
 - next-intl 4 (`localePrefix: "as-needed"`, localised pathnames)
 - Payload 3 in the same Next.js app (admin at `/admin`), with `@payloadcms/db-postgres`, `@payloadcms/richtext-lexical`, `@payloadcms/storage-s3` (pointed at Cloudflare R2), and Live Preview + draft mode. **Payload pins the Next.js versions it supports**, so at M1 start Next.js is set to the newest version Payload supports, not simply the newest Next.js.
-- `next/font` (Fraunces variable with the SOFT/WONK/opsz axes, Alegreya Sans; latin + latin-ext subsets, self-hosted)
+- Fonts self-hosted through `next/font/local` from subsets in `assets/fonts/` (`scripts/fetch-fonts.sh`, M1 2026-10-25): Fraunces keeps opsz and WONK, wght 360–400, SOFT pinned at 100; both faces carry only ASCII, Romanian, é and the punctuation the copy uses (135 KB for Fraunces instead of ~490 KB). Parisienne via `next/font/google`
+- The language switch is a full page load to the localized URL (a client-side locale switch made Next 16.4 prefetch in a loop); the cross-fade is a CSS cross-document view transition
 - a server action + Resend for the contact form
 
 **Folder layout** (repo root; `mockups/` stays as an archive, excluded from the build):
@@ -317,9 +318,11 @@ i18n/       routing.ts, request.ts        messages/ ro.json, en.json
 - No cookies for visitors. The only cookie is the admin login session, which only Ramona (and the developer) gets.
 - Analytics is cookie-free, so no consent banner is needed. The tool is chosen with the hosting.
 - The contact form sends an email and stores nothing. A consent line links to the privacy page.
+- Bookings (M4) are stored in Payload and Google Calendar: the privacy page must say so, with a retention period. The booking note is optional and must not ask for health details (it can be special-category data).
+- Fonts are self-hosted (next/font), never loaded from Google at runtime.
 - Fonts are self-hosted, so there are no requests to Google Fonts.
 
-## 12. Hosting (open decision, needed before M6)
+## 12. Hosting (open decision, needed in M5)
 
 Payload is free software, but it needs three things to run, and these are what cost money:
 
@@ -335,7 +338,7 @@ Payload is free software, but it needs three things to run, and these are what c
 
 Payload also has a Cloudflare Workers template (D1 database + R2), but it swaps Postgres for D1, so it is not the default.
 
-**Default for previews (M1–M5): Netlify free + Neon free + R2**, unless Vercel Pro is chosen at M1 start. M1 doesn't use the database yet. Moving hosts later is cheap: the app is host-independent, the database moves with a dump and restore, and R2 stays.
+**Previews (M1–M4): Vercel Hobby (free) + Neon free + R2** (decided 2026-10-24; fine for non-commercial previews). The launch host is decided in M5. M1 doesn't use the database yet. Moving hosts later is cheap: the app is host-independent, the database moves with a dump and restore, and R2 stays.
 
 When the shop arrives (M7), payment fees (Stripe, roughly 1.5% + €0.25 per EU card sale) are the same on any host.
 
@@ -347,12 +350,12 @@ Each milestone gets its own implementation plan, is built and verified, and ship
 |---|---|---|
 | **M1** | Next.js foundation, Tailwind tokens from DESIGN.md, next-intl routing, fonts, shared components; **home page** from typed local data shaped like the CMS; header, footer, menu, language switch; SEO basics (metadata, Person/WebSite JSON-LD) | The home page matches the approved mockup on phone and laptop, RO/EN; Lighthouse phone SEO 100 and Performance ≥ 90 |
 | **M2** | Payload in the app: Postgres (Neon) + R2 storage, collections and globals (§7), admin at `/admin` in Romanian, seed import, drafts + Live Preview; the home page reads from Payload; revalidation hooks; nightly backup | Editing text or an image in the admin updates Live Preview immediately and the live page within a minute; a backup restores cleanly |
-| **M3** | Universuri + universe pages, with the orb → page morph | The morph works on a real phone (Safari + Chrome); reduced motion falls back cleanly |
-| **M4** | Books, art, counselling, about, contact (form + email), legal, 404 | Every page on the preview link in RO and EN; the form delivers to her inbox |
-| **M4b** | Booking (§5.6b): availability and bookings in Payload, slot engine, Google Calendar (freeBusy + events with Meet), Resend confirmations with `.ics`, cancel/reschedule links, 24 h reminders | A test booking appears in Ramona's Google Calendar and both inboxes; double booking is impossible; cancelling frees the slot |
-| **M5** | Security (Strix pentest of the preview: forms, booking, admin) and SEO and quality pass: all JSON-LD validated, hreflang, sitemap, OG images, redirects, accessibility audit, performance | Every checklist in §8 and §10 passes |
-| **M6** | Real content entered, a short Romanian editing guide, hosting chosen, domains connected, launch, Search Console | Site live on the canonical domain; sitemap submitted; profiles link back |
+| **M3** | Universuri + universe pages with the orb → page morph, and every inner page: books, art, counselling, about, community, contact (form + email), legal, 404. Each page ships with its own metadata, JSON-LD, OG image, sitemap entry and accessibility checks as it is built | The morph works on a real phone (Safari + Chrome) with a clean reduced-motion fallback; every page on the preview link in RO and EN; the form delivers to her inbox; JSON-LD validates |
+| **M4** | Booking (§5.6b): availability and bookings in Payload, slot engine, Google Calendar (freeBusy + events with Meet), Resend confirmations with `.ics`, cancel/reschedule links, 24 h reminders | A test booking appears in Ramona's Google Calendar and both inboxes; double booking is impossible; cancelling frees the slot |
+| **M5** | Security (Strix pentest of the preview: forms, booking, admin), final SEO/accessibility/performance audit (hreflang, sitemap, redirects), real content entered, a short Romanian editing guide, hosting chosen, domains connected, launch, Search Console | Every checklist in §8 and §10 passes; site live on the canonical domain; sitemap submitted; profiles link back |
 | *M7 (later)* | *Shop, once her PFA is set up: Payload e-commerce plugin (products, variants, cart, orders), Stripe payments, shipping options, Romanian e-Factura invoices through the SmartBill API, terms of sale and return policy. Specced separately when she's ready.* | *A test order is paid, invoiced through SmartBill and appears in the admin* |
+
+**M1 status (2026-10-25): built and verified locally.** 179 Playwright tests pass on phone (iPhone 15, WebKit) and laptop (1024 / 1180 / 1440), RO and EN; the home page matches the mockup to under 1% of pixels. Lighthouse mobile: SEO 100, Accessibility 100, Best Practices 96, **Performance 84–85**. The client accepted this for now (option A): the remaining cost is the framework's JavaScript plus the two Fraunces files (without web fonts the page scores 92), so performance is revisited in M5 on the real host and domain. The M1 preview link moves to the end of M2, together with the Vercel setup.
 
 **Fixes carried into M1 from the mockup review** (the DESIGN.md documenter found these; not fixed in the archived mockup):
 - **Book section eyebrow.** The line „Pentru copii · 2026 · „Magia suntem noi”” sits above the book title, which the design rules forbid. Move it below the title as a meta line.
@@ -361,36 +364,38 @@ Each milestone gets its own implementation plan, is built and verified, and ship
 
 ## 14. Content checklist for Ramona
 
-- [ ] Counselling availability (days and hours), session lengths and prices, the 15-min free intro yes/no
+- [ ] Counselling availability (days and hours). Received: sessions 60/90/120 min at 25/40/50 € (same online and in person), free 15-min first conversation by phone (2026-10-13)
 - [ ] Access to her Google account (for the calendar sync) and where in-person sessions take place
 - [ ] AVA Art & Soul: logo and one or two lines about them
 - [x] Long bio for Despre mine (received 2026-10-03), „Despre autor”, both books' covers and interiors (PDF)
 - [ ] Approve two small edits in her bio: the comma in „picturile au fost pentru mine, uși întredeschise” and „ale propriilor alegeri” → „a propriilor alegeri” (left as she wrote them)
-- [ ] Counselling: session steps, FAQ answers, durations and prices (placeholders now)
+- [x] Counselling texts: „Ce se repetă în viața ta?” and „Cum știi dacă este pentru tine?” (RO + her EN), steps, FAQ, durations and prices (2026-10-13). Still open: payment method and cancellation/reschedule rule
 - [ ] More books (teen and adult titles are placeholders) and real cover files
 - [ ] Artworks: photos, technique, size, year, availability, prices (most are placeholders)
-- [ ] Comunitate cu sens: real events (dates, places, audience) and projects
+- [ ] Comunitate cu sens: her page text received (2026-10-13); real events (dates, places) and projects still to come
 - [ ] Original, full-resolution photos (portrait: 2–3 options)
 - [ ] Paintings: photos + title, technique, size, year, availability (+ price if public)
 - [ ] Bio: a short and a long version
 - [ ] Counselling: approach, session length, price (if public), city for in-person sessions, FAQ
 - [ ] Book: store links (eMAG, Amazon, …) when orders open, publisher name; „Băuțar” on the cover: place or imprint?
 - [ ] Profiles: Instagram, Facebook, Goodreads, Amazon Author Central, other
-- [ ] Email for the contact form, and her WhatsApp number
+- [x] Email ramona_nichifor@yahoo.com, WhatsApp +40730775132, instagram.com/ramonanichifor.creations, facebook.com/ramona.nichifor (2026-10-13)
 - [ ] Domain: confirm she owns `ramonanichifor.com`; register `.ro`
-- [ ] Approval of the English copy and the English working titles of the books
+- [ ] Approval of the English copy and the English working titles of the books (her own EN translation of Despre mine received 2026-10-14)
+- [ ] Products: texts and photos for semn de carte / puzzle / joc de familie (only the Fluture playing cards and Fluture bookmarks are real so far)
+- [ ] Her legal form (PFA/SRL), CUI and address to show on the site (Legea 365/2002), data-retention period for bookings
 - [ ] Privacy and terms texts (or approval of our template)
 
 ## 15. Risks and open questions
 
-- **Hosting** isn't decided (§12). Everything else is independent of it until M6.
+- **Hosting** isn't decided (§12). Everything else is independent of it until M5.
 - **Self-hosted CMS upkeep.** With Payload, the database, backups and Payload updates are the developer's job, not a vendor's. Mitigated by the nightly backup, a tested restore, and updating Payload at each milestone rather than letting versions pile up.
 - **Payload's Next.js support** can lag behind the newest Next.js release; the build uses the newest Next.js that Payload supports (§9).
-- **Image quality.** The current photos are about 900px WhatsApp copies; originals are needed before M6.
+- **Image quality.** The current photos are about 900px WhatsApp copies; originals are needed before M5.
 - **Unreleased universes** use line-drawn stand-ins until her illustrations exist. The CMS supports swapping in an image.
 - **View Transitions:** supported in Chromium 125+, Safari 18.2+ and Firefox 144+. Older browsers get plain navigation.
 - **English book titles** are working titles until she approves them.
 
 ## 16. Out of scope (for now)
 
-Shop, cart and payments (planned as M7; the content model is ready for it) · newsletter · more languages (FR, DE, ES, AR, HI) · journal/blog · booking calendar for sessions.
+Shop, cart and payments (planned as M7; the content model is ready for it) · online payment for sessions (method undecided) · newsletter · more languages (FR, DE, ES, AR, HI) · journal/blog.

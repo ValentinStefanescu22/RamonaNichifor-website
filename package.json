@@ -1,0 +1,33 @@
+{
+  "name": "ramona-nichifor-site",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "playwright test",
+    "lighthouse": "node scripts/lighthouse.mjs",
+    "check:copy": "! grep -rIn -e 'Bine ai revenit acasă' -e 'Welcome home' app components content messages lib"
+  },
+  "dependencies": {
+    "motion": "^12.43.0",
+    "next": "^16.4.3",
+    "next-intl": "^4.14.9",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "lighthouse": "^13.5.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "5.9"
+  }
+}
