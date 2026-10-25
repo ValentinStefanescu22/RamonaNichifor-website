@@ -189,7 +189,7 @@ Motion inventory. Every item has a `prefers-reduced-motion` fallback: static or 
 | Orb drift + glow | Universuri | CSS transform loops on x, y and tilt, each world on its own period; no connecting line |
 | Orb focus (grow) | Universuri | Hover or keyboard focus on laptop; nearest mid-screen on phones; 1.22 / 0.9 / 0.7 |
 | Pollen | Universuri, universe pages | Canvas, paused off-screen, static under reduced motion |
-| **Orb → universe page morph** | Universuri → universe | React `<ViewTransition>` shared element (Next `experimental.viewTransition`). The API is checked at M3 start; plain navigation is the fallback. |
+| **Orb → universe page morph** | Universuri → universe | React `<ViewTransition>` shared element (checked 2026-10-25: works on Next 16.4.3 without a flag, Chromium + WebKit) with next-intl `Link transitionTypes`; instant under reduced motion; plain navigation where unsupported; browser Back is instant, the in-page back pill morphs back. |
 | Language cross-fade | Everywhere | Root View Transition |
 | Sheets and menus | Phone | Springs, drag to dismiss where it's a sheet |
 

@@ -231,7 +231,7 @@ Each page task:
 - Modify: `app/[locale]/(site)/universuri/page.tsx`, `universuri/[slug]/page.tsx`
 - Port: `mockups/src/universuri-poiana/App.tsx`, `universuri/{WorldMap,Pollen}.tsx`, `pages/produs/{App,Deck}.tsx`.
 
-**Morph:** *(filled in by Task 0)*
+**Morph (Task 0, 2026-10-25):** React `<ViewTransition name={`orb-${roSlug}`} share="morph" default="none">` wraps the map orb and the universe hero orb (the name uses the RO slug, so it is the same in both languages); the orb links are next-intl `Link`s with `transitionTypes={["morph"]}`. No `next.config` flag (Next 16.4.3 has none). A CSS rule turns off `::view-transition-*(*)` animations under `prefers-reduced-motion: reduce`. Browser Back/Forward switches instantly (no morph); the in-page „← Universuri” pill morphs back. The global cross-document `@view-transition` for the language switch stays. Spike report: `.superpowers/sdd/2026-10-25-m3-inner-pages/task-0-report.md` (copy any code pattern you need from it).
 
 - [ ] **Step 1: Write the failing tests** in `tests/universes.spec.ts`:
   - `/universuri`:
