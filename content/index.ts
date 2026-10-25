@@ -150,13 +150,16 @@ export async function getCounsellingPage(l: Locale): Promise<CounsellingPage> {
   };
 }
 
+/** `draft: false` alone still returns docs that were never published (their latest version is a draft), so slug lists filter on _status too */
+const published: Where = { _status: { equals: "published" } };
+
 type SlugCollection = "universes" | "books" | "artworks" | "products";
 
 /** Every locale's published slug of each doc (with locale "all" a slug is { ro, en }); a missing one falls back to RO.
  *  Products repeat their slugs under every universe, so identical pairs collapse into one (use getProductPaths for routes). */
 export async function getSlugPairs(collection: SlugCollection): Promise<SlugPair[]> {
   const payload = await getPayload({ config });
-  const { docs } = await payload.find({ collection, locale: "all", draft: false, depth: 0, pagination: false, select: { slug: true } });
+  const { docs } = await payload.find({ collection, locale: "all", where: published, draft: false, depth: 0, pagination: false, select: { slug: true } });
   const pairs = docs.map((d) => toPair(d.slug));
   return [...new Map(pairs.map((p) => [routing.locales.map((l) => p[l]).join("|"), p])).values()];
 }
@@ -184,14 +187,14 @@ export const getBookSlugs = () => getSlugPairs("books");
 /** Every published product with its universe's slug pair: the routes /universuri/<universe>/<product> */
 export async function getProductPaths(): Promise<{ universe: SlugPair; product: SlugPair; updatedAt: string }[]> {
   const payload = await getPayload({ config });
-  const { docs } = await payload.find({ collection: "products", locale: "all", draft: false, depth: 1, pagination: false, select: { slug: true, universe: true, updatedAt: true } });
+  const { docs } = await payload.find({ collection: "products", locale: "all", where: published, draft: false, depth: 1, pagination: false, select: { slug: true, universe: true, updatedAt: true } });
   return docs.flatMap((d) => (d.universe && typeof d.universe === "object" ? [{ universe: toPair(d.universe.slug), product: toPair(d.slug), updatedAt: d.updatedAt }] : []));
 }
 
 /** Published docs with their slug pair and last edit, for the sitemap (products are in getProductPaths: their routes need the universe too) */
 export async function getSlugDocs(collection: Exclude<SlugCollection, "products">): Promise<{ pair: SlugPair; updatedAt: string }[]> {
   const payload = await getPayload({ config });
-  const { docs } = await payload.find({ collection, locale: "all", draft: false, depth: 0, pagination: false, select: { slug: true, updatedAt: true } });
+  const { docs } = await payload.find({ collection, locale: "all", where: published, draft: false, depth: 0, pagination: false, select: { slug: true, updatedAt: true } });
   return docs.map((d) => ({ pair: toPair(d.slug), updatedAt: d.updatedAt }));
 }
 

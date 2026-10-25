@@ -6,18 +6,12 @@ import { m } from "motion/react";
 import { getPathname, usePathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import type { SlugPairs } from "@/content/types";
+import { dynamicRoutes } from "@/lib/routes";
 
 export type { SlugPairs };
 
 type Href = Parameters<typeof getPathname>[0]["href"];
 
-/** The routes with [params], and which collection's slugs each param holds. Products repeat under every universe, so both are looked up. */
-const dynamicRoutes: Record<string, Record<string, keyof SlugPairs>> = {
-  "/universuri/[slug]": { slug: "universes" },
-  "/universuri/[slug]/[product]": { slug: "universes", product: "products" },
-  "/carti/[slug]": { slug: "books" },
-  "/arta/[slug]": { slug: "artworks" },
-};
 
 /** RO | EN pill: the URL is the persisted choice (no cookie, no storage). */
 export function LangSwitch({ id, slugs, className = "" }: { id: string; slugs: SlugPairs; className?: string }) {

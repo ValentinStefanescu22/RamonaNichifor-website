@@ -4,6 +4,10 @@
  */
 import assert from "node:assert/strict";
 import { registerHooks } from "node:module";
+import { getPayload } from "payload";
+import config from "@payload-config";
+import { getPathname } from "../../i18n/navigation";
+import { localizeDynamicPath } from "../../lib/routes";
 import { counsellingPage } from "../../content/pages-data";
 
 // The getters are server-only and read Next's draft mode; outside a request neither exists, so stub both (published content, as for a visitor)
@@ -119,6 +123,40 @@ const checks: [string, () => Promise<void>][] = [
     const paths = await c.getProductPaths();
     assert.equal(paths.length, 16);
     assert.ok(paths.some((p) => p.universe.en === "butterfly" && p.product.en === "playing-cards"));
+  }],
+  ["a never-published doc is in no slug list (sitemap, language switch, static params)", async () => {
+    const payload = await getPayload({ config });
+    const universe = (await payload.find({ collection: "universes", limit: 1, depth: 0 })).docs[0];
+    const made: { collection: "universes" | "products"; id: number }[] = [];
+    try {
+      // draft: true skips required-field validation and saves _status "draft"; neither doc was ever published
+      const u = await payload.create({ collection: "universes", draft: true, data: { slug: "unit-draft-universe" } as never });
+      made.push({ collection: "universes", id: u.id });
+      const pr = await payload.create({ collection: "products", draft: true, data: { slug: "unit-draft-product", universe: universe.id } as never });
+      made.push({ collection: "products", id: pr.id });
+      assert.ok(!(await c.getSlugPairs("universes")).some((x) => x.ro === "unit-draft-universe"));
+      assert.ok(!(await c.getSlugPairs("products")).some((x) => x.ro === "unit-draft-product"));
+      assert.ok(!(await c.getSlugDocs("universes")).some((x) => x.pair.ro === "unit-draft-universe"));
+      assert.ok(!(await c.getProductPaths()).some((x) => x.product.ro === "unit-draft-product"));
+    } finally {
+      for (const d of made) await payload.delete({ collection: d.collection, id: d.id });
+    }
+  }],
+  ["an internal admin link to a page with a slug localizes (RichText)", async () => {
+    const slugs = await c.getAllSlugPairs();
+    const en = (url: string) => {
+      const href = localizeDynamicPath(url, "en", slugs);
+      return href && getPathname({ locale: "en", href: href as never });
+    };
+    assert.equal(en("/universuri/fluturele"), "/en/universes/butterfly");
+    // getPathname drops the hash; <Link> keeps it (seen rendered as /carti#fluturele), so only the hash field is pinned here
+    assert.equal(en("/universuri/fluturele#carti"), "/en/universes/butterfly");
+    assert.equal(localizeDynamicPath("/universuri/fluturele#carti", "en", slugs)?.hash, "carti");
+    assert.equal(en("/universuri/fluturele/semn-de-carte"), "/en/universes/butterfly/bookmark");
+    assert.equal(en("/carti/fluturele-dansator-de-step"), "/en/books/the-tap-dancing-butterfly");
+    assert.equal(getPathname({ locale: "ro", href: localizeDynamicPath("/arta/poiana-fluturelui", "ro", slugs) as never }), "/arta/poiana-fluturelui");
+    assert.equal(en("/universuri/nu-exista"), null, "unknown slug: the caller keeps the path as written");
+    assert.equal(en("/carti"), null, "a static page is the Link's own job");
   }],
   ["an EN slug not yet translated still opens (looked up in RO)", async () => {
     // simulates the fallback by asking the EN getter for the RO slug of a doc whose EN slug differs: it must not 404 silently into a blank

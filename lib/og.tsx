@@ -18,7 +18,11 @@ const VIOLET = "#7a5fb0";
 // Satori reads TTF but not woff2: assets/fonts/fraunces-og.ttf is the roman cut at wght 380, opsz 144 (scripts/fetch-fonts.sh).
 // A local file read, so the route is fine in a static build with no network.
 let font: Promise<Buffer> | undefined;
-const fraunces = () => (font ??= readFile(join(process.cwd(), "assets/fonts/fraunces-og.ttf")));
+const fraunces = () =>
+  (font ??= readFile(join(process.cwd(), "assets/fonts/fraunces-og.ttf")).catch((err) => {
+    font = undefined; // a failed read must not be cached: the next render tries again
+    throw err;
+  }));
 
 /** The picture, whole, as a PNG data URL plus its drawn size. Takes a file under public/ ("/img/…") or a Payload upload
  *  ("/api/media/file/…", read in-process through Payload's own route, so it works at build time with disk or R2). */
