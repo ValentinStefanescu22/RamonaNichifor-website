@@ -1,3 +1,4 @@
+import { PAGES } from "./pages";
 import { expect, test } from "./fixtures";
 
 const SITE = "https://ramonanichifor.com"; // NEXT_PUBLIC_SITE_URL is unset in the test build
@@ -122,4 +123,9 @@ test("sitemap lists every page in both languages, with alternates and the doc's 
   expect(xml).toContain(`<loc>${SITE}/universuri/fluturele/semn-de-carte</loc>`);
   // the 404 and the admin are not pages
   expect(xml).not.toContain("/admin");
+  // every PAGES path is listed, and every listed URL answers 200
+  for (const { path } of PAGES) expect(xml, path).toContain(`<loc>${SITE}${path === "/" ? "" : path}</loc>`);
+  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
+  expect(locs.length).toBeGreaterThanOrEqual(PAGES.length);
+  for (const path of locs) expect((await request.get(path)).status(), path).toBe(200);
 });

@@ -1,5 +1,6 @@
 import type { Page } from "@playwright/test";
 import { test, expect, allow404 } from "./fixtures";
+import { PAGES } from "./pages";
 
 // Port of mockups/scripts/check-routing.js: every internal link opens its page at the top (also after
 // a scroll down to reach the link), stays there 1.2s later, and Back returns to where the visitor was.
@@ -34,7 +35,10 @@ async function checkLink(page: Page, start: string, region: Region, href: string
     await expect(page.getByRole("dialog")).toBeVisible();
   }
   const link = page.locator(roots[region]).locator(`a[href="${href}"]`).filter({ visible: true }).first();
-  await link.scrollIntoViewIfNeeded();
+  // the orbs on Universuri float (never "stable"), sit under the pollen canvas: instant scroll (the page scrolls smoothly, a forced click would save a half-way position), forced click
+  const orbs = /^\/(en\/universes|universuri)\/?$/.test(new URL(page.url()).pathname);
+  if (orbs) await link.evaluate((el) => el.scrollIntoView({ block: "center", behavior: "instant" }));
+  else await link.scrollIntoViewIfNeeded();
   const startUrl = page.url();
   const startY = await scrollY(page);
 
@@ -49,7 +53,7 @@ async function checkLink(page: Page, start: string, region: Region, href: string
   }
 
   const target = new URL(href, startUrl);
-  await link.click();
+  await link.click({ force: orbs });
   await page.waitForURL((u) => u.pathname === target.pathname && u.hash === target.hash);
   await page.waitForLoadState("load");
   const now = await scrollY(page);
@@ -81,6 +85,7 @@ async function crawl(page: Page, start: string, regions: Region[]) {
 
 const phone = (name: string) => name === "phone";
 
+// header, footer and sheet links are identical on every page: crawl them once per language, and `main` from every page
 for (const start of ["/", "/en"]) {
   test(`every chrome and body link from ${start}`, async ({ page }, info) => {
     test.setTimeout(240_000);
@@ -88,21 +93,18 @@ for (const start of ["/", "/en"]) {
   });
 }
 
-const stubs = [
-  "/universuri", "/universuri/fluturele", "/carti", "/carti/fluturele-dansator-de-step", "/consiliere", "/despre", "/comunitate", "/contact", "/confidentialitate", "/termeni", "/arta",
-  "/en/universes", "/en/universes/butterfly", "/en/books", "/en/books/the-tap-dancing-butterfly", "/en/counselling", "/en/about", "/en/community", "/en/contact", "/en/privacy", "/en/terms", "/en/art",
-];
-
-test("every stub page opens at its top and its body links work", async ({ page, errors }) => {
-  test.setTimeout(240_000);
-  const fails: string[] = [];
-  for (const path of stubs) {
+for (const { path, name } of PAGES.filter((p) => p.path !== "/" && p.path !== "/en")) {
+  test(`${name}: opens at its top and its body links work`, async ({ page }) => {
+    test.setTimeout(240_000);
     const res = await page.goto(path);
-    if ((res?.status() ?? 500) >= 400) fails.push(`${path}: HTTP ${res?.status()}`);
-    if ((await scrollY(page)) !== 0) fails.push(`${path}: not at top`);
-  }
-  expect(fails).toEqual([]);
-  await crawl(page, "/carti", ["main"]);
+    expect(res?.status()).toBe(200);
+    expect(await scrollY(page)).toBe(0);
+    await crawl(page, path, ["main"]);
+  });
+}
+
+test("an unknown URL's 404 page: its body links work", async ({ page, errors }) => {
+  test.setTimeout(240_000);
   await crawl(page, "/nu-exista", ["main"]);
   allow404(errors);
 });
