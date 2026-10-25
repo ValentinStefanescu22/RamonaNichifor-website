@@ -138,9 +138,22 @@ const checks: [string, () => Promise<void>][] = [
       assert.ok(!(await c.getSlugPairs("products")).some((x) => x.ro === "unit-draft-product"));
       assert.ok(!(await c.getSlugDocs("universes")).some((x) => x.pair.ro === "unit-draft-universe"));
       assert.ok(!(await c.getProductPaths()).some((x) => x.product.ro === "unit-draft-product"));
+      // nor is it served: its page 404s, and the map of worlds leaves it out
+      assert.equal(await c.getUniverse("ro", "unit-draft-universe"), null);
+      assert.equal(await c.getProduct("ro", universe.slug, "unit-draft-product"), null);
+      assert.ok(!(await c.getUniverses("ro")).some((x) => x.slug === "unit-draft-universe"));
     } finally {
       for (const d of made) await payload.delete({ collection: d.collection, id: d.id });
     }
+  }],
+  ["keepsake photos play their part by file number, not by their place in the list", async () => {
+    const { byNumber, fanOf, pickNumbered } = await import("../../components/product/images");
+    const m = (src: string) => ({ src, alt: "", width: 460, height: 644 });
+    const photos = ["/api/media/file/fluturele-05.webp", "/api/media/file/fluturele-01-1.webp", "/api/media/file/fluturele-03.webp", "/x/other.webp"].map(m);
+    assert.equal(byNumber(photos, 1)?.src, "/api/media/file/fluturele-01-1.webp"); // Payload's suffix for a second upload
+    assert.deepEqual(fanOf("cards", photos).map((p) => p.src), ["/api/media/file/fluturele-03.webp", "/api/media/file/fluturele-01-1.webp", "/api/media/file/fluturele-05.webp"]);
+    assert.deepEqual(pickNumbered([m("/a.webp"), m("/b.webp")], [7, 8, 9]).map((p) => p.src), ["/a.webp", "/b.webp"]); // no numbers: stored order
+    assert.equal(byNumber(photos, 24), undefined);
   }],
   ["an internal admin link to a page with a slug localizes (RichText)", async () => {
     const slugs = await c.getAllSlugPairs();

@@ -99,8 +99,14 @@ const universe = (u: UniverseDoc): Universe => ({
 
 export async function getUniverses(l: Locale): Promise<Universe[]> {
   const { payload, opts } = await read(l);
-  const { docs } = await payload.find({ collection: "universes", ...opts, sort: "order", pagination: false });
+  const { docs } = await payload.find({ collection: "universes", ...opts, sort: "order", pagination: false, ...(opts.draft ? {} : { where: published }) });
   return docs.map(universe);
+}
+
+/** The universes with `id` = their Romanian slug: the same in both languages, it names the orb morph */
+export async function getWorlds(l: Locale): Promise<(Universe & { id: string })[]> {
+  const [list, pairs] = await Promise.all([getUniverses(l), getSlugPairs("universes")]);
+  return list.map((u) => ({ ...u, id: pairs.find((p) => p[l] === u.slug)?.[routing.defaultLocale] ?? u.slug }));
 }
 
 const book = (b: number | BookDoc | null | undefined): Book => {
@@ -218,7 +224,8 @@ async function bySlug<C extends "universes" | "books" | "artworks" | "products">
   extra?: Where,
 ): Promise<DataFromCollectionSlug<C> | null> {
   const { payload, opts } = await read(l);
-  const where = (s: string) => ({ and: [{ slug: { equals: s } }, ...(extra ? [extra] : [])] }) as Where;
+  // a visitor never gets a doc that was never published (`draft: false` alone still returns it): it 404s
+  const where = (s: string) => ({ and: [{ slug: { equals: s } }, ...(extra ? [extra] : []), ...(opts.draft ? [] : [published])] }) as Where;
   const own = await payload.find({ collection, ...opts, where: where(slug), limit: 1 });
   if (own.docs[0]) return own.docs[0] as DataFromCollectionSlug<C>;
   if (l === routing.defaultLocale) return null;
@@ -237,6 +244,8 @@ const productCard = (p: ProductDoc, universeSlug: string): ProductCard => ({
   status: p.status,
   universeSlug,
   image: mediaOrNull((p.images ?? [])[0]),
+  images: (p.images ?? []).filter((m) => typeof m === "object").map(media),
+  gallery: p.gallery ?? null,
 });
 
 const bookFull = (b: BookDoc): BookFull => ({
@@ -272,8 +281,6 @@ export async function getProduct(l: Locale, universeSlug: string, slug: string):
     description: rich(p.description),
     paragraphs: lexicalParagraphs(p.description),
     specs: (p.specs ?? []).map((s) => ({ label: s.label, value: s.value })),
-    images: (p.images ?? []).map(media),
-    gallery: p.gallery ?? null,
     price: p.price ?? null,
     externalLink: p.externalLink || null,
     universe: universe(u),

@@ -111,7 +111,7 @@ function ProductArt({ kind, tint, images, className = "" }: { kind: ProductKind;
   const line = { stroke: deep, strokeOpacity: 0.35 };
   const hair = { stroke: deep, strokeOpacity: 0.18 };
   return (
-    <div className={`relative aspect-[4/5] ${className}`} aria-hidden="true">
+    <div data-placeholder className={`relative aspect-[4/5] ${className}`} aria-hidden="true">
       <svg viewBox="0 0 100 125" className="absolute inset-0 h-full w-full [&_*]:[vector-effect:non-scaling-stroke]" fill="none" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
         {kind === "semn-de-carte" && (
           // a bookmark with a punched hole and its thread

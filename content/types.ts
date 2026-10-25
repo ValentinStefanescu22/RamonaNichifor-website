@@ -105,14 +105,15 @@ export type ProductCard = {
   universeSlug: string;
   /** The first photo; null while there are none („Imagine în curând”) */
   image: Media | null;
+  /** Every photo, in the order set in the admin */
+  images: Media[];
+  /** bookmarks → the fan of bookmarks, cards → the deck; null → plain images */
+  gallery: "bookmarks" | "cards" | null;
 };
 export type ProductFull = ProductCard & {
   description: RichTextData | null;
   paragraphs: string[];
   specs: { label: string; value: string }[];
-  images: Media[];
-  /** bookmarks → the fan of bookmarks, cards → the deck; null → plain images */
-  gallery: "bookmarks" | "cards" | null;
   price: number | null;
   externalLink: string | null;
   universe: Universe;

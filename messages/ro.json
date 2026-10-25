@@ -37,6 +37,40 @@
     "howIWork": "Cum lucrez",
     "forChildren": "Pentru copii"
   },
+  "universes": {
+    "lead": "Colecții pentru copii",
+    "tap": "Atinge o lume ca s-o deschizi",
+    "inThis": "În acest univers",
+    "others": "Alte universuri",
+    "notifyMe": "Anunță-mă când apare",
+    "available": "Disponibil"
+  },
+  "product": {
+    "buy": "Cumpără",
+    "priceSoon": "Preț în curând",
+    "sameUniverse": "Din același univers",
+    "price": "{price} lei",
+    "of": "din",
+    "close": "Închide",
+    "deck": {
+      "title": "Perechile",
+      "lead": "Două dintre perechi, ca să vezi cum arată. Atinge o carte ca s-o vezi mare.",
+      "winnerTitle": "Cartea câștigătoare",
+      "rulesTitle": "Cum se joacă",
+      "packTitle": "În pachet sunt 24 de cărți",
+      "rulesCard": "Cardul cu reguli",
+      "prev": "Cartea anterioară",
+      "next": "Cartea următoare",
+      "fan": "Pachetul, ca o mână de cărți"
+    },
+    "bookmarks": {
+      "title": "Toate semnele",
+      "lead": "Nouă modele, fiecare cu gândul lui bun. Atinge un semn ca să-l vezi mare.",
+      "fan": "Semnele de carte, în evantai",
+      "prev": "Semnul anterior",
+      "next": "Semnul următor"
+    }
+  },
   "footer": {
     "placeholders": "Toate ilustrațiile și textele sunt protejate de drepturi de autor. Unele imagini și detalii sunt provizorii."
   },

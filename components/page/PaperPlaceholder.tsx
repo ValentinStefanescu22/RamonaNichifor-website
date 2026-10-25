@@ -38,7 +38,7 @@ export function PaperPlaceholder({
 }) {
   const t = useTranslations("ui");
   return (
-    <div className={`@container relative overflow-hidden ${className}`} style={{ background: tint, aspectRatio: String(ratio) }}>
+    <div data-placeholder className={`@container relative overflow-hidden ${className}`} style={{ background: tint, aspectRatio: String(ratio) }}>
       <div className="absolute inset-[6cqi] flex flex-col items-center justify-center gap-2.5 border border-[rgb(52_34_74/0.18)] p-[6cqi] text-center">
         {children ?? (
           <>

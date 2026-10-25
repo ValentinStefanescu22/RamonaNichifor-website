@@ -343,6 +343,9 @@ export interface Product {
   kind: 'semn-de-carte' | 'carti-de-joc' | 'puzzle' | 'joc-de-familie';
   status: 'available' | 'soon';
   universe?: (number | null) | Universe;
+  /**
+   * Ordinea e liberă. Pentru cărțile de joc și semnele de carte, pagina alege imaginile după numărul din numele fișierului (fluturele-01 = cartea câștigătoare, 02–05 = cele două perechi arătate, 24 = cardul cu reguli): păstrați numele fișierelor de la tipografie.
+   */
   images?: (number | Media)[] | null;
   /**
    * Gol: imaginile se arată simplu, una lângă alta.

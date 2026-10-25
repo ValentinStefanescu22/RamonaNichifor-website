@@ -37,6 +37,40 @@
     "howIWork": "How I work",
     "forChildren": "For children"
   },
+  "universes": {
+    "lead": "Collections for children",
+    "tap": "Tap a world to open it",
+    "inThis": "In this universe",
+    "others": "Other universes",
+    "notifyMe": "Tell me when it's out",
+    "available": "Available"
+  },
+  "product": {
+    "buy": "Buy",
+    "priceSoon": "Price coming soon",
+    "sameUniverse": "From the same universe",
+    "price": "{price} lei",
+    "of": "of",
+    "close": "Close",
+    "deck": {
+      "title": "The pairs",
+      "lead": "Two of the pairs, so you can see what they look like. Tap a card to see it large.",
+      "winnerTitle": "The winning card",
+      "rulesTitle": "How to play",
+      "packTitle": "There are 24 cards in the deck",
+      "rulesCard": "The rules card",
+      "prev": "Previous card",
+      "next": "Next card",
+      "fan": "The deck, held like a hand of cards"
+    },
+    "bookmarks": {
+      "title": "All the bookmarks",
+      "lead": "Nine designs, each with its own kind thought. Tap a bookmark to see it large.",
+      "fan": "The bookmarks, fanned out",
+      "prev": "Previous bookmark",
+      "next": "Next bookmark"
+    }
+  },
   "footer": {
     "placeholders": "All illustrations and texts are protected by copyright. Some images and details are placeholders."
   },

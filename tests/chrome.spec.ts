@@ -132,7 +132,8 @@ test("404 is localized", async ({ page, errors }) => {
   await expect(page.locator("h1")).toContainText("wandered off");
 
   expect((await page.goto("/universuri/nu-exista"))?.status()).toBe(404);
-  expect((await page.goto("/en/universes/fluturele"))?.status()).toBe(404);
+  // the RO slug under /en is not a 404: it redirects to the English slug (Ruling 6, tests/universes.spec.ts)
+  expect((await page.goto("/universuri/fluturele/nu-exista"))?.status()).toBe(404);
   allow404(errors);
 });
 

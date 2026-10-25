@@ -12,7 +12,7 @@ export const PAGES: PageEntry[] = [
   ...both("home", "/", "/en"),
   ...both("universes", "/universuri", "/en/universes"),
   ...both("universe", "/universuri/fluturele", "/en/universes/butterfly"),
-  ...both("product", "/universuri/fluturele/semn-de-carte", "/en/universes/butterfly/bookmark", true),
+  ...both("product", "/universuri/fluturele/semn-de-carte", "/en/universes/butterfly/bookmark"),
   ...both("books", "/carti", "/en/books"),
   ...both("book", "/carti/fluturele-dansator-de-step", "/en/books/the-tap-dancing-butterfly"),
   ...both("art", "/arta", "/en/art"),

@@ -25,7 +25,17 @@ export const Products: CollectionConfig = {
     },
     statusSoon("enum_products_release"),
     { name: "universe", label: "Universul", type: "relationship", relationTo: "universes" },
-    { name: "images", label: "Imagini", type: "upload", relationTo: "media", hasMany: true },
+    {
+      name: "images",
+      label: "Imagini",
+      type: "upload",
+      relationTo: "media",
+      hasMany: true,
+      admin: {
+        description:
+          "Ordinea e liberă. Pentru cărțile de joc și semnele de carte, pagina alege imaginile după numărul din numele fișierului (fluturele-01 = cartea câștigătoare, 02–05 = cele două perechi arătate, 24 = cardul cu reguli): păstrați numele fișierelor de la tipografie.",
+      },
+    },
     {
       name: "gallery",
       label: "Cum se arată imaginile",
