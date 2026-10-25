@@ -12,6 +12,7 @@ import {
   UnorderedListFeature,
   lexicalEditor,
 } from "@payloadcms/richtext-lexical";
+import { s3Storage } from "@payloadcms/storage-s3";
 import { ro } from "@payloadcms/translations/languages/ro";
 import { buildConfig } from "payload";
 import sharp from "sharp";
@@ -91,12 +92,32 @@ export default buildConfig({
     ],
   }),
   db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URI },
+    // DATABASE_URI (local Postgres in dev) wins; otherwise Neon's pooled DATABASE_URL (Vercel, `neon env pull`)
+    pool: { connectionString: process.env.DATABASE_URI || process.env.DATABASE_URL },
     // schema changes ship as committed migrations (migrations/), never auto-pushed
     push: false,
     migrationDir: path.resolve(dirname, "migrations"),
   }),
   graphQL: { disable: true },
+  plugins: [
+    // Uploads in Cloudflare R2 when S3_BUCKET is set, else on disk in media/. The bucket stays private (backups/ live
+    // there too): files are served through /api/media/file/…, so image URLs are the same in both modes.
+    s3Storage({
+      enabled: Boolean(process.env.S3_BUCKET),
+      // same columns (_objectKey) with or without R2, so one migration history fits every environment
+      alwaysInsertFields: true,
+      collections: { media: true },
+      bucket: process.env.S3_BUCKET ?? "",
+      config: {
+        endpoint: process.env.S3_ENDPOINT,
+        region: "auto",
+        credentials: { accessKeyId: process.env.S3_ACCESS_KEY_ID ?? "", secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? "" },
+        // R2 rejects the AWS SDK's newer default checksum headers
+        requestChecksumCalculation: "WHEN_REQUIRED",
+        responseChecksumValidation: "WHEN_REQUIRED",
+      },
+    }),
+  ],
   sharp,
   typescript: { outputFile: path.resolve(dirname, "payload-types.ts") },
 });

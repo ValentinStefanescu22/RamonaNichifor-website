@@ -12,3 +12,4 @@ reports
 .env
 media
 backups
+.neon

@@ -289,8 +289,8 @@ i18n/       routing.ts, request.ts        messages/ ro.json, en.json
 **Data safety:** a nightly `pg_dump` of the database to the R2 bucket (scheduled GitHub Action), kept for 30 days, plus the free database plan's own short restore window. Restoring a backup is tried once before launch.
 
 **Environment variables:**
-- `PAYLOAD_SECRET`, `DATABASE_URI`
-- `S3_BUCKET`, `S3_ENDPOINT`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` (R2), `NEXT_PUBLIC_MEDIA_URL`
+- `PAYLOAD_SECRET`, `DATABASE_URI` (local dev) or Neon's `DATABASE_URL` (pooled, app) + `DATABASE_URL_UNPOOLED` (direct: migrations, dump/restore)
+- `S3_BUCKET`, `S3_ENDPOINT`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` (R2; private bucket, media served through Payload at `/api/media/file/…`)
 - `RESEND_API_KEY`, `CONTACT_TO_EMAIL`
 
 **Reused from the mockups:**

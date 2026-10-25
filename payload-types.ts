@@ -209,6 +209,8 @@ export interface Media {
    * Bifat: primește automat „© Ramona Nichifor” și e micșorată la mărimea de ecran. Nebifat: decor (fluturi decupați, poiana).
    */
   illustration?: boolean | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -844,6 +846,8 @@ export interface LegalPagesSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   illustration?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

@@ -11,13 +11,15 @@
     "test": "playwright test",
     "test:unit": "node --test --experimental-strip-types tests/unit/stamp.test.ts && payload run tests/unit/media-upload.ts",
     "lighthouse": "node scripts/lighthouse.mjs",
-    "check:copy": "! grep -rIn -e 'Bine ai revenit acas\u0103' -e 'Welcome home' app components content messages lib",
+    "check:copy": "! grep -rIn -e 'Bine ai revenit acasă' -e 'Welcome home' app components content messages lib",
     "payload": "payload",
     "seed": "payload run payload/seed/index.ts",
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap"
   },
   "dependencies": {
+    "@neon/config": "^1.9.4",
+    "@neon/env": "^1.6.5",
     "@payloadcms/db-postgres": "^3.92.0",
     "@payloadcms/live-preview-react": "^3.92.0",
     "@payloadcms/next": "^3.92.0",
