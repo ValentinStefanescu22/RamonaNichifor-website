@@ -178,4 +178,73 @@ test("a book with no year, pages, ISBN, pages to leaf through or text still rend
   }
 });
 
+// A book with a real store link, its own SEO texts and leaf pages she left unlabelled: metadata, JSON-LD and names follow
+test("a book's SEO group, store link (sameAs) and unlabelled leaf pages reach the page", async ({ page, request }) => {
+  const fluturele = (await (await request.get("/api/books?where[slug][equals]=fluturele-dansator-de-step&locale=ro&depth=0", { headers: auth })).json()).docs[0];
+  const image = fluturele.leafPages[1].image;
+  const created = await request.post("/api/books?locale=ro", {
+    headers: auth,
+    data: {
+      title: "Carte cu magazin",
+      slug: "carte-cu-magazin",
+      ageGroup: "copii",
+      status: "published",
+      year: 2026,
+      cover: fluturele.cover,
+      storeLinks: [{ store: "Librăria de probă", url: "https://example.com/carte-de-proba" }],
+      leafPages: [{ image }, { image }],
+      seo: { title: "Titlu SEO de probă", description: "Descriere SEO de probă pentru carte." },
+      _status: "published",
+    },
+  });
+  expect(created.ok(), "create the test book").toBeTruthy();
+  const id = (await created.json()).doc.id;
+  try {
+    await expect(async () => {
+      await page.goto("/carti/carte-cu-magazin");
+      await expect(page.locator("h1")).toHaveText("Carte cu magazin", { timeout: 1000 });
+    }).toPass(FRESH);
+    // the doc's SEO group wins over the page's own title and description
+    await expect(page).toHaveTitle("Titlu SEO de probă · Ramona Nichifor");
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "Titlu SEO de probă · Ramona Nichifor");
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Descriere SEO de probă pentru carte.");
+    await expect(page.locator('meta[property="og:description"]')).toHaveAttribute("content", "Descriere SEO de probă pentru carte.");
+    // a real store link: a pill, not „în curând”; JSON-LD says where it is sold, with an absolute image
+    await expect(page.getByRole("link", { name: "Librăria de probă" })).toHaveAttribute("href", "https://example.com/carte-de-proba");
+    await expect(page.getByText("Comenzile online se pregătesc.")).toHaveCount(0);
+    const ld = await page.locator('script[type="application/ld+json"]').evaluateAll((els) => els.map((e) => JSON.parse(e.textContent!)));
+    const book = ld.find((d) => d["@type"] === "Book");
+    expect(book.sameAs).toEqual(["https://example.com/carte-de-proba"]);
+    expect(book.image).toMatch(/^https?:\/\//);
+    // leaf pages without a label are still named: the back cover first, then „Pagina N”
+    const leaf = page.locator("[data-leaf] button[aria-haspopup=dialog]");
+    await expect(leaf).toHaveCount(2);
+    await expect(leaf.nth(0)).toHaveAccessibleName("Coperta spate, Carte cu magazin");
+    await expect(leaf.nth(1)).toHaveAccessibleName("Pagina 2, Carte cu magazin");
+    await expect(page.locator("[data-leaf] li span[aria-hidden]")).toHaveText(["Coperta spate", "Pagina 2"]);
+  } finally {
+    await request.delete(`/api/books/${id}`, { headers: auth });
+  }
+});
+
+test("a universe's SEO title reaches its page and goes away when emptied", async ({ page, request }) => {
+  const doc = (await (await request.get("/api/universes?where[slug][equals]=fluturele&locale=ro&depth=0", { headers: auth })).json()).docs[0];
+  const setSeo = async (title: string) => {
+    const res = await request.patch(`/api/universes/${doc.id}?locale=ro`, { headers: auth, data: { seo: { title }, _status: "published" } });
+    expect(res.ok(), "save universe seo").toBeTruthy();
+  };
+  const titleIs = (text: string) =>
+    expect(async () => {
+      await page.goto("/universuri/fluturele");
+      await expect(page).toHaveTitle(text, { timeout: 1000 });
+    }).toPass(FRESH);
+  try {
+    await setSeo("Univers SEO de probă");
+    await titleIs("Univers SEO de probă · Ramona Nichifor");
+  } finally {
+    await setSeo("");
+  }
+  await titleIs("Universul Fluturelui · Ramona Nichifor");
+});
+
 // Database down (Review Focus 5) is not here: stopping Postgres would break the other databases on this machine.

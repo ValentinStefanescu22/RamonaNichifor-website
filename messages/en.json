@@ -110,7 +110,9 @@
     "prev": "Previous page",
     "next": "Next page",
     "universe": "The book's universe",
-    "series": "From the same series"
+    "series": "From the same series",
+    "pageN": "Page {n}",
+    "backCover": "Back cover"
   },
   "footer": {
     "placeholders": "All illustrations and texts are protected by copyright. Some images and details are placeholders."

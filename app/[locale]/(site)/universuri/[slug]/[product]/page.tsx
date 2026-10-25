@@ -46,6 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     params: await slugsOf(locale, p),
     title: `${p.name} · ${p.universe.name}`,
     description: p.paragraphs[0] || `${p.name} · ${p.universe.name}`,
+    seo: p.seo,
   });
 }
 

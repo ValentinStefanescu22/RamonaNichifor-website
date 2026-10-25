@@ -11,8 +11,8 @@ import { HomeFlightZone } from "@/components/poiana/HomeFlightZone";
 // The home owns its canonical + hreflang (the layout only sets site-wide defaults).
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "meta" });
-  return pageMetadata({ locale, path: "/", title: t("homeTitle"), description: t("description"), absoluteTitle: true, ogPath: `/og/home-${locale}.png` });
+  const [t, site] = await Promise.all([getTranslations({ locale, namespace: "meta" }), getSiteSettings(locale)]);
+  return pageMetadata({ locale, path: "/", title: t("homeTitle"), description: t("description"), seo: site.seo, absoluteTitle: true, ogPath: `/og/home-${locale}.png` });
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {

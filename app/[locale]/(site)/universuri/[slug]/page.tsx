@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const u = await getUniverse(locale, slug);
   if (!u) return {};
-  return pageMetadata({ locale, path: "/universuri/[slug]", params: await slugsOf(locale, u), title: u.name, description: u.hook });
+  return pageMetadata({ locale, path: "/universuri/[slug]", params: await slugsOf(locale, u), title: u.name, description: u.hook, seo: u.seo });
 }
 
 export default async function Page({ params }: Props) {
@@ -67,7 +67,7 @@ export default async function Page({ params }: Props) {
             ...(book.subtitle && { alternativeHeadline: book.subtitle }),
             author: { "@type": "Person", "@id": `${siteUrl()}/#person`, name: "Ramona Nichifor" },
             illustrator: { "@id": `${siteUrl()}/#person` },
-            image: siteUrl() + book.cover.src,
+            image: new URL(book.cover.src, siteUrl()).href,
             url: absoluteUrl(locale, { pathname: "/carti/[slug]", params: { slug: book.slug } }),
             inLanguage: "ro",
             ...(book.isbn && { isbn: book.isbn }),

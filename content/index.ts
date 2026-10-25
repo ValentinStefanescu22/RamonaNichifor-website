@@ -18,6 +18,7 @@ import type {
   CounsellingPage,
   LegalPage,
   Media,
+  Seo,
   ProductCard,
   ProductFull,
   RichTextData,
@@ -81,6 +82,7 @@ export async function getSiteSettings(l: Locale): Promise<SiteSettings> {
     sameAs: (s.sameAs ?? []).map((r) => r.url),
     portrait: media(s.portrait),
     artTeaser: { title: s.artTeaser.title, lead: s.artTeaser.lead },
+    seo: s.seo ? { description: s.seo.description || undefined, image: mediaOrNull(s.seo.shareImage) } : undefined,
   };
 }
 
@@ -209,6 +211,9 @@ export async function getSlugDocs(collection: Exclude<SlugCollection, "products"
 const rich = (r: unknown) => (r ?? null) as RichTextData | null;
 const rows = <T extends { text: string }>(r: T[] | null | undefined) => (r ?? []).map((x) => x.text);
 const mediaOrNull = (m: number | MediaDoc | null | undefined) => (m && typeof m === "object" ? media(m) : null);
+/** A doc's `seo` group; empty strings are dropped so pageMetadata falls back to the page's own text */
+const seoOf = (g: { title?: string | null; description?: string | null; image?: number | MediaDoc | null } | null | undefined): Seo | undefined =>
+  g ? { title: g.title || undefined, description: g.description || undefined, image: mediaOrNull(g.image) } : undefined;
 
 type FindOpts = Awaited<ReturnType<typeof read>>["opts"];
 type Visible = { _status?: "draft" | "published" | null };
@@ -255,6 +260,7 @@ const bookFull = (b: BookDoc): BookFull => ({
   formats: (b.formats ?? []).map((f) => ({ label: f.label, status: f.status ?? "soon" })),
   leafPages: (b.leafPages ?? []).map((p) => ({ ...media(p.image), label: p.label ?? "" })),
   blurbRich: rich(b.blurb),
+  seo: seoOf(b.seo),
 });
 
 export async function getUniverse(l: Locale, slug: string): Promise<UniverseFull | null> {
@@ -264,6 +270,7 @@ export async function getUniverse(l: Locale, slug: string): Promise<UniverseFull
   return {
     ...universe(u),
     story: rich(u.story),
+    seo: seoOf(u.seo),
     books: populated<BookDoc>(u.books, opts).map(book),
     products: populated<ProductDoc>(u.products, opts)
       .map((p) => productCard(p, u.slug))
@@ -284,6 +291,7 @@ export async function getProduct(l: Locale, universeSlug: string, slug: string):
     price: p.price ?? null,
     externalLink: p.externalLink || null,
     universe: universe(u),
+    seo: seoOf(p.seo),
   };
 }
 
@@ -309,6 +317,7 @@ const artwork = (a: ArtworkDoc): ArtworkFull => ({
   year: a.year ?? null,
   price: a.price ?? null,
   description: rich(a.description),
+  seo: seoOf(a.seo),
 });
 
 export async function getArtworks(l: Locale): Promise<ArtworkFull[]> {

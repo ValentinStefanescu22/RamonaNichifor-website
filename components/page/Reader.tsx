@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
@@ -133,23 +133,26 @@ function Panel({ r, index, pages, title, frame, labels }: { r: ReaderState; inde
     };
   }, []);
 
-  // Esc closes, ← → turn, and Tab stays inside the reader
-  const onKey = (e: KeyboardEvent) => {
-    if (e.key === "Escape") return r.close();
-    if (e.key === "ArrowRight") return r.turn(1);
-    if (e.key === "ArrowLeft") return r.turn(-1);
-    if (e.key !== "Tab" || !panel.current) return;
-    const items = panel.current.querySelectorAll<HTMLElement>("button");
-    const first = items[0];
-    const last = items[items.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
-    }
-  };
+  // Esc closes, ← → turn, and Tab stays inside the reader. Listened on the document while the reader is open: in Safari a click
+  // or a Tab can leave focus on <body>, and the keys must keep working then.
+  useEffect(() => {
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") return r.close();
+      if (e.key === "ArrowRight") return r.turn(1);
+      if (e.key === "ArrowLeft") return r.turn(-1);
+      if (e.key !== "Tab" || !panel.current) return;
+      const items = panel.current.querySelectorAll<HTMLElement>("button");
+      const first = items[0];
+      const last = items[items.length - 1];
+      const inside = panel.current.contains(document.activeElement);
+      if (!inside || (e.shiftKey && document.activeElement === first) || (!e.shiftKey && document.activeElement === last)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  });
 
   const fade = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.25, ease: easeOut } };
   const roundBtn = "grid size-11 place-items-center rounded-full bg-cream/85 text-ink shadow-soft ring-1 ring-ink/10 backdrop-blur-md transition-transform duration-150 active:scale-[0.94]";
@@ -165,7 +168,6 @@ function Panel({ r, index, pages, title, frame, labels }: { r: ReaderState; inde
       role="dialog"
       aria-modal="true"
       aria-label={`${title}: ${page.label}`}
-      onKeyDown={onKey}
       className="fixed inset-0 z-[60] flex flex-col items-center justify-center gap-4 px-4 pt-[calc(env(safe-area-inset-top,0px)+4.5rem)] pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)]"
     >
       <m.div {...fade} className="absolute inset-0 bg-[rgb(52_34_74/0.72)] backdrop-blur-md" onClick={r.close} aria-hidden="true" />

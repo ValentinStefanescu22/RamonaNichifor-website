@@ -315,6 +315,21 @@ test.describe("Răsfoiește", () => {
     expect(Math.abs(r.box - r.natural)).toBeLessThanOrEqual(0.01);
   });
 
+  test("the keys work even when focus has fallen to the page body (Safari)", async ({ page }) => {
+    await page.goto(BOOK);
+    await page.waitForLoadState("networkidle");
+    await thumbs(page).first().scrollIntoViewIfNeeded();
+    await thumbs(page).first().click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toContainText("1 din 3");
+    await page.evaluate(() => (document.activeElement as HTMLElement).blur());
+    expect(await page.evaluate(() => document.activeElement === document.body)).toBe(true);
+    await page.keyboard.press("ArrowRight");
+    await expect(dialog).toContainText("Pagina 4");
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
+  });
+
   test("reduced motion: the reader still opens, turns and closes", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(BOOK);

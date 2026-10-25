@@ -46,6 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     params: await slugsOf(locale, b),
     title: b.title,
     description: b.blurb[0] || b.subtitle || t("placeholderBlurb"),
+    seo: b.seo,
   });
 }
 
@@ -55,6 +56,9 @@ export default async function Page({ params }: Props) {
   const b = await getBook(locale, slug);
   if (!b) notFound();
   // the RO slug under /en (the lookup falls back to RO) or an old spelling: one URL per page, the doc's own (Ruling 6)
+  // ponytail: on the FIRST (uncached) request Next 16 sends this 308 with the `location` header twice, the same value (the render
+  // sets it and the stored response headers add it again; `curl -sI /en/books/fluturele-dansator-de-step` shows two). From the
+  // second request (x-nextjs-cache: HIT) there is one. Browsers accept identical duplicates; no clean fix on our side.
   if (b.slug !== slug) permanentRedirect({ href: { pathname: "/carti/[slug]", params: { slug: b.slug } }, locale });
 
   const [t, site, books, worlds] = await Promise.all([getTranslations(), getSiteSettings(locale), getBooks(locale), getWorlds(locale)]);
@@ -87,10 +91,12 @@ export default async function Page({ params }: Props) {
       ...(b.blurb[0] && { description: b.blurb[0] }),
       author: { "@type": "Person", "@id": `${siteUrl()}/#person`, name: "Ramona Nichifor" },
       illustrator: { "@id": `${siteUrl()}/#person` },
-      image: siteUrl() + b.cover.src,
+      image: new URL(b.cover.src, siteUrl()).href,
       url: absoluteUrl(locale, { pathname: "/carti/[slug]", params: { slug: b.slug } }),
       inLanguage: "ro",
       ...(b.isbn && { isbn: b.isbn }),
+      // where it can be bought (only real links exist here)
+      ...(stores.length && { sameAs: stores.map((s) => s.url) }),
       ...(b.pages && { numberOfPages: b.pages }),
       ...(live && b.year > 0 && { datePublished: String(b.year) }),
     },

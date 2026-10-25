@@ -110,7 +110,9 @@
     "prev": "Pagina anterioară",
     "next": "Pagina următoare",
     "universe": "Universul cărții",
-    "series": "Din aceeași serie"
+    "series": "Din aceeași serie",
+    "pageN": "Pagina {n}",
+    "backCover": "Coperta spate"
   },
   "footer": {
     "placeholders": "Toate ilustrațiile și textele sunt protejate de drepturi de autor. Unele imagini și detalii sunt provizorii."

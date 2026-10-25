@@ -10,6 +10,8 @@ export type SlugPair = Record<Locale, string>;
 export type SlugPairs = Record<"universes" | "books" | "artworks" | "products", SlugPair[]>;
 
 export type Media = { src: string; alt: string; width: number; height: number };
+/** A doc's `seo` group (admin: „SEO”): filled fields replace the page's own title, description and share image */
+export type Seo = { title?: string; description?: string; image?: Media | null };
 
 export type CreatureId = "buburuza" | "tantar" | "musca";
 
@@ -37,6 +39,8 @@ export type SiteSettings = {
   portrait: Media;
   /** The home Artă section */
   artTeaser: { title: string; lead: string };
+  /** The home's SEO overrides (site-settings → SEO) */
+  seo?: Seo;
 };
 
 export type Universe = {
@@ -87,6 +91,7 @@ export type CounsellingPage = {
 
 export type BookCard = Book;
 export type BookFull = Book & {
+  seo?: Seo;
   pages: number | null;
   /** „A4, copertă cartonată lucioasă”; empty when not set */
   format: string;
@@ -111,6 +116,7 @@ export type ProductCard = {
   gallery: "bookmarks" | "cards" | null;
 };
 export type ProductFull = ProductCard & {
+  seo?: Seo;
   description: RichTextData | null;
   paragraphs: string[];
   specs: { label: string; value: string }[];
@@ -120,6 +126,7 @@ export type ProductFull = ProductCard & {
 };
 
 export type UniverseFull = Universe & {
+  seo?: Seo;
   story: RichTextData | null;
   /** The universe's book first, then its keepsakes, in the order of the shop */
   books: BookCard[];
@@ -127,6 +134,7 @@ export type UniverseFull = Universe & {
 };
 
 export type ArtworkFull = Artwork & {
+  seo?: Seo;
   availability: "preorder" | "sold" | "onRequest";
   size: string;
   year: number | null;
