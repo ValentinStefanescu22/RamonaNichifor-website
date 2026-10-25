@@ -7,7 +7,8 @@ import { StubPage } from "@/components/site/StubPage";
 
 type Props = { params: Promise<{ locale: Locale; slug: string }> };
 
-export const dynamicParams = false;
+// slugs are edited in the admin: one published after the build renders on first visit (unknown ones 404 below)
+export const dynamicParams = true;
 
 const slugs = async () => await getUniverseSlugs();
 

@@ -8,3 +8,7 @@ playwright-report
 reports
 .vercel
 *.tsbuildinfo
+.env*.local
+.env
+media
+backups

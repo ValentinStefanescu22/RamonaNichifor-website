@@ -1,0 +1,61 @@
+# Nightly database backup to R2 (spec §9 "Data safety"). Runs scripts/backup.sh, which uploads the dump to
+# s3://$S3_BUCKET/backups/ and deletes remote dumps older than 30 days.
+# Until the DATABASE_URI secret exists (end of M2) the job ends green with a notice.
+name: Database backup
+
+on:
+  schedule:
+    - cron: "0 1 * * *" # 01:00 UTC = 03:00 / 04:00 Bucharest
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URI: ${{ secrets.DATABASE_URI }}
+      S3_BUCKET: ${{ secrets.S3_BUCKET }}
+      S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
+      S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+      S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Check secrets
+        id: guard
+        run: |
+          if [ -z "$DATABASE_URI" ]; then
+            echo "::notice::DATABASE_URI secret is not set yet; skipping the backup."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          elif [ -z "$S3_BUCKET" ]; then
+            # a dump that stays on the runner is lost when the job ends
+            echo "::error::DATABASE_URI is set but the S3_* secrets are not; the backup would not be stored."
+            exit 1
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.guard.outputs.skip == 'false'
+        uses: actions/checkout@v4
+
+      # Neon runs Postgres 17; pg_dump must be the same major or newer. The runner's own client is older,
+      # so install 17 from the PostgreSQL apt repo (PGDG) and put it first on PATH.
+      - name: Install pg_dump 17
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          sudo apt-get install -y -qq postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y -qq postgresql-client-17
+          echo /usr/lib/postgresql/17/bin >> "$GITHUB_PATH"
+
+      - name: Back up
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          pg_dump --version
+          aws --version
+          sh scripts/backup.sh

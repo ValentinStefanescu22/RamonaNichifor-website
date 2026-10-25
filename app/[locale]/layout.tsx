@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -9,6 +10,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { ArtGuard } from "@/components/ui/ArtGuard";
 import { MotionRoot } from "@/components/ui/MotionRoot";
 import { PaintDefs } from "@/components/poiana/PaintDefs";
+import { LivePreviewRefresh } from "@/components/site/LivePreviewRefresh";
 import { alegreya, fraunces, parisienne } from "../fonts";
 import "../globals.css";
 
@@ -33,11 +35,12 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const site = await getSiteSettings(locale);
+  const [site, draft] = await Promise.all([getSiteSettings(locale), draftMode()]);
   return (
     <html lang={locale} data-theme="light" data-scroll-behavior="smooth" className={`${fraunces.variable} ${alegreya.variable} ${parisienne.variable}`}>
       <body>
         <JsonLd data={siteGraph(site, locale)} />
+        {draft.isEnabled && <LivePreviewRefresh />}
         <NextIntlClientProvider>
           <MotionRoot>
             <PaintDefs />

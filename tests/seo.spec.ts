@@ -43,7 +43,8 @@ test("json-ld", async ({ page }) => {
     expect.arrayContaining(["https://www.instagram.com/ramonanichifor.creations/", "https://www.facebook.com/ramona.nichifor/"]),
   );
   expect(person.jobTitle).toHaveLength(3);
-  expect(person.image).toBe(`${SITE}/img/portrait.webp`);
+  // the portrait is a Payload upload since M2
+  expect(person.image).toBe(`${SITE}/api/media/file/portrait.webp`);
   expect(graph.find((n) => n["@type"] === "WebSite")).toMatchObject({ name: "Ramona Nichifor", url: SITE, inLanguage: "ro" });
 });
 

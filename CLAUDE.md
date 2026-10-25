@@ -7,8 +7,8 @@ Website for Ramona Nichifor: author and illustrator of children's books („Magi
 - The repo now lives at `~/code/RamonaNichifor-website` (moved from the Desktop on 2026-10-24).
 - **Milestones are now five (client, 2026-10-24):** M1 foundation + Acasă · M2 Payload · M3 Universuri + every inner page · M4 booking · M5 security, final audit and launch; M7 shop later. See spec §13.
 - **M1 is done (2026-10-25)**, verified locally (plan `docs/superpowers/plans/2026-10-24-m1-foundation-home.md`); Lighthouse mobile performance 84–85 accepted until M5. Its preview link comes at the end of M2 with Vercel.
-- **Next: M2 (Payload)**, plan `docs/superpowers/plans/2026-10-25-m2-payload.md`. Local Postgres 17 (brew) and local media during M2; Neon + R2 + Vercel at the end of M2 with keys from the user. Booking collections wait for M4.
-- Site commands: `npm run build`, `npm run test` (Playwright; phone + 3 laptop widths), `npm run lighthouse` (after an indexable build: `SITE_INDEXABLE=1 NEXT_PUBLIC_SITE_URL=http://localhost:3101 npm run build && npx next start -p 3101`).
+- **M2 (Payload) is built locally** (plan `docs/superpowers/plans/2026-10-25-m2-payload.md`): admin at `/admin` in Romanian, the content model, seed (`npm run seed`), © stamp on illustration uploads, Live Preview + drafts, revalidation, backups (`scripts/backup.sh`, `scripts/restore.sh`). It runs on local Postgres 17 (db `ramona`, brew) with media on disk in `media/`. **Left for the end of M2, with the user:** Neon + R2 + Vercel preview + GitHub backup secrets. Booking collections wait for M4.
+- Site commands: `npm run build`, `npm run test` (Playwright; phone + 3 laptop widths + CMS), `npm run test:unit`, `npm run seed`, `npx payload migrate:create <name>` then `npx payload migrate` for schema changes, `npm run lighthouse` (after an indexable build: `SITE_INDEXABLE=1 NEXT_PUBLIC_SITE_URL=http://localhost:3101 npm run build && npx next start -p 3101`).
 
 ## Read these first
 | File | What it holds |

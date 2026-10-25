@@ -1,4 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
+import nextEnv from "@next/env";
+
+// .env.local: the seeded admin and PREVIEW_SECRET for tests/cms.spec.ts
+nextEnv.loadEnvConfig(process.cwd());
 
 // BASE_URL points the suite at a deployed preview; otherwise it builds and serves the app locally.
 const port = process.env.PORT ?? "3100";
@@ -16,11 +20,21 @@ export default defineConfig({
     ? undefined
     : { command: `npm run build && npx next start -p ${port}`, url: baseURL, reuseExistingServer: true, timeout: 240_000 },
   projects: [
-    // phone = Ramona's visitors: iPhone 15 (393px) in WebKit
-    { name: "phone", use: { ...devices["iPhone 15"] } },
-    // laptops: her own window is under 1280px
-    { name: "laptop-1024", use: { browserName: "chromium", viewport: { width: 1024, height: 768 } } },
-    { name: "laptop-1180", use: { browserName: "chromium", viewport: { width: 1180, height: 800 } } },
-    { name: "laptop-1440", use: { browserName: "chromium", viewport: { width: 1440, height: 900 } } },
+    ...[
+      // phone = Ramona's visitors: iPhone 15 (393px) in WebKit
+      { name: "phone", use: { ...devices["iPhone 15"] } },
+      // laptops: her own window is under 1280px
+      { name: "laptop-1024", use: { browserName: "chromium" as const, viewport: { width: 1024, height: 768 } } },
+      { name: "laptop-1180", use: { browserName: "chromium" as const, viewport: { width: 1180, height: 800 } } },
+      { name: "laptop-1440", use: { browserName: "chromium" as const, viewport: { width: 1440, height: 900 } } },
+    ].map((p) => ({ ...p, testIgnore: /cms\.spec/ })),
+    // edits content through Payload, so it runs alone, after every other project (they read the same texts and slugs)
+    {
+      name: "cms",
+      testMatch: /cms\.spec/,
+      dependencies: ["phone", "laptop-1024", "laptop-1180", "laptop-1440"],
+      fullyParallel: false,
+      use: { browserName: "chromium", viewport: { width: 1180, height: 800 } },
+    },
   ],
 });

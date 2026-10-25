@@ -3,6 +3,7 @@
 Run from mockups/: `npm run images`. Everything here is derived from her own
 material; nothing is generated or stock.
 """
+import sys
 import urllib.request
 from collections import deque
 from pathlib import Path
@@ -66,6 +67,34 @@ def stamp(img: Image.Image) -> Image.Image:
         layer.putalpha(mask)
         out = Image.alpha_composite(out, layer)
     return out.convert(img.mode)
+
+
+def export_stamp_assets(out_dir: Path, w: int = 3000) -> None:
+    """The two marks of stamp() as transparent PNGs (halo already composited), drawn as for a w-wide
+    image, for the Payload upload hook (payload/hooks/stampIllustration.ts) to scale by width / w.
+    line.png is cropped symmetric about the centre, so centring it reproduces stamp()'s placement;
+    corner.png runs to the canvas' bottom-right corner, so placing it flush keeps the 3% margin."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    marks = stamp(Image.new("RGBA", (w, w), (0, 0, 0, 0)))
+    alpha = marks.getchannel("A")
+    l, t, r, b = alpha.crop((0, 0, w, round(w * 0.8))).getbbox()  # the line sits around the middle
+    hw, hh = max(w / 2 - l, r - w / 2), max(w / 2 - t, b - w / 2)
+    # 256-colour palette PNGs: only ink/halo blends, ~1/255 mean error, ~40 KB instead of ~240 KB
+    def save_png(img: Image.Image, name: str) -> None:
+        img.quantize(256, method=Image.FASTOCTREE).save(out_dir / name, optimize=True)
+
+    save_png(marks.crop((round(w / 2 - hw), round(w / 2 - hh), round(w / 2 + hw), round(w / 2 + hh))), "line.png")
+    l, t, _, _ = alpha.crop((0, round(w * 0.8), w, w)).getbbox()  # the corner mark, bottom-right
+    save_png(marks.crop((l, round(w * 0.8) + t, w, w)), "corner.png")
+    for name in ("line.png", "corner.png"):
+        im = Image.open(out_dir / name)
+        print(f"{name:12} {im.size[0]}x{im.size[1]}  {(out_dir / name).stat().st_size // 1024} KB")
+
+
+# `python3 scripts/prepare-images.py --stamp-assets` (from mockups/): only re-render assets/stamp/
+if sys.argv[1:] == ["--stamp-assets"]:
+    export_stamp_assets(Path("../assets/stamp"))
+    sys.exit()
 
 
 def largest_component(mask: np.ndarray) -> np.ndarray:
