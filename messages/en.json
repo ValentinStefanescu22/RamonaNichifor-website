@@ -132,5 +132,39 @@
     "homeTitle": "Ramona Nichifor · Author, illustrator and personal development counsellor",
     "description": "Ramona Nichifor: author, illustrator and personal development counsellor. Stories for young and grown-up souls.",
     "ogLocale": "en_US"
+  },
+  "art": {
+    "tagline": "Originals and prints.",
+    "filters": {
+      "all": "All",
+      "original": "Originals",
+      "print": "Prints"
+    },
+    "kind": {
+      "original": "Original",
+      "print": "Print"
+    },
+    "availability": {
+      "preorder": "Pre-order",
+      "sold": "Sold",
+      "onRequest": "On request"
+    },
+    "labels": {
+      "technique": "Technique",
+      "size": "Size",
+      "year": "Year"
+    },
+    "ask": "Ask about this piece",
+    "preorder": "Pre-order",
+    "preorderNote": "We arrange payment and delivery together. The online shop is coming soon.",
+    "priceSoon": "Price coming soon",
+    "price": "{price} lei",
+    "back": "All art",
+    "imageN": "Image {n} of {total}",
+    "images": "Images of the piece",
+    "emptyFilter": "Works in this category, coming soon.",
+    "commissionTitle": "Commissions",
+    "commissionCta": "Commission a piece",
+    "commission": "I also paint on commission: a portrait of your child inside a storybook world, or an illustration for a special occasion."
   }
 }

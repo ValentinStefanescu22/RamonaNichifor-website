@@ -132,5 +132,39 @@
     "homeTitle": "Ramona Nichifor · Autoare, ilustratoare și consilier pentru dezvoltare personală",
     "description": "Ramona Nichifor: autor, ilustrator și consilier pentru dezvoltare personală. Povești pentru suflete mici și mari.",
     "ogLocale": "ro_RO"
+  },
+  "art": {
+    "tagline": "Originale și printuri.",
+    "filters": {
+      "all": "Toate",
+      "original": "Originale",
+      "print": "Printuri"
+    },
+    "kind": {
+      "original": "Original",
+      "print": "Print"
+    },
+    "availability": {
+      "preorder": "Pre-comandă",
+      "sold": "Vândută",
+      "onRequest": "La cerere"
+    },
+    "labels": {
+      "technique": "Tehnică",
+      "size": "Dimensiuni",
+      "year": "Anul"
+    },
+    "ask": "Întreabă de această lucrare",
+    "preorder": "Pre-comandă",
+    "preorderNote": "Plata și livrarea le stabilim împreună. Magazinul online vine în curând.",
+    "priceSoon": "Preț în curând",
+    "price": "{price} lei",
+    "back": "Toată arta",
+    "imageN": "Imaginea {n} din {total}",
+    "images": "Imaginile lucrării",
+    "emptyFilter": "Lucrări în această categorie, în curând.",
+    "commissionTitle": "Lucrări la comandă",
+    "commissionCta": "Comandă o lucrare",
+    "commission": "Pictez și la comandă: un portret al copilului tău într-un univers de poveste sau o ilustrație pentru o ocazie specială."
   }
 }

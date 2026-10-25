@@ -16,7 +16,7 @@ export const PAGES: PageEntry[] = [
   ...both("books", "/carti", "/en/books"),
   ...both("book", "/carti/fluturele-dansator-de-step", "/en/books/the-tap-dancing-butterfly"),
   ...both("art", "/arta", "/en/art"),
-  ...both("artwork", "/arta/poiana-fluturelui", "/en/art/the-butterflys-meadow", true),
+  ...both("artwork", "/arta/poiana-fluturelui", "/en/art/the-butterflys-meadow"),
   ...both("counselling", "/consiliere", "/en/counselling"),
   ...both("about", "/despre", "/en/about"),
   ...both("community", "/comunitate", "/en/community"),

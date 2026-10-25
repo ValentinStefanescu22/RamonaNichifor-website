@@ -1,5 +1,5 @@
 import type { APIRequestContext, Page } from "@playwright/test";
-import { allow404, expect, test } from "./fixtures";
+import { allow404, expect, hasSideScroll, test } from "./fixtures";
 
 // Payload → public site, driven through Payload's REST API with the seeded admin (.env.local, loaded by the config).
 // Runs in its own "cms" project, after every other one: it edits the texts and slugs the other suites read.
@@ -245,6 +245,107 @@ test("a universe's SEO title reaches its page and goes away when emptied", async
     await setSeo("");
   }
   await titleIs("Universul Fluturelui · Ramona Nichifor");
+});
+
+// Artă with works the seed does not have (Review Focus 1): a print with a price and two pictures, a sold work, one on request with almost nothing filled in
+test("artworks with a price, several pictures, sold and on request render every state", async ({ page, request }) => {
+  const seeded = (await (await request.get("/api/artworks?where[slug][equals]=poiana-fluturelui&locale=ro&depth=0", { headers: auth })).json()).docs[0];
+  const other = (await (await request.get("/api/artworks?where[slug][equals]=buburuza-rotunjoara&locale=ro&depth=0", { headers: auth })).json()).docs[0];
+  const text = (t: string) => ({ root: { type: "root", format: "", indent: 0, version: 1, direction: "ltr", children: [{ type: "paragraph", format: "", indent: 0, version: 1, direction: "ltr", textFormat: 0, textStyle: "", children: [{ type: "text", version: 1, text: t, format: 0, mode: "normal", style: "", detail: 0 }] }] } });
+  const make = async (data: Record<string, unknown>) => {
+    const res = await request.post("/api/artworks?locale=ro", { headers: auth, data: { _status: "published", ...data } });
+    expect(res.ok(), `create ${data.slug}`).toBeTruthy();
+    return (await res.json()).doc.id as number;
+  };
+  const ids: number[] = [];
+  try {
+    ids.push(
+      await make({ title: "Lucrare de probă A", slug: "lucrare-proba-a", kind: "print", availability: "preorder", price: 450, size: "A3", year: 2025, technique: "Print giclée", images: [seeded.images[0], other.images[0]], description: text("Un print de probă.") }),
+      await make({ title: "Lucrare de probă B", slug: "lucrare-proba-b", kind: "original", availability: "sold", price: 900, technique: "Acuarelă pe hârtie", size: "30 × 40 cm", year: 2024, images: [other.images[0]] }),
+      await make({ title: "Lucrare de probă C", slug: "lucrare-proba-c", kind: "original", availability: "onRequest", images: [seeded.images[0]] }),
+    );
+    const hrefOf = async (name: string) => {
+      const href = (await page.getByRole("link", { name }).getAttribute("href"))!;
+      const url = new URL(href, "http://x");
+      return { path: url.pathname, subject: url.searchParams.get("subiect"), title: url.searchParams.get("lucrare") };
+    };
+
+    // the wall: Printuri narrows to the print, Toate shows five; the state and price lines follow each work
+    await expect(async () => {
+      await page.goto("/arta");
+      await page.waitForLoadState("networkidle");
+      await expect(page.locator(".gallery > li:visible")).toHaveCount(5, { timeout: 1000 });
+    }).toPass(FRESH);
+    await expect(page.getByRole("button", { name: /Printuri/ })).toContainText("1");
+    await page.getByRole("button", { name: /Printuri/ }).click();
+    const visible = page.locator(".gallery > li:visible");
+    await expect(visible).toHaveCount(1);
+    await expect(visible).toContainText("Lucrare de probă A");
+    await expect(visible).toContainText("Print giclée · A3");
+    await expect(visible).toContainText("450 lei");
+    await expect(page.locator("[data-placeholder]", { hasText: "Lucrări în această categorie" })).toHaveCount(0);
+    await page.getByRole("button", { name: /Originale/ }).click();
+    await expect(visible).toHaveCount(4);
+    await expect(page.locator(".gallery > li", { hasText: "Lucrare de probă B" })).toContainText("Vândută");
+    await expect(page.locator(".gallery > li", { hasText: "Lucrare de probă B" })).not.toContainText("lei");
+    await expect(page.locator(".gallery > li", { hasText: "Lucrare de probă C" })).toContainText("La cerere");
+    await expect(page.locator(".gallery > li", { hasText: "Lucrare de probă C" })).not.toContainText("undefined");
+
+    // A: price shown, pre-order link with the title, two pictures that swipe with dots on a phone
+    await page.setViewportSize({ width: 393, height: 852 });
+    await page.goto("/arta/lucrare-proba-a");
+    await expect(page.locator("h1")).toHaveText("Lucrare de probă A");
+    await expect(page.getByText("450 lei")).toBeVisible();
+    await expect(page.getByText("Preț în curând")).toHaveCount(0);
+    const pairs = await page.locator("main dl > div").evaluateAll((els) => els.map((e) => [e.querySelector("dt")!.textContent, e.querySelector("dd")!.textContent]));
+    expect(pairs).toEqual([["Tehnică", "Print giclée"], ["Dimensiuni", "A3"], ["Anul", "2025"]]);
+    await expect(page.getByText("Un print de probă.")).toBeVisible();
+    expect(await hrefOf("Pre-comandă")).toEqual({ path: "/contact", subject: "arta", title: "Lucrare de probă A" });
+    const row = page.locator("[data-swipe]");
+    const dots = page.locator("[data-swipe] ~ div button");
+    await expect(row.locator("img")).toHaveCount(2);
+    await expect(dots).toHaveCount(2);
+    await expect(dots.nth(0)).toHaveAttribute("aria-current", "true");
+    expect(await row.evaluate((el) => getComputedStyle(el).scrollSnapType)).toContain("x");
+    for (const img of await row.locator("img").all()) {
+      await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+      const r = await img.evaluate((el: HTMLImageElement) => el.getBoundingClientRect().width / el.getBoundingClientRect().height - el.naturalWidth / el.naturalHeight);
+      expect(Math.abs(r)).toBeLessThanOrEqual(0.01);
+    }
+    await row.evaluate((el) => el.scrollTo({ left: el.clientWidth, behavior: "instant" }));
+    await expect(dots.nth(1)).toHaveAttribute("aria-current", "true");
+    await expect(dots.nth(0)).not.toHaveAttribute("aria-current", "true");
+    await dots.nth(0).click();
+    await expect(dots.nth(0)).toHaveAttribute("aria-current", "true");
+    expect(await hasSideScroll(page)).toBe(false);
+    const ld = await page.locator('script[type="application/ld+json"]').evaluateAll((els) => els.map((e) => JSON.parse(e.textContent!)));
+    const art = ld.find((d) => d["@type"] === "VisualArtwork");
+    expect(art).toMatchObject({ artform: "Print", dateCreated: "2025", offers: { price: 450, priceCurrency: "RON", availability: "https://schema.org/PreOrder" } });
+
+    // B (sold): no price, no pre-order; asks instead, with the title
+    await page.goto("/arta/lucrare-proba-b");
+    await expect(page.getByText("Vândută")).toBeVisible();
+    await expect(page.getByText("900")).toHaveCount(0);
+    await expect(page.getByText("Preț în curând")).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Pre-comandă" })).toHaveCount(0);
+    expect(await hrefOf("Întreabă de această lucrare")).toEqual({ path: "/contact", subject: "arta", title: "Lucrare de probă B" });
+    await expect(page.locator("[data-swipe] ~ div button")).toHaveCount(0);
+
+    // C (on request, almost nothing filled in): „În curând” rows, asks, no "undefined"
+    await page.goto("/arta/lucrare-proba-c");
+    await expect(page.getByText("La cerere")).toBeVisible();
+    const empty = await page.locator("main dl > div").evaluateAll((els) => els.map((e) => [e.querySelector("dt")!.textContent, e.querySelector("dd")!.textContent]));
+    expect(empty).toEqual([["Tehnică", "În curând"], ["Dimensiuni", "În curând"], ["Anul", "În curând"]]);
+    expect(await hrefOf("Întreabă de această lucrare")).toEqual({ path: "/contact", subject: "arta", title: "Lucrare de probă C" });
+    expect(await page.locator("main").textContent()).not.toMatch(/undefined|null|NaN/);
+
+    // English has no title of its own: it falls back to Romanian instead of a blank
+    const en = await page.goto("/en/art/lucrare-proba-c");
+    expect(en?.status()).toBe(200);
+    await expect(page.locator("h1")).toHaveText("Lucrare de probă C");
+  } finally {
+    for (const id of ids) await request.delete(`/api/artworks/${id}`, { headers: auth });
+  }
 });
 
 // Database down (Review Focus 5) is not here: stopping Postgres would break the other databases on this machine.
