@@ -4,9 +4,11 @@
  * updated, so running it twice changes nothing. Run with `npm run seed`.
  */
 import path from "node:path";
-import { getPayload, type Payload } from "payload";
+import { getPayload, type Payload, type Where } from "payload";
 import config from "@payload-config";
 import { counselling, featuredBook, homeArtworks, site, universes } from "../../content/data";
+import { about, bookmarks, booksPage, community, contactPage, counsellingPage, deck, flutureProducts, kindCopy, legalTemplates, specsSoon } from "../../content/pages-data";
+import { slugify } from "../fields";
 
 type L = { ro: string; en: string };
 const t = (ro: string, en: string): L => ({ ro, en });
@@ -38,6 +40,27 @@ const rt = (paragraphs: string[]) => ({
 const pick = <T extends Record<string, unknown>>(obj: T, l: "ro" | "en") =>
   Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, v && typeof v === "object" && "ro" in v && "en" in v ? (v as L)[l] : v]));
 
+/** Pages-data holds each text as { ro, en }: these split a whole structure into one language's Payload data */
+const isL = (v: unknown): v is L => !!v && typeof v === "object" && !Array.isArray(v) && Object.keys(v).length === 2 && "ro" in v && "en" in v;
+const localize = (v: unknown, l: "ro" | "en"): unknown =>
+  isL(v) ? v[l] : Array.isArray(v) ? v.map((x) => localize(x, l)) : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, localize(x, l)])) : v;
+/** Array rows are shared by both locales: the English pass must name the rows the Romanian pass created (same index → same id) */
+const withIds = (v: unknown, ref: unknown): unknown => {
+  const r = ref as Record<string, unknown> | undefined;
+  if (Array.isArray(v))
+    return v.map((x, i) => {
+      const rr = (ref as Record<string, unknown>[] | undefined)?.[i];
+      const o = withIds(x, rr);
+      return o && typeof o === "object" && !Array.isArray(o) && rr?.id ? { ...o, id: rr.id } : o;
+    });
+  if (v && typeof v === "object") return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, withIds(x, r?.[k])]));
+  return v;
+};
+/** Rows of one text field: ["a", "b"] → [{ text: "a" }, { text: "b" }] */
+const lines = (texts: L[]) => texts.map((text) => ({ text }));
+/** Rich text in both languages from paragraph pairs */
+const richL = (paragraphs: L[]) => ({ ro: rt(paragraphs.map((p) => p.ro)), en: rt(paragraphs.map((p) => p.en)) });
+
 async function upsertMedia(payload: Payload, file: string, alt: L, illustration: boolean) {
   const filename = path.basename(file);
   const found = await payload.find({ collection: "media", where: { filename: { equals: filename } }, limit: 1, context });
@@ -48,22 +71,34 @@ async function upsertMedia(payload: Payload, file: string, alt: L, illustration:
   return doc.id;
 }
 
-/** Create or update a localized document matched by its RO slug; `ro`/`en` hold the per-locale fields */
-async function upsert(
+type Collection = "universes" | "books" | "artworks" | "products" | "events" | "partners" | "legal-pages";
+
+/** Create or update a localized document found by `where` (in RO); `ro`/`en` hold the per-locale fields */
+async function upsertWhere(
   payload: Payload,
-  collection: "universes" | "books" | "artworks",
-  slugRo: string,
+  collection: Collection,
+  where: Where,
   shared: Record<string, unknown>,
   ro: Record<string, unknown>,
   en: Record<string, unknown>,
 ) {
-  const found = await payload.find({ collection, where: { slug: { equals: slugRo } }, locale: "ro", limit: 1, draft: true, context });
+  const found = await payload.find({ collection, where, locale: "ro", limit: 1, draft: true, context });
   const data = { ...shared, ...ro, _status: "published" as const };
   const doc = found.docs[0]
     ? await payload.update({ collection, id: found.docs[0].id, data: data as never, locale: "ro", context })
     : await payload.create({ collection, data: data as never, locale: "ro", context });
-  await payload.update({ collection, id: doc.id, data: { ...en, _status: "published" } as never, locale: "en", context });
+  const saved = await payload.findByID({ collection, id: doc.id, locale: "ro", draft: true, context });
+  await payload.update({ collection, id: doc.id, data: { ...(withIds(en, saved) as object), _status: "published" } as never, locale: "en", context });
   return doc.id;
+}
+const upsert = (payload: Payload, collection: Collection, slugRo: string, shared: Record<string, unknown>, ro: Record<string, unknown>, en: Record<string, unknown>) =>
+  upsertWhere(payload, collection, { slug: { equals: slugRo } }, shared, ro, en);
+
+/** Fill a page global in both languages from one { ro, en } structure */
+async function fillGlobal(payload: Payload, slug: "counselling-page" | "about-page" | "books-page" | "community-page" | "contact-page", data: Record<string, unknown>) {
+  await payload.updateGlobal({ slug, locale: "ro", context, data: { ...(localize(data, "ro") as object), _status: "published" } as never });
+  const saved = await payload.findGlobal({ slug, locale: "ro", draft: true, context });
+  await payload.updateGlobal({ slug, locale: "en", context, data: { ...(withIds(localize(data, "en"), saved) as object), _status: "published" } as never });
 }
 
 async function seed() {
@@ -96,10 +131,18 @@ async function seed() {
     ["buburuza-p8.webp", t("Pagina 8", "Page 8")],
     ["buburuza-p12.webp", t("Pagina 12", "Page 12")],
   ]);
+  // The Fluture keepsakes (printer files, already stamped): bookmarks alt = their motto, cards alt = the character
+  const cardNames = (n: number): L => (n === deck.winner.n ? deck.winner.name : n === deck.rulesCard ? deck.rulesCardLabel : t(deck.cardNames[n - 2], deck.cardNames[n - 2]));
+  const cardIds: (number | string)[] = [];
+  for (const n of [1, 2, 3, 4, 5, 14, 15, 23, 24])
+    cardIds.push(await upsertMedia(payload, `mockups/public/img/${deck.card(n)}`, cardNames(n), true));
+  const bookmarkIds: (number | string)[] = [];
+  for (const [i, motto] of bookmarks.mottos.entries())
+    bookmarkIds.push(await upsertMedia(payload, `mockups/public/img/${bookmarks.src(i + 1)}`, motto, true));
   log("media ready");
 
   // Universes
-  const uni: Record<string, number | string> = {};
+  const uni: Record<string, number> = {};
   for (const u of universes) {
     uni[u.slug.ro] = await upsert(
       payload,
@@ -173,6 +216,35 @@ async function seed() {
   await payload.update({ collection: "universes", id: uni.fluturele, data: { books: [bookFluturele] }, context });
   await payload.update({ collection: "universes", id: uni.buburuza, data: { books: [bookBuburuza] }, context });
   log("books ready");
+
+  // Keepsakes: four kinds per universe. Only the Fluture bookmarks and cards are real; the rest wait for Ramona („În curând”, no photos).
+  const kinds = [
+    { id: "semn", value: "semn-de-carte", gallery: "bookmarks" },
+    { id: "carti", value: "carti-de-joc", gallery: "cards" },
+    { id: "puzzle", value: "puzzle", gallery: null },
+    { id: "joc", value: "joc-de-familie", gallery: null },
+  ] as const;
+  for (const u of universes) {
+    const ids: number[] = [];
+    for (const k of kinds) {
+      const real = u.slug.ro === "fluturele" && (k.id === "semn" || k.id === "carti");
+      const copy = real ? flutureProducts[k.id as "semn" | "carti"] : { description: kindCopy[k.id].description, specs: specsSoon };
+      const name = kindCopy[k.id].name;
+      const fields = { slug: t(slugify(name.ro), slugify(name.en)), name, description: richL(copy.description), specs: copy.specs };
+      ids.push(
+        await upsertWhere(
+          payload,
+          "products",
+          { and: [{ universe: { equals: uni[u.slug.ro] } }, { kind: { equals: k.value } }] },
+          { kind: k.value, status: "soon", universe: uni[u.slug.ro], images: real ? (k.id === "semn" ? bookmarkIds : cardIds) : [], gallery: real ? k.gallery : null },
+          localize(fields, "ro") as Record<string, unknown>,
+          localize(fields, "en") as Record<string, unknown>,
+        ),
+      );
+    }
+    await payload.update({ collection: "universes", id: uni[u.slug.ro], data: { products: ids }, context });
+  }
+  log("products ready");
 
   // The two covers shown as art on Acasă
   const art: (number | string)[] = [];
@@ -257,6 +329,90 @@ async function seed() {
       _status: "published",
     } as never,
   });
+
+  // The inner pages' texts (content/pages-data.ts)
+  const patterns = counsellingPage.patterns;
+  const right = counsellingPage.rightForYou;
+  await fillGlobal(payload, "counselling-page", {
+    tagline: counsellingPage.tagline,
+    patterns: {
+      title: patterns.title,
+      questions: lines(patterns.questions),
+      reactions: lines(patterns.reactions),
+      thesis: patterns.thesis,
+      path: patterns.path.map((label) => ({ label })),
+      explain: patterns.explain,
+      change: patterns.change,
+      closer: patterns.closer,
+      toward: lines(patterns.toward),
+    },
+    rightForYou: { title: right.title, maybe: lines(right.maybe), body: lines(right.body), simply: right.simply, here: right.here, offer: lines(right.offer), close: right.close },
+    sessions: counsellingPage.prices.map((p) => ({ minutes: p.minutes, priceEur: p.eur })),
+    steps: counsellingPage.steps.map((x) => ({ title: x.title, text: x.line })),
+    faq: counsellingPage.faq.map((f) => ({ question: f.q, answer: richL([f.a]) })),
+    ctaTitle: counsellingPage.ctaTitle,
+  });
+  await fillGlobal(payload, "about-page", {
+    titleA: about.title[0],
+    titleB: about.title[1],
+    role: about.role,
+    portrait: m.portrait,
+    // her four movements as flat rows: „Pauză înainte” opens each movement after the first
+    story: about.story.flatMap((movement, mi) =>
+      movement.map((beat, i) => ({
+        kind: beat.kind === "questions" ? "question" : beat.kind === "close" ? "closing" : "beat",
+        breakBefore: mi > 0 && i === 0,
+        text: beat.text,
+      })),
+    ),
+    crafts: { title: about.crafts.title, items: about.crafts.items.map(({ name, line, href, tint }) => ({ name, line, href, tint })) },
+  });
+  const [ebook, audiobook] = booksPage.author.formats;
+  await fillGlobal(payload, "books-page", {
+    seriesNote: booksPage.seriesNote,
+    author: {
+      title: booksPage.author.title,
+      paragraphs: lines(booksPage.author.paragraphs),
+      statement: booksPage.author.statement,
+      // the e-book's „În curând” is the status itself; the audiobook has her own sentence
+      formats: [{ label: ebook.name, status: "soon" }, { label: audiobook.name, status: "planned", line: audiobook.line }],
+    },
+  });
+  await fillGlobal(payload, "community-page", {
+    titleA: community.title[0],
+    titleB: community.title[1],
+    tagline: community.tagline,
+    lead: community.lead,
+    intro: community.intro,
+    eventsTitle: community.eventsTitle,
+    eventsLead: community.eventsLead,
+    projectsTitle: community.projectsTitle,
+    projectsLead: community.projectsLead,
+    partnersTitle: community.partnersTitle,
+    partnersLead: lines(community.partnersLead),
+    closing: community.closing,
+    ctaTitle: community.ctaTitle,
+    ctaLine: community.ctaLine,
+  });
+  await fillGlobal(payload, "contact-page", { tagline: contactPage.tagline });
+
+  // The four kinds of gathering (no dates yet), her one partner (no logo), and the legal pages as marked drafts
+  const eventKinds = { pictura: "atelier-pictura", lansari: "lansare", autografe: "autografe", citit: "atelier-citit" } as const;
+  for (const e of community.events)
+    await upsertWhere(
+      payload,
+      "events",
+      { kind: { equals: eventKinds[e.id as keyof typeof eventKinds] } },
+      { kind: eventKinds[e.id as keyof typeof eventKinds], status: "upcoming" },
+      pick({ title: e.title, audience: e.audience }, "ro"),
+      pick({ title: e.title, audience: e.audience }, "en"),
+    );
+  for (const p of community.partners)
+    await upsertWhere(payload, "partners", { name: { equals: p.name } }, { name: p.name, handle: p.handle, url: p.url, order: 0 }, {}, {});
+  for (const kind of ["privacy", "terms"] as const) {
+    const lg = legalTemplates[kind];
+    await upsertWhere(payload, "legal-pages", { kind: { equals: kind } }, { kind }, { title: lg.title.ro, body: rt(lg.body.map((p) => p.ro)) }, { title: lg.title.en, body: rt(lg.body.map((p) => p.en)) });
+  }
   log("globals ready");
 
   // Developer admin (local test account from .env.local; Ramona creates her own in M5)

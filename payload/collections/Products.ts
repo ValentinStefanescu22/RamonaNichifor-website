@@ -10,7 +10,7 @@ export const Products: CollectionConfig = {
   hooks: revalidateCollection(),
   fields: [
     { name: "name", label: "Nume", type: "text", localized: true, required: true },
-    slugField("name"),
+    slugField("name", false),
     {
       name: "kind",
       label: "Tip",
@@ -26,6 +26,17 @@ export const Products: CollectionConfig = {
     statusSoon("enum_products_release"),
     { name: "universe", label: "Universul", type: "relationship", relationTo: "universes" },
     { name: "images", label: "Imagini", type: "upload", relationTo: "media", hasMany: true },
+    {
+      name: "gallery",
+      label: "Cum se arată imaginile",
+      type: "select",
+      enumName: "enum_products_gallery",
+      options: [
+        { label: "Semnele de carte, în evantai", value: "bookmarks" },
+        { label: "Cărțile de joc, ca un pachet", value: "cards" },
+      ],
+      admin: { description: "Gol: imaginile se arată simplu, una lângă alta." },
+    },
     { name: "description", label: "Descriere", type: "richText", localized: true },
     {
       name: "specs",

@@ -1,10 +1,31 @@
 import "server-only";
 import { draftMode } from "next/headers";
-import { getPayload } from "payload";
+import { getPayload, type DataFromCollectionSlug, type Where } from "payload";
 import config from "@payload-config";
 import { routing, type Locale } from "@/i18n/routing";
-import type { Book as BookDoc, Media as MediaDoc } from "@/payload-types";
-import type { Artwork, Book, CounsellingPage, Media, SiteSettings, Universe } from "./types";
+import type { Artwork as ArtworkDoc, Book as BookDoc, Media as MediaDoc, Product as ProductDoc, Universe as UniverseDoc } from "@/payload-types";
+import type {
+  About,
+  Artwork,
+  ArtworkFull,
+  Book,
+  BookCard,
+  BookFull,
+  BooksPage,
+  CommunityFull,
+  ContactPage,
+  Counselling,
+  CounsellingPage,
+  LegalPage,
+  Media,
+  ProductCard,
+  ProductFull,
+  RichTextData,
+  SiteSettings,
+  SlugPair,
+  Universe,
+  UniverseFull,
+} from "./types";
 
 // The getters pages read from: Payload Local API calls, mapped to the M1 shapes (components don't change).
 // Published content for visitors; the latest drafts while draft mode (Live Preview) is on.
@@ -62,21 +83,23 @@ export async function getSiteSettings(l: Locale): Promise<SiteSettings> {
   };
 }
 
+const universe = (u: UniverseDoc): Universe => ({
+  slug: u.slug,
+  name: u.name,
+  bookTitle: u.bookTitle,
+  hook: u.hook,
+  status: u.status,
+  tint: [u.tint.light, u.tint.mid, u.tint.deep],
+  order: u.order ?? 0,
+  homeWindow: u.homeWindow,
+  scene: u.scene ? media(u.scene) : undefined,
+  creature: u.creature ?? undefined,
+});
+
 export async function getUniverses(l: Locale): Promise<Universe[]> {
   const { payload, opts } = await read(l);
   const { docs } = await payload.find({ collection: "universes", ...opts, sort: "order", pagination: false });
-  return docs.map((u) => ({
-    slug: u.slug,
-    name: u.name,
-    bookTitle: u.bookTitle,
-    hook: u.hook,
-    status: u.status,
-    tint: [u.tint.light, u.tint.mid, u.tint.deep],
-    order: u.order ?? 0,
-    homeWindow: u.homeWindow,
-    scene: u.scene ? media(u.scene) : undefined,
-    creature: u.creature ?? undefined,
-  }));
+  return docs.map(universe);
 }
 
 const book = (b: number | BookDoc | null | undefined): Book => {
@@ -126,17 +149,276 @@ export async function getCounsellingPage(l: Locale): Promise<CounsellingPage> {
   };
 }
 
-/** Every locale's published slug of each doc (with locale "all" a slug is { ro, en }); a missing one falls back to RO */
-async function slugPairs(collection: "universes" | "books"): Promise<Record<Locale, string>[]> {
+type SlugCollection = "universes" | "books" | "artworks" | "products";
+
+/** Every locale's published slug of each doc (with locale "all" a slug is { ro, en }); a missing one falls back to RO.
+ *  Products repeat their slugs under every universe, so identical pairs collapse into one (use getProductPaths for routes). */
+export async function getSlugPairs(collection: SlugCollection): Promise<SlugPair[]> {
   const payload = await getPayload({ config });
   const { docs } = await payload.find({ collection, locale: "all", draft: false, depth: 0, pagination: false, select: { slug: true } });
-  return docs.map((d) => {
-    const s = d.slug as unknown as Partial<Record<Locale, string>>;
-    const ro = s[routing.defaultLocale] ?? "";
-    return Object.fromEntries(routing.locales.map((l) => [l, s[l] || ro])) as Record<Locale, string>;
-  });
+  const pairs = docs.map((d) => toPair(d.slug));
+  return [...new Map(pairs.map((p) => [routing.locales.map((l) => p[l]).join("|"), p])).values()];
 }
+const toPair = (slug: unknown): SlugPair => {
+  const s = slug as Partial<Record<Locale, string>>;
+  const ro = s[routing.defaultLocale] ?? "";
+  return Object.fromEntries(routing.locales.map((l) => [l, s[l] || ro])) as SlugPair;
+};
 
 /** Every locale's slug for one universe, so the language switch and static params can map between them */
-export const getUniverseSlugs = () => slugPairs("universes");
-export const getBookSlugs = () => slugPairs("books");
+export const getUniverseSlugs = () => getSlugPairs("universes");
+export const getBookSlugs = () => getSlugPairs("books");
+
+/** Every published product with its universe's slug pair: the routes /universuri/<universe>/<product> */
+export async function getProductPaths(): Promise<{ universe: SlugPair; product: SlugPair }[]> {
+  const payload = await getPayload({ config });
+  const { docs } = await payload.find({ collection: "products", locale: "all", draft: false, depth: 1, pagination: false, select: { slug: true, universe: true } });
+  return docs.flatMap((d) => (d.universe && typeof d.universe === "object" ? [{ universe: toPair(d.universe.slug), product: toPair(d.slug) }] : []));
+}
+
+/* ------------------------------------------------------------------ M3: inner pages */
+
+const rich = (r: unknown) => (r ?? null) as RichTextData | null;
+const rows = <T extends { text: string }>(r: T[] | null | undefined) => (r ?? []).map((x) => x.text);
+const mediaOrNull = (m: number | MediaDoc | null | undefined) => (m && typeof m === "object" ? media(m) : null);
+
+type FindOpts = Awaited<ReturnType<typeof read>>["opts"];
+type Visible = { _status?: "draft" | "published" | null };
+/** Populated relations only (depth ran out → a bare id), and no unpublished doc for a visitor */
+const populated = <T extends object>(list: (number | T)[] | null | undefined, opts: FindOpts): T[] =>
+  (list ?? []).filter((x): x is T => typeof x === "object" && (opts.draft || (x as Visible)._status !== "draft"));
+
+/** A doc by its slug in `l`. A slug not yet translated (the switch then offers the RO one) is looked up in RO and shown in `l`. */
+async function bySlug<C extends "universes" | "books" | "artworks" | "products">(
+  collection: C,
+  l: Locale,
+  slug: string,
+  extra?: Where,
+): Promise<DataFromCollectionSlug<C> | null> {
+  const { payload, opts } = await read(l);
+  const where = (s: string) => ({ and: [{ slug: { equals: s } }, ...(extra ? [extra] : [])] }) as Where;
+  const own = await payload.find({ collection, ...opts, where: where(slug), limit: 1 });
+  if (own.docs[0]) return own.docs[0] as DataFromCollectionSlug<C>;
+  if (l === routing.defaultLocale) return null;
+  const ro = await payload.find({ collection, locale: routing.defaultLocale, draft: opts.draft, depth: 0, where: where(slug), limit: 1, select: { slug: true } });
+  const id = (ro.docs[0] as { id: number } | undefined)?.id;
+  if (id === undefined) return null;
+  return (await payload.findByID({ collection, id, ...opts })) as DataFromCollectionSlug<C>;
+}
+
+const KIND_ORDER = ["semn-de-carte", "carti-de-joc", "puzzle", "joc-de-familie"];
+
+const productCard = (p: ProductDoc, universeSlug: string): ProductCard => ({
+  slug: p.slug,
+  kind: p.kind,
+  name: p.name,
+  status: p.status,
+  universeSlug,
+  image: mediaOrNull((p.images ?? [])[0]),
+});
+
+const bookFull = (b: BookDoc): BookFull => ({
+  ...book(b),
+  pages: b.pages ?? null,
+  format: b.format ?? "",
+  formats: (b.formats ?? []).map((f) => ({ label: f.label, status: f.status ?? "soon" })),
+  leafPages: (b.leafPages ?? []).map((p) => ({ ...media(p.image), label: p.label ?? "" })),
+  blurbRich: rich(b.blurb),
+});
+
+export async function getUniverse(l: Locale, slug: string): Promise<UniverseFull | null> {
+  const u = await bySlug("universes", l, slug);
+  if (!u) return null;
+  const { opts } = await read(l);
+  return {
+    ...universe(u),
+    story: rich(u.story),
+    books: populated<BookDoc>(u.books, opts).map(book),
+    products: populated<ProductDoc>(u.products, opts)
+      .map((p) => productCard(p, u.slug))
+      .sort((a, b) => KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind)),
+  };
+}
+
+export async function getProduct(l: Locale, universeSlug: string, slug: string): Promise<ProductFull | null> {
+  const u = await bySlug("universes", l, universeSlug);
+  if (!u) return null;
+  const p = await bySlug("products", l, slug, { universe: { equals: u.id } });
+  if (!p) return null;
+  return {
+    ...productCard(p, u.slug),
+    description: rich(p.description),
+    paragraphs: lexicalParagraphs(p.description),
+    specs: (p.specs ?? []).map((s) => ({ label: s.label, value: s.value })),
+    images: (p.images ?? []).map(media),
+    gallery: p.gallery ?? null,
+    price: p.price ?? null,
+    externalLink: p.externalLink || null,
+    universe: universe(u),
+  };
+}
+
+export async function getBooks(l: Locale): Promise<BookCard[]> {
+  const { payload, opts } = await read(l);
+  const { docs } = await payload.find({ collection: "books", ...opts, sort: "createdAt", pagination: false });
+  return docs.map(book);
+}
+
+export async function getBook(l: Locale, slug: string): Promise<BookFull | null> {
+  const b = await bySlug("books", l, slug);
+  return b ? bookFull(b) : null;
+}
+
+const artwork = (a: ArtworkDoc): ArtworkFull => ({
+  slug: a.slug,
+  title: a.title,
+  technique: a.technique ?? "",
+  kind: a.kind,
+  images: a.images.map(media),
+  availability: a.availability,
+  size: a.size ?? "",
+  year: a.year ?? null,
+  price: a.price ?? null,
+  description: rich(a.description),
+});
+
+export async function getArtworks(l: Locale): Promise<ArtworkFull[]> {
+  const { payload, opts } = await read(l);
+  const { docs } = await payload.find({ collection: "artworks", ...opts, sort: "createdAt", pagination: false });
+  return docs.map(artwork);
+}
+
+export async function getArtwork(l: Locale, slug: string): Promise<ArtworkFull | null> {
+  const a = await bySlug("artworks", l, slug);
+  return a ? artwork(a) : null;
+}
+
+export async function getCounselling(l: Locale): Promise<Counselling> {
+  const { payload, opts } = await read(l);
+  const c = await payload.findGlobal({ slug: "counselling-page", ...opts });
+  const p = c.patterns;
+  const r = c.rightForYou;
+  return {
+    teaserTitle: c.teaserTitle,
+    teaserLead: c.teaserLead,
+    formats: (c.formats ?? []).map((f) => ({ kind: f.kind, title: f.title, line: f.line })),
+    tagline: c.tagline ?? "",
+    intro: rich(c.intro),
+    approach: rich(c.approach),
+    patterns: {
+      title: p?.title ?? "",
+      questions: rows(p?.questions),
+      reactions: rows(p?.reactions),
+      thesis: p?.thesis ?? "",
+      path: (p?.path ?? []).map((x) => x.label),
+      explain: p?.explain ?? "",
+      change: p?.change ?? "",
+      closer: p?.closer ?? "",
+      toward: rows(p?.toward),
+    },
+    rightForYou: {
+      title: r?.title ?? "",
+      maybe: rows(r?.maybe),
+      body: rows(r?.body),
+      simply: r?.simply ?? "",
+      here: r?.here ?? "",
+      offer: rows(r?.offer),
+      close: r?.close ?? "",
+    },
+    sessions: (c.sessions ?? []).map((s) => ({ minutes: s.minutes, priceEur: s.priceEur ?? null })),
+    steps: (c.steps ?? []).map((s) => ({ title: s.title, text: s.text ?? "" })),
+    faq: (c.faq ?? []).map((f) => ({ question: f.question, answer: rich(f.answer) })),
+    ctaTitle: c.ctaTitle ?? "",
+  };
+}
+
+export async function getAbout(l: Locale): Promise<About> {
+  const { payload, opts } = await read(l);
+  const a = await payload.findGlobal({ slug: "about-page", ...opts });
+  // flat rows → her movements: a row with „Pauză înainte” starts the next one
+  const story: About["story"] = [];
+  for (const [i, row] of (a.story ?? []).entries()) {
+    if (i === 0 || row.breakBefore) story.push([]);
+    story[story.length - 1].push({ kind: row.kind, text: row.text });
+  }
+  return {
+    titleA: a.titleA ?? "",
+    titleB: a.titleB ?? "",
+    role: a.role ?? "",
+    portrait: mediaOrNull(a.portrait),
+    bio: rich(a.bio),
+    highlights: (a.highlights ?? []).map((h) => h.text),
+    story,
+    crafts: {
+      title: a.crafts?.title ?? "",
+      items: (a.crafts?.items ?? []).map((i) => ({ name: i.name, line: i.line, href: i.href, tint: i.tint })),
+    },
+  };
+}
+
+export async function getBooksPage(l: Locale): Promise<BooksPage> {
+  const { payload, opts } = await read(l);
+  const b = await payload.findGlobal({ slug: "books-page", ...opts });
+  return {
+    seriesNote: b.seriesNote ?? "",
+    author: {
+      title: b.author?.title ?? "",
+      paragraphs: rows(b.author?.paragraphs),
+      statement: b.author?.statement ?? "",
+      formats: (b.author?.formats ?? []).map((f) => ({ label: f.label, status: f.status, line: f.line ?? "" })),
+    },
+  };
+}
+
+export async function getCommunity(l: Locale): Promise<CommunityFull> {
+  const { payload, opts } = await read(l);
+  const [c, events, projects, partners] = await Promise.all([
+    payload.findGlobal({ slug: "community-page", ...opts }),
+    payload.find({ collection: "events", ...opts, sort: "createdAt", pagination: false }),
+    payload.find({ collection: "projects", ...opts, sort: "order", pagination: false }),
+    payload.find({ collection: "partners", ...opts, sort: "order", pagination: false }),
+  ]);
+  return {
+    titleA: c.titleA ?? "",
+    titleB: c.titleB ?? "",
+    tagline: c.tagline ?? "",
+    lead: c.lead ?? "",
+    intro: c.intro ?? "",
+    eventsTitle: c.eventsTitle ?? "",
+    eventsLead: c.eventsLead ?? "",
+    projectsTitle: c.projectsTitle ?? "",
+    projectsLead: c.projectsLead ?? "",
+    partnersTitle: c.partnersTitle ?? "",
+    partnersLead: rows(c.partnersLead),
+    closing: c.closing ?? "",
+    ctaTitle: c.ctaTitle ?? "",
+    ctaLine: c.ctaLine ?? "",
+    events: events.docs.map((e) => ({
+      id: String(e.id),
+      kind: e.kind,
+      title: e.title,
+      audience: e.audience ?? "",
+      startsAt: e.startsAt ?? null,
+      place: e.place ?? "",
+      online: Boolean(e.online),
+      image: mediaOrNull(e.image),
+      signUpNote: e.signUpNote ?? "",
+      timing: e.status ?? "upcoming",
+    })),
+    projects: projects.docs.map((p) => ({ id: String(p.id), title: p.title, line: p.line ?? "", image: mediaOrNull(p.image), stage: p.status ?? "idee" })),
+    partners: partners.docs.map((p) => ({ id: String(p.id), name: p.name, handle: p.handle ?? "", url: p.url ?? "", line: p.line ?? "", logo: mediaOrNull(p.logo) })),
+  };
+}
+
+export async function getContactPage(l: Locale): Promise<ContactPage> {
+  const { payload, opts } = await read(l);
+  const c = await payload.findGlobal({ slug: "contact-page", ...opts });
+  return { tagline: c.tagline ?? "" };
+}
+
+export async function getLegal(l: Locale, kind: "privacy" | "terms"): Promise<LegalPage | null> {
+  const { payload, opts } = await read(l);
+  const { docs } = await payload.find({ collection: "legal-pages", ...opts, where: { kind: { equals: kind } }, limit: 1 });
+  const d = docs[0];
+  return d ? { kind: d.kind, title: d.title, body: rich(d.body), lastUpdated: d.lastUpdated ?? null } : null;
+}

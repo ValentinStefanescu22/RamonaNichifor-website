@@ -9,14 +9,15 @@ export const slugify = (s: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-/** Localized slug: filled from `from` when left empty, always normalized, unique per locale. */
-export const slugField = (from: string): TextField => ({
+/** Localized slug: filled from `from` when left empty, always normalized, unique per locale
+ *  (`unique: false` for products: "semn-de-carte" is the slug under every universe, so the URL is /universuri/<universe>/<product>). */
+export const slugField = (from: string, unique = true): TextField => ({
   name: "slug",
   label: "Adresă (slug)",
   type: "text",
   localized: true,
   required: true,
-  unique: true,
+  unique,
   index: true,
   admin: { position: "sidebar", description: "Partea din link, fără diacritice. Se completează singură din titlu." },
   hooks: {

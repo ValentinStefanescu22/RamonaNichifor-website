@@ -23,17 +23,27 @@ import { Media } from "./payload/collections/Media";
 import { Products } from "./payload/collections/Products";
 import { Universes } from "./payload/collections/Universes";
 import { Users } from "./payload/collections/Users";
-import { AboutPage, CounsellingPage } from "./payload/globals/Pages";
+import { AboutPage, BooksPage, CommunityPage, ContactPage, CounsellingPage } from "./payload/globals/Pages";
 import { SiteSettings } from "./payload/globals/SiteSettings";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** The public page a document shows on, in the admin's current locale (mirrors the next-intl pathnames). */
-function publicPath({ collection, slug, locale }: { collection?: string; slug?: unknown; locale: string }) {
+function publicPath({ collection, slug, locale, universe }: { collection?: string; slug?: unknown; locale: string; universe?: unknown }) {
   const en = locale === "en";
-  const base = { universes: en ? "/en/universes" : "/universuri", books: en ? "/en/books" : "/carti" }[collection ?? ""];
-  if (base && typeof slug === "string" && slug) return `${base}/${slug}`;
-  return en ? "/en" : "/";
+  const home = en ? "/en" : "/";
+  if (typeof slug !== "string" || !slug) return home;
+  const base = {
+    universes: en ? "/en/universes" : "/universuri",
+    books: en ? "/en/books" : "/carti",
+    artworks: en ? "/en/art" : "/arta",
+  }[collection ?? ""];
+  if (base) return `${base}/${slug}`;
+  // a product lives under its universe; the relation carries a slug only when populated (the form usually holds just an id)
+  const universeSlug = universe && typeof universe === "object" && "slug" in universe ? (universe as { slug?: unknown }).slug : undefined;
+  if (collection === "products" && typeof universeSlug === "string" && universeSlug)
+    return `${en ? "/en/universes" : "/universuri"}/${universeSlug}/${slug}`;
+  return home;
 }
 
 export default buildConfig({
@@ -53,9 +63,9 @@ export default buildConfig({
     // Live Preview: the page beside the form, in draft mode (app/api/preview). Runs server-side, so the secret stays in the admin.
     livePreview: {
       collections: ["universes", "books", "products", "artworks", "events", "projects", "partners", "legal-pages"],
-      globals: ["site-settings", "counselling-page", "about-page"],
+      globals: ["site-settings", "counselling-page", "about-page", "books-page", "community-page", "contact-page"],
       url: ({ collectionConfig, data, locale, req }) => {
-        const p = publicPath({ collection: collectionConfig?.slug, slug: data?.slug, locale: locale.code });
+        const p = publicPath({ collection: collectionConfig?.slug, slug: data?.slug, universe: data?.universe, locale: locale.code });
         const q = new URLSearchParams({ secret: process.env.PREVIEW_SECRET ?? "", path: p });
         // absolute: the admin posts messages to this URL's origin
         return `${req.origin}/api/preview?${q}`;
@@ -77,7 +87,7 @@ export default buildConfig({
     fallback: true,
   },
   collections: [Universes, Books, Products, Artworks, Events, Projects, Partners, LegalPages, Media, Users],
-  globals: [SiteSettings, CounsellingPage, AboutPage],
+  globals: [SiteSettings, CounsellingPage, AboutPage, BooksPage, CommunityPage, ContactPage],
   // only the formatting the design uses: paragraphs, bold/italic, links, lists, h2–h3
   editor: lexicalEditor({
     features: () => [

@@ -1,7 +1,7 @@
 import type { Pathname } from "@/i18n/routing";
 
 /** Routes without a [slug]: the only ones a menu can link to directly */
-type StaticPathname = Exclude<Pathname, `${string}[slug]`>;
+type StaticPathname = Exclude<Pathname, `${string}[${string}]${string}`>;
 
 export type PageId = "home" | "universuri" | "carti" | "despre" | "arta" | "consiliere" | "comunitate" | "contact";
 

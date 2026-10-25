@@ -86,6 +86,7 @@ export const Partners: CollectionConfig = {
   defaultSort: "order",
   fields: [
     { name: "name", label: "Nume", type: "text", required: true },
+    { name: "handle", label: "Cont (ex.: @nume, opțional)", type: "text" },
     { name: "logo", label: "Logo (opțional)", type: "upload", relationTo: "media" },
     { name: "line", label: "Un rând despre ei", type: "text", localized: true },
     { name: "url", label: "Link", type: "text" },

@@ -107,11 +107,17 @@ export interface Config {
     'site-settings': SiteSetting;
     'counselling-page': CounsellingPage;
     'about-page': AboutPage;
+    'books-page': BooksPage;
+    'community-page': CommunityPage;
+    'contact-page': ContactPage;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'counselling-page': CounsellingPageSelect<false> | CounsellingPageSelect<true>;
     'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
+    'books-page': BooksPageSelect<false> | BooksPageSelect<true>;
+    'community-page': CommunityPageSelect<false> | CommunityPageSelect<true>;
+    'contact-page': ContactPageSelect<false> | ContactPageSelect<true>;
   };
   locale: 'ro' | 'en';
   widgets: {
@@ -338,6 +344,10 @@ export interface Product {
   status: 'available' | 'soon';
   universe?: (number | null) | Universe;
   images?: (number | Media)[] | null;
+  /**
+   * Gol: imaginile se arată simplu, una lângă alta.
+   */
+  gallery?: ('bookmarks' | 'cards') | null;
   description?: {
     root: {
       type: string;
@@ -466,6 +476,7 @@ export interface Project {
 export interface Partner {
   id: number;
   name: string;
+  handle?: string | null;
   logo?: (number | null) | Media;
   line?: string | null;
   url?: string | null;
@@ -733,6 +744,7 @@ export interface ProductsSelect<T extends boolean = true> {
   status?: T;
   universe?: T;
   images?: T;
+  gallery?: T;
   description?: T;
   specs?:
     | T
@@ -818,6 +830,7 @@ export interface ProjectsSelect<T extends boolean = true> {
  */
 export interface PartnersSelect<T extends boolean = true> {
   name?: T;
+  handle?: T;
   logo?: T;
   line?: T;
   url?: T;
@@ -1048,6 +1061,7 @@ export interface CounsellingPage {
         id?: string | null;
       }[]
     | null;
+  tagline?: string | null;
   intro?: {
     root: {
       type: string;
@@ -1078,6 +1092,61 @@ export interface CounsellingPage {
     };
     [k: string]: unknown;
   } | null;
+  patterns?: {
+    title?: string | null;
+    questions?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    reactions?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    thesis?: string | null;
+    path?:
+      | {
+          label: string;
+          id?: string | null;
+        }[]
+      | null;
+    explain?: string | null;
+    change?: string | null;
+    closer?: string | null;
+    toward?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  rightForYou?: {
+    title?: string | null;
+    maybe?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    body?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    simply?: string | null;
+    here?: string | null;
+    offer?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    close?: string | null;
+  };
   sessions?:
     | {
         minutes: number;
@@ -1113,6 +1182,7 @@ export interface CounsellingPage {
         id?: string | null;
       }[]
     | null;
+  ctaTitle?: string | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1123,6 +1193,9 @@ export interface CounsellingPage {
  */
 export interface AboutPage {
   id: number;
+  titleA?: string | null;
+  titleB?: string | null;
+  role?: string | null;
   portrait?: (number | null) | Media;
   bio?: {
     root: {
@@ -1139,12 +1212,104 @@ export interface AboutPage {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Un rând = o frază. „Pauză înainte” începe o nouă secțiune (patru în total).
+   */
+  story?:
+    | {
+        kind: 'beat' | 'question' | 'closing';
+        breakBefore?: boolean | null;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  crafts?: {
+    title?: string | null;
+    items?:
+      | {
+          name: string;
+          line: string;
+          href: string;
+          tint: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
   highlights?:
     | {
         text: string;
         id?: string | null;
       }[]
     | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "books-page".
+ */
+export interface BooksPage {
+  id: number;
+  seriesNote?: string | null;
+  author?: {
+    title?: string | null;
+    paragraphs?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    statement?: string | null;
+    formats?:
+      | {
+          label: string;
+          status: 'soon' | 'planned';
+          line?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-page".
+ */
+export interface CommunityPage {
+  id: number;
+  titleA?: string | null;
+  titleB?: string | null;
+  tagline?: string | null;
+  lead?: string | null;
+  intro?: string | null;
+  eventsTitle?: string | null;
+  eventsLead?: string | null;
+  projectsTitle?: string | null;
+  projectsLead?: string | null;
+  partnersTitle?: string | null;
+  partnersLead?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  closing?: string | null;
+  ctaTitle?: string | null;
+  ctaLine?: string | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-page".
+ */
+export interface ContactPage {
+  id: number;
+  tagline?: string | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1260,8 +1425,68 @@ export interface CounsellingPageSelect<T extends boolean = true> {
         line?: T;
         id?: T;
       };
+  tagline?: T;
   intro?: T;
   approach?: T;
+  patterns?:
+    | T
+    | {
+        title?: T;
+        questions?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        reactions?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        thesis?: T;
+        path?:
+          | T
+          | {
+              label?: T;
+              id?: T;
+            };
+        explain?: T;
+        change?: T;
+        closer?: T;
+        toward?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+      };
+  rightForYou?:
+    | T
+    | {
+        title?: T;
+        maybe?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        body?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        simply?: T;
+        here?: T;
+        offer?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        close?: T;
+      };
   sessions?:
     | T
     | {
@@ -1283,6 +1508,7 @@ export interface CounsellingPageSelect<T extends boolean = true> {
         answer?: T;
         id?: T;
       };
+  ctaTitle?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1293,14 +1519,110 @@ export interface CounsellingPageSelect<T extends boolean = true> {
  * via the `definition` "about-page_select".
  */
 export interface AboutPageSelect<T extends boolean = true> {
+  titleA?: T;
+  titleB?: T;
+  role?: T;
   portrait?: T;
   bio?: T;
+  story?:
+    | T
+    | {
+        kind?: T;
+        breakBefore?: T;
+        text?: T;
+        id?: T;
+      };
+  crafts?:
+    | T
+    | {
+        title?: T;
+        items?:
+          | T
+          | {
+              name?: T;
+              line?: T;
+              href?: T;
+              tint?: T;
+              id?: T;
+            };
+      };
   highlights?:
     | T
     | {
         text?: T;
         id?: T;
       };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "books-page_select".
+ */
+export interface BooksPageSelect<T extends boolean = true> {
+  seriesNote?: T;
+  author?:
+    | T
+    | {
+        title?: T;
+        paragraphs?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        statement?: T;
+        formats?:
+          | T
+          | {
+              label?: T;
+              status?: T;
+              line?: T;
+              id?: T;
+            };
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-page_select".
+ */
+export interface CommunityPageSelect<T extends boolean = true> {
+  titleA?: T;
+  titleB?: T;
+  tagline?: T;
+  lead?: T;
+  intro?: T;
+  eventsTitle?: T;
+  eventsLead?: T;
+  projectsTitle?: T;
+  projectsLead?: T;
+  partnersTitle?: T;
+  partnersLead?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  closing?: T;
+  ctaTitle?: T;
+  ctaLine?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-page_select".
+ */
+export interface ContactPageSelect<T extends boolean = true> {
+  tagline?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;
