@@ -349,3 +349,61 @@ test("artworks with a price, several pictures, sold and on request render every 
 });
 
 // Database down (Review Focus 5) is not here: stopping Postgres would break the other databases on this machine.
+
+// Comunitate: an event with a date shows it, its place and the sign-up link, and gets Event JSON-LD; dated events come first, soonest first
+test("an event given a date shows it with a sign-up link and Event JSON-LD, and goes back to „Datele, în curând”", async ({ page, request }) => {
+  const docs = (await (await request.get("/api/events?locale=ro&depth=0&limit=20&sort=createdAt", { headers: auth })).json()).docs;
+  const byKind = (k: string) => docs.find((d: { kind: string }) => d.kind === k);
+  const pictura = byKind("atelier-pictura");
+  const lansare = byKind("lansare");
+  const save = async (doc: { id: number }, data: Record<string, unknown>) => {
+    const res = await request.patch(`/api/events/${doc.id}?locale=ro`, { headers: auth, data: { ...data, _status: "published" } });
+    expect(res.ok(), "save event").toBeTruthy();
+  };
+  const rows = (heading = "Întâlniri") => page.locator("section", { has: page.getByRole("heading", { level: 2, name: heading }) }).locator("ul > li");
+  const ld = () => page.locator('script[type="application/ld+json"]').evaluateAll((els) => els.map((e) => JSON.parse(e.textContent!)));
+  try {
+    await save(pictura, { startsAt: "2030-06-20T14:00:00.000Z", place: "Casa de Cultură, Cluj" });
+    await save(lansare, { startsAt: "2030-05-17T09:30:00.000Z", place: "Librăria de probă" });
+    await expect(async () => {
+      await page.goto("/comunitate");
+      await expect(rows().first()).toContainText("17 mai 2030", { timeout: 1000 });
+    }).toPass(FRESH);
+
+    // soonest first (the launch, though created second), then the other dated one, then the two without a date
+    await expect(rows().getByRole("heading", { level: 3 })).toHaveText(["Lansări de carte", "Ateliere de pictură", "Sesiuni de autografe", "Ateliere de citit"]);
+    const first = rows().first();
+    await expect(first.locator("time")).toHaveAttribute("datetime", "2030-05-17T09:30:00.000Z");
+    await expect(first).toContainText("12:30"); // Bucharest summer time
+    await expect(first).toContainText("Librăria de probă");
+    await expect(first).not.toContainText("Datele, în curând");
+    await expect(first.getByRole("link", { name: "Vreau să particip" })).toHaveAttribute("href", "/contact?subiect=comunitate");
+    await expect(rows().nth(2)).toContainText("Datele, în curând");
+    await expect(rows().nth(2).locator("a")).toHaveCount(0);
+
+    const events = (await ld()).filter((d) => d["@type"] === "Event");
+    expect(events).toHaveLength(2);
+    expect(events[0]).toMatchObject({
+      "@type": "Event",
+      name: "Lansări de carte",
+      startDate: "2030-05-17T09:30:00.000Z",
+      location: { "@type": "Place", name: "Librăria de probă" },
+      organizer: { "@type": "Person", name: "Ramona Nichifor" },
+    });
+    expect(events[0].eventAttendanceMode).toContain("OfflineEventAttendanceMode");
+
+    await expect(async () => {
+      await page.goto("/en/community");
+      await expect(rows("Gatherings").first()).toContainText("17 May 2030", { timeout: 1000 });
+    }).toPass(FRESH);
+  } finally {
+    await save(pictura, { startsAt: null, place: pictura.place ?? "" });
+    await save(lansare, { startsAt: null, place: lansare.place ?? "" });
+  }
+  await expect(async () => {
+    await page.goto("/comunitate");
+    await expect(rows().first()).toContainText("Datele, în curând", { timeout: 1000 });
+  }).toPass(FRESH);
+  await expect(rows().getByRole("heading", { level: 3 })).toHaveText(["Ateliere de pictură", "Lansări de carte", "Sesiuni de autografe", "Ateliere de citit"]);
+  expect((await ld()).filter((d) => d["@type"] === "Event")).toHaveLength(0);
+});

@@ -160,3 +160,48 @@ export function faqLd(items: { question: string; answer: RichTextData }[]) {
     mainEntity: items.map((q) => ({ "@type": "Question", name: q.question, acceptedAnswer: { "@type": "Answer", text: plainText(q.answer) } })),
   };
 }
+
+/** schema.org ProfilePage whose mainEntity is the site's Person (same @id and sameAs as the site-wide graph). */
+export function profilePageLd(settings: SiteSettings, locale: Locale) {
+  const url = siteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url: absoluteUrl(locale, "/despre"),
+    inLanguage: locale,
+    mainEntity: {
+      "@type": "Person",
+      "@id": `${url}/#person`,
+      name: settings.name,
+      url: absoluteUrl(locale, "/"),
+      image: url + settings.portrait.src,
+      jobTitle: settings.roles.split(" · "),
+      description: settings.intro,
+      sameAs: settings.sameAs,
+    },
+  };
+}
+
+/** schema.org Event for one gathering that has a date (never for one still „Datele, în curând”). */
+export function eventLd(
+  locale: Locale,
+  settings: SiteSettings,
+  e: { title: string; audience: string; startsAt: string; place: string; online: boolean; image: { src: string } | null },
+) {
+  const page = absoluteUrl(locale, "/comunitate");
+  const location = [...(e.place ? [{ "@type": "Place", name: e.place }] : []), ...(e.online ? [{ "@type": "VirtualLocation", url: page }] : [])];
+  return {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: e.title,
+    startDate: e.startsAt,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: `https://schema.org/${e.online ? (e.place ? "MixedEventAttendanceMode" : "OnlineEventAttendanceMode") : "OfflineEventAttendanceMode"}`,
+    ...(location.length && { location: location.length === 1 ? location[0] : location }),
+    ...(e.audience && { description: e.audience }),
+    ...(e.image && { image: siteUrl() + e.image.src }),
+    url: page,
+    inLanguage: locale,
+    organizer: { "@type": "Person", name: settings.name, url: absoluteUrl(locale, "/") },
+  };
+}

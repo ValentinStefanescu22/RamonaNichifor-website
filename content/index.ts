@@ -412,7 +412,7 @@ export async function getCommunity(l: Locale): Promise<CommunityFull> {
   const { payload, opts } = await read(l);
   const [c, events, projects, partners] = await Promise.all([
     payload.findGlobal({ slug: "community-page", ...opts }),
-    payload.find({ collection: "events", ...opts, sort: "createdAt", pagination: false }),
+    payload.find({ collection: "events", ...opts, sort: "createdAt", pagination: false }), // ties (no date yet) keep the order they were made in
     payload.find({ collection: "projects", ...opts, sort: "order", pagination: false }),
     payload.find({ collection: "partners", ...opts, sort: "order", pagination: false }),
   ]);
@@ -431,7 +431,10 @@ export async function getCommunity(l: Locale): Promise<CommunityFull> {
     closing: c.closing ?? "",
     ctaTitle: c.ctaTitle ?? "",
     ctaLine: c.ctaLine ?? "",
-    events: events.docs.map((e) => ({
+    // soonest first, events without a date last (Array.sort is stable)
+    events: events.docs
+      .sort((a, b) => (a.startsAt ? Date.parse(a.startsAt) : Infinity) - (b.startsAt ? Date.parse(b.startsAt) : Infinity) || 0)
+      .map((e) => ({
       id: String(e.id),
       kind: e.kind,
       title: e.title,

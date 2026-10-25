@@ -177,5 +177,30 @@
     "firstLine": "15 min, telefonic, fără cost",
     "soon": "Programările online se deschid în curând.",
     "soonNext": "Până atunci, scrie-mi pe WhatsApp și stabilim împreună."
+  },
+  "about": {
+    "findMe": "Unde mă găsești"
+  },
+  "community": {
+    "join": "Vreau să particip",
+    "datesSoon": "Datele, în curând",
+    "partnerInvite": "Vrei să fim parteneri? Scrie-mi",
+    "welcome": "Bine ai venit în Comunitate cu sens!",
+    "follow": "Urmărește pe Instagram",
+    "propose": "Propune un proiect",
+    "partnerSoon": "Descriere în curând",
+    "online": "Online",
+    "kind": {
+      "atelier-pictura": "Atelier",
+      "lansare": "Lansare",
+      "autografe": "Autografe",
+      "atelier-citit": "Lectură"
+    },
+    "stage": {
+      "idee": "Idee",
+      "in-pregatire": "În pregătire",
+      "in-desfasurare": "În desfășurare",
+      "incheiat": "Încheiat"
+    }
   }
 }

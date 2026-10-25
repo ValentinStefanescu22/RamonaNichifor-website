@@ -65,6 +65,7 @@ export function PageHero({
                 {title}
               </span>
             </span>
+            {titleItalic && " "}
             {titleItalic && (
               <span className="block overflow-hidden pb-[0.12em] pl-[0.6em] sm:pl-[0.9em]">
                 <span className="rise display-wonk block text-violet italic" style={d(0.22)}>

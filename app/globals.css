@@ -343,7 +343,21 @@ html:active-view-transition-type(morph)::view-transition-new(root) { animation-d
   transform: rotate(45deg);
 }
 
+/* Comunitate: the gathering. Each perch rests at its tilt; the flight in is a `from` frame, then a slow breath of its own. */
+.gather { transform: rotate(var(--tilt)); animation: gather 1.8s var(--ease-bloom) var(--delay, 0s) both; }
+@keyframes gather {
+  from { opacity: 0; transform: translate(var(--fx), var(--fy)) rotate(calc(var(--tilt) + 24deg)); }
+}
+.perch-bob { animation: bob var(--dur) ease-in-out var(--dl) infinite; }
+.perch-glide { animation: glide var(--dur) ease-in-out var(--dl) infinite; }
+.perch-sway { animation: sway var(--dur) ease-in-out var(--dl) infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .gather, .perch-bob, .perch-glide, .perch-sway { animation: none !important; }
+}
+
 @keyframes draw-x { from { transform: scaleX(0); } }
+@keyframes stroke-in { from { stroke-dashoffset: 1.5; } }
+@keyframes sign-in { from { clip-path: inset(-20% 100% -20% 0); } }
 @keyframes draw-y { from { transform: scaleY(0); } }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
@@ -368,6 +382,17 @@ html:active-view-transition-type(morph)::view-transition-new(root) { animation-d
     }
     @media (min-width: 1024px) {
       .path-stop { animation-range: cover calc(1% + var(--i) * 2%) cover calc(15% + var(--i) * 2%); }
+    }
+    /* her three crafts are painted in as they scroll in; her name is written */
+    .craft-stroke {
+      animation: stroke-in linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 90%;
+    }
+    .sign {
+      animation: sign-in linear both;
+      animation-timeline: view();
+      animation-range: entry 30% entry 100%;
     }
     /* the steps' stem grows as the visitor reads down */
     .steps { view-timeline: --steps block; }

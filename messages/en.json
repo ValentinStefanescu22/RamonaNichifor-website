@@ -177,5 +177,30 @@
     "firstLine": "15 min, by phone, free",
     "soon": "Online booking opens soon.",
     "soonNext": "Until then, message me on WhatsApp and we'll arrange it together."
+  },
+  "about": {
+    "findMe": "Where to find me"
+  },
+  "community": {
+    "join": "I'd like to come",
+    "datesSoon": "Dates coming soon",
+    "partnerInvite": "Want to partner up? Write to me",
+    "welcome": "Welcome to Comunitate cu sens!",
+    "follow": "Follow on Instagram",
+    "propose": "Suggest a project",
+    "partnerSoon": "Description coming soon",
+    "online": "Online",
+    "kind": {
+      "atelier-pictura": "Workshop",
+      "lansare": "Launch",
+      "autografe": "Signing",
+      "atelier-citit": "Reading"
+    },
+    "stage": {
+      "idee": "Idea",
+      "in-pregatire": "In preparation",
+      "in-desfasurare": "Under way",
+      "incheiat": "Finished"
+    }
   }
 }
