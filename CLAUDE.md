@@ -37,7 +37,7 @@ Next.js (newest version Payload supports) + Tailwind v4 + next-intl (RO default 
 - Commit only when the user asks. Never sign in to the user's or Ramona's accounts. Don't bypass CAPTCHAs or bot checks.
 - Ask when something is unclear; don't assume. The user writes in Romanian; reply in Romanian.
 - Use the skills: `superpowers:brainstorming` / `writing-plans` / `executing-plans` / `subagent-driven-development` (parallel easy tasks on disjoint files) / `verification-before-completion` / `systematic-debugging`; design and motion: `impeccable` (critique, audit, polish), `frontend-design`, `taste-skill:high-end-visual-design`, `animate`, `emil-design-eng`, `review-animations`, `mobile-native`; code: `vercel-react-best-practices`; testing: `playwright-cli`.
-- **Test everything before calling it done**, with evidence: phone (393px) and laptop (1024–1440px; Ramona's laptop window is under 1280px), RO and EN, every internal link opens at the top of the page, no horizontal scroll, no console errors, no cropped artwork, reduced motion respected.
+- **Test everything before calling it done**, with evidence: phone (393px) and laptop (1024–1440px; Ramona's laptop window is under 1280px), RO and EN, every internal link opens at the top of the page and Back returns to where the visitor was, no horizontal scroll, no console errors, no cropped artwork, reduced motion respected.
 
 ## Mockup commands (only if the mockup must change again)
 From `mockups/`: `npm run build` (typecheck + build + `artifact/`), `npx vite preview --port 4173`, then `playwright-cli open http://localhost:4173/` and `playwright-cli --raw run-code --filename=scripts/check-routing.js` (must report 0 failures; also run with `--device="iPhone 15"`).

@@ -170,7 +170,7 @@ A page for gatherings and good works around the stories (mocked up 2026-10-01; c
 
 ### 5.10 Global chrome
 - **Header:** the Parisienne wordmark (hidden on Acasă, whose hero is the name), nav on laptop in the client's order (Acasă, Despre mine, Consiliere, Cărți, Artă, Universuri, Comunitate, Contact), and the RO|EN switch.
-- **Every page opens at its top** (no scroll restoration; also on back/forward and inside wrapping frames); a routing test clicks every internal link and must pass with 0 failures before any release. On the real Next.js site the artifact host's shared scroll key does not exist, but the same test (minus that emulation) still runs in CI.
+- **A new page opens at its top; Back/Forward return to where the visitor was** (client, 2026-10-25). Links, the menu and the language switch open the page at its top; Back, Forward and a reload restore that page's scroll position (components/site/OpenAtTop.tsx, saved per URL in sessionStorage when a page is left, no scroll listener). In-page anchors glide. A routing test clicks every internal link, checks the new page is at the top and that Back lands where the click was; it must pass with 0 failures before any release.
 - **Phone menu:** a full-screen watercolour sheet with staggered links, opening from the menu button.
 - **Floating pill bar:** appears after the hero on long pages.
 - **Language switch:** keeps you on the same page in the other language (localised slug), and cross-fades with a View Transition.

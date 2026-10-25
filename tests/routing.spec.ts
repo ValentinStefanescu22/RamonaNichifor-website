@@ -2,7 +2,7 @@ import type { Page } from "@playwright/test";
 import { test, expect, allow404 } from "./fixtures";
 
 // Port of mockups/scripts/check-routing.js: every internal link opens its page at the top (also after
-// a scroll down to reach the link), stays there 1.2s later, and Back lands at the top again.
+// a scroll down to reach the link), stays there 1.2s later, and Back returns to where the visitor was.
 
 type Region = "header" | "footer" | "main" | "sheet";
 const roots: Record<Region, string> = { header: "header", footer: "footer", main: "main", sheet: "[role=dialog]" };
@@ -36,6 +36,7 @@ async function checkLink(page: Page, start: string, region: Region, href: string
   const link = page.locator(roots[region]).locator(`a[href="${href}"]`).filter({ visible: true }).first();
   await link.scrollIntoViewIfNeeded();
   const startUrl = page.url();
+  const startY = await scrollY(page);
 
   if (href.startsWith("#") || new URL(href, startUrl).pathname === new URL(startUrl).pathname && href.includes("#")) {
     // in-page anchor: glides to its target and is never reset to the top
@@ -61,7 +62,7 @@ async function checkLink(page: Page, start: string, region: Region, href: string
   await page.waitForURL(startUrl);
   await page.waitForTimeout(300);
   const back = await scrollY(page);
-  if (back !== 0) fails.push(`${where}: scrollY ${back} after Back`);
+  if (Math.abs(back - startY) > 2) fails.push(`${where}: scrollY ${back} after Back, was ${startY}`);
 }
 
 async function crawl(page: Page, start: string, regions: Region[]) {
@@ -106,19 +107,41 @@ test("every stub page opens at its top and its body links work", async ({ page, 
   allow404(errors);
 });
 
-test("Back from a scrolled page lands at the top", async ({ page }) => {
+test("Back and Forward return to where the visitor was; new pages open at the top", async ({ page }) => {
+  const bottom = () => page.evaluate(() => (window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }), Math.round(window.scrollY)));
   await page.goto("/carti");
-  await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
+  const cartiY = await bottom();
+  expect(cartiY).toBeGreaterThan(200);
   await page.locator("footer").getByRole("link", { name: "Contact" }).click();
   await page.waitForURL(/\/contact$/);
+  await page.waitForTimeout(300);
   expect(await scrollY(page)).toBe(0);
-  await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
+  const contactY = await bottom();
   await page.goBack();
   await page.waitForURL(/\/carti$/);
   await page.waitForTimeout(300);
-  expect(await scrollY(page)).toBe(0);
+  expect(await scrollY(page)).toBe(cartiY);
   await page.goForward();
   await page.waitForURL(/\/contact$/);
   await page.waitForTimeout(300);
+  expect(await scrollY(page)).toBe(contactY);
+});
+
+// The language switch replaces the history entry (Back skips it), so the document-load case is another
+// site or a typed URL (page.goto), and a reload.
+test("Back from a document load, and a reload, return to where the visitor was", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("#despre").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300);
+  const y = await scrollY(page);
+  expect(y).toBeGreaterThan(200);
+  await page.goto("/carti");
   expect(await scrollY(page)).toBe(0);
+  await page.goBack();
+  await page.waitForTimeout(500);
+  expect(new URL(page.url()).pathname).toBe("/");
+  expect(Math.abs((await scrollY(page)) - y)).toBeLessThanOrEqual(2);
+  await page.reload();
+  await page.waitForTimeout(500);
+  expect(Math.abs((await scrollY(page)) - y)).toBeLessThanOrEqual(2);
 });
