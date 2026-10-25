@@ -166,5 +166,16 @@
     "commissionTitle": "Commissions",
     "commissionCta": "Commission a piece",
     "commission": "I also paint on commission: a portrait of your child inside a storybook world, or an illustration for a special occasion."
+  },
+  "counselling": {
+    "whatsapp": "Message me on WhatsApp",
+    "book": "Book a session",
+    "pathLabel": "The path, step by step",
+    "stepsTitle": "How it goes",
+    "faqTitle": "Frequently asked questions",
+    "firstTitle": "First conversation",
+    "firstLine": "15 min, by phone, free",
+    "soon": "Online booking opens soon.",
+    "soonNext": "Until then, message me on WhatsApp and we'll arrange it together."
   }
 }

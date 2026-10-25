@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale, type Pathname } from "@/i18n/routing";
-import type { SiteSettings } from "@/content/types";
+import type { RichTextData, SiteSettings } from "@/content/types";
 
 export type Href = Parameters<typeof getPathname>[0]["href"];
 
@@ -144,5 +144,19 @@ export function siteGraph(settings: SiteSettings, locale: Locale) {
         sameAs: settings.sameAs,
       },
     ],
+  };
+}
+
+type LexNode = { type?: string; text?: string; children?: LexNode[] };
+const inlineText = (n: LexNode): string => (n.type === "linebreak" ? " " : (n.text ?? (n.children ?? []).map(inlineText).join(n.type === "list" ? " " : "")));
+/** A Lexical text as plain text: blocks (paragraphs, list items) separated by a space, no markup. */
+export const plainText = (d: RichTextData) => d.root.children.map((b) => inlineText(b as LexNode)).join(" ").replace(/\s+/g, " ").trim();
+
+/** schema.org FAQPage: one Question per entry, the answer as plain text (the page shows the same questions). */
+export function faqLd(items: { question: string; answer: RichTextData }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((q) => ({ "@type": "Question", name: q.question, acceptedAnswer: { "@type": "Answer", text: plainText(q.answer) } })),
   };
 }

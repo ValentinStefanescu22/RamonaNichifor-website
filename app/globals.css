@@ -313,3 +313,68 @@ html:active-view-transition-type(morph)::view-transition-new(root) { animation-d
 .gallery > * {
   break-inside: avoid;
 }
+
+/* ------------------------------------------------------------------ Consiliere
+   Scroll-driven, in CSS: the text is in the HTML and visible without JavaScript; a browser without
+   animation-timeline simply shows everything, and reduced motion never animates. */
+.faq {
+  interpolate-size: allow-keywords;
+}
+.faq details::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition:
+    block-size 0.45s var(--ease-bloom),
+    content-visibility 0.45s allow-discrete;
+}
+.faq details[open]::details-content {
+  block-size: auto;
+}
+.faq summary {
+  list-style: none;
+}
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+.faq summary .faq-plus {
+  transition: transform 0.45s var(--ease-bloom);
+}
+.faq details[open] summary .faq-plus {
+  transform: rotate(45deg);
+}
+
+@keyframes draw-x { from { transform: scaleX(0); } }
+@keyframes draw-y { from { transform: scaleY(0); } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* a paragraph settles into place over its first ~100px of scrolling in (--i staggers a group) */
+    .reveal {
+      animation: fade-up linear both;
+      animation-timeline: view();
+      animation-range: cover calc(1% + var(--i, 0) * 2%) cover calc(14% + var(--i, 0) * 2%);
+    }
+    /* the path: its line is drawn as the list scrolls in, each stop settles on its own */
+    .path { view-timeline: --path block; }
+    .path-line {
+      animation: draw-y linear both;
+      animation-timeline: --path;
+      animation-range: cover 4% cover 40%;
+    }
+    .path-line-x { animation-name: draw-x; }
+    .path-stop {
+      animation: fade-up linear both;
+      animation-timeline: view();
+      animation-range: cover 1% cover 15%;
+    }
+    @media (min-width: 1024px) {
+      .path-stop { animation-range: cover calc(1% + var(--i) * 2%) cover calc(15% + var(--i) * 2%); }
+    }
+    /* the steps' stem grows as the visitor reads down */
+    .steps { view-timeline: --steps block; }
+    .stem {
+      animation: draw-y linear both;
+      animation-timeline: --steps;
+      animation-range: cover 16% cover 62%;
+    }
+  }
+}

@@ -166,5 +166,16 @@
     "commissionTitle": "Lucrări la comandă",
     "commissionCta": "Comandă o lucrare",
     "commission": "Pictez și la comandă: un portret al copilului tău într-un univers de poveste sau o ilustrație pentru o ocazie specială."
+  },
+  "counselling": {
+    "whatsapp": "Scrie-mi pe WhatsApp",
+    "book": "Programează o ședință",
+    "pathLabel": "Drumul, pas cu pas",
+    "stepsTitle": "Cum decurge",
+    "faqTitle": "Întrebări frecvente",
+    "firstTitle": "Primă discuție",
+    "firstLine": "15 min, telefonic, fără cost",
+    "soon": "Programările online se deschid în curând.",
+    "soonNext": "Până atunci, scrie-mi pe WhatsApp și stabilim împreună."
   }
 }
