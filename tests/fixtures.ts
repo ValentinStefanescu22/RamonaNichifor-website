@@ -1,7 +1,10 @@
 import { test as base, expect } from "@playwright/test";
 
 // WebKit reports a Next.js prefetch (?_rsc=) that the next navigation cancels as an error; it is not one.
-const cancelledPrefetch = (text: string) => text.includes("_rsc=") && text.includes("due to access control checks");
+// Chromium logs a cross-document view transition (globals.css) that a new navigation interrupts; the page is fine.
+const benignBrowserLog = (text: string) =>
+  (text.includes("_rsc=") && text.includes("due to access control checks")) ||
+  text.startsWith("Transition was aborted because of invalid state");
 
 /** Every test fails on a console error or an uncaught page error. */
 export const test = base.extend<{ errors: string[] }>({
@@ -10,10 +13,10 @@ export const test = base.extend<{ errors: string[] }>({
       const errors: string[] = [];
       page.on("console", (m) => {
         if (m.type() !== "error") return;
-        if (cancelledPrefetch(m.text())) return;
+        if (benignBrowserLog(m.text())) return;
         errors.push(`${m.text()} (${m.location().url})`);
       });
-      page.on("pageerror", (e) => !cancelledPrefetch(e.message) && errors.push(e.message));
+      page.on("pageerror", (e) => !benignBrowserLog(e.message) && errors.push(e.message));
       await use(errors);
       expect(errors, "console / page errors").toEqual([]);
     },
