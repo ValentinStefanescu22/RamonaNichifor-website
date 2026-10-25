@@ -6,6 +6,8 @@ import type { Locale } from "@/i18n/routing";
 export type RichTextData = SerializedEditorState;
 /** One doc's slug in every locale: the language switch maps between them */
 export type SlugPair = Record<Locale, string>;
+/** The slug pairs the language switch needs to keep a dynamic page: every doc of each routed collection */
+export type SlugPairs = Record<"universes" | "books" | "artworks" | "products", SlugPair[]>;
 
 export type Media = { src: string; alt: string; width: number; height: number };
 

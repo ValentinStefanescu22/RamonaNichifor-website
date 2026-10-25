@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ogImage, pageMetadata } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import type { Locale } from "@/i18n/routing";
 import { getCounsellingPage, getFeaturedBook, getHomeArtworks, getSiteSettings, getUniverses } from "@/content";
 import { AboutTeaser } from "@/components/poiana/AboutTeaser";
@@ -12,8 +12,7 @@ import { HomeFlightZone } from "@/components/poiana/HomeFlightZone";
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
-  const title = t("homeTitle");
-  return pageMetadata({ locale, href: "/", title, description: t("description"), image: ogImage(locale, title) });
+  return pageMetadata({ locale, path: "/", title: t("homeTitle"), description: t("description"), absoluteTitle: true, ogPath: `/og/home-${locale}.png` });
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {

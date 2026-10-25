@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getPathname } from "@/i18n/navigation";
-import { routing, type Locale } from "@/i18n/routing";
+import { routing, type Locale, type Pathname } from "@/i18n/routing";
 import type { SiteSettings } from "@/content/types";
 
 export type Href = Parameters<typeof getPathname>[0]["href"];
@@ -20,9 +20,14 @@ export function absoluteUrl(locale: Locale, href: Href) {
   return siteUrl() + (path === "/" ? "" : path);
 }
 
-/** ro / en / x-default (→ RO) for one page. Slug routes pass `hrefs`, because the slug differs per locale. */
-export function languageAlternates(href: Href, hrefs?: Partial<Record<Locale, Href>>) {
-  const urls = Object.fromEntries(routing.locales.map((l) => [l, absoluteUrl(l, hrefs?.[l] ?? href)])) as Record<Locale, string>;
+/** The page's path in each locale. `params` carries each locale's own values for a dynamic route (the slug differs per
+ *  language), so a canonical or hreflang never reuses the slug of the URL that was requested. */
+export type LocaleParams = Partial<Record<Locale, Record<string, string>>>;
+const hrefOf = (path: Pathname, params?: Record<string, string>) => (params ? { pathname: path, params } : path) as Href;
+
+/** ro / en / x-default (→ RO) for one page. */
+export function languageAlternates(path: Pathname, params?: LocaleParams) {
+  const urls = Object.fromEntries(routing.locales.map((l) => [l, absoluteUrl(l, hrefOf(path, params?.[l]))])) as Record<Locale, string>;
   return { ...urls, "x-default": urls[routing.defaultLocale] };
 }
 
@@ -49,33 +54,45 @@ export function baseMetadata({ locale, title, description }: { locale: Locale; t
 }
 
 /**
- * Full metadata for one page: self canonical, hreflang alternates, Open Graph with its URL.
+ * Full metadata for one page: „{title} · Ramona Nichifor”, a self canonical, hreflang ro/en/x-default and Open Graph with its URL.
  * Next merges metadata shallowly, so this repeats every key it sets in full (openGraph, twitter, robots).
+ *
+ * - `path` is the typed pathname (`"/despre"`, `"/universuri/[slug]"`). For a dynamic route pass `params` for EACH locale
+ *   (`{ ro: { slug: "fluturele" }, en: { slug: "butterfly" } }`): canonical and hreflang use the doc's own slug per language.
+ * - `seo` is the doc's `seo` group; a filled title / description / image replaces the page's own.
+ * - `ogPath` is the image: the route's own card (`ogRoute(locale, "/despre")`), or a static file such as the home card.
  */
 export function pageMetadata({
   locale,
-  href,
-  hrefs,
+  path,
+  params,
   title,
   description,
-  image,
+  seo,
+  ogPath,
+  absoluteTitle = false,
 }: {
   locale: Locale;
-  href: Href;
-  hrefs?: Partial<Record<Locale, Href>>;
-  /** Used as is (absolute), without the „ · Ramona Nichifor” template. */
-  title?: string;
-  description?: string;
-  /** Defaults to the home card of the locale until pages get their own (M3). */
-  image?: ReturnType<typeof ogImage>;
+  path: Pathname;
+  params?: LocaleParams;
+  title: string;
+  description: string;
+  seo?: { title?: string | null; description?: string | null; image?: { src: string } | null } | null;
+  ogPath?: string;
+  /** The title is already complete (the home), so „ · Ramona Nichifor” is not added. */
+  absoluteTitle?: boolean;
 }): Metadata {
-  const languages = languageAlternates(href, hrefs);
+  const languages = languageAlternates(path, params);
   const url = languages[locale];
-  const images = [image ?? ogImage(locale, title ?? "Ramona Nichifor")];
+  const name = seo?.title || title;
+  const full = absoluteTitle ? name : `${name} · Ramona Nichifor`;
+  const summary = seo?.description || description;
+  const src = seo?.image?.src ?? ogPath;
+  const images = src ? [{ url: src, width: 1200, height: 630, alt: full }] : undefined;
   return {
     metadataBase: new URL(siteUrl()),
-    ...(title && { title: { absolute: title } }),
-    ...(description && { description }),
+    title: { absolute: full },
+    description: summary,
     alternates: { canonical: url, languages },
     openGraph: {
       type: "website",
@@ -83,12 +100,28 @@ export function pageMetadata({
       locale: OG_LOCALE[locale],
       alternateLocale: routing.locales.filter((l) => l !== locale).map((l) => OG_LOCALE[l]),
       url,
-      ...(title && { title }),
-      ...(description && { description }),
-      images,
+      title: full,
+      description: summary,
+      ...(images && { images }),
     },
-    twitter: { card: "summary_large_image", ...(title && { title }), ...(description && { description }), images },
+    twitter: { card: "summary_large_image", title: full, description: summary, ...(images && { images }) },
     robots: { index: isIndexable(), follow: isIndexable() },
+  };
+}
+
+const HOME_CRUMB: Record<Locale, string> = { ro: "Acasă", en: "Home" }; // = messages nav.home
+
+/** schema.org BreadcrumbList for an inner page: Acasă / Home first, then each step (names already in the page's language). */
+export function breadcrumbLd(locale: Locale, trail: { name: string; path: Href }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [{ name: HOME_CRUMB[locale], path: "/" as Href }, ...trail].map((step, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: step.name,
+      item: absoluteUrl(locale, step.path),
+    })),
   };
 }
 

@@ -17,6 +17,8 @@
     "footer": "Footer"
   },
   "ui": {
+    "imageSoon": "Image coming soon",
+    "coverSoon": "Cover coming soon",
     "comingSoon": "Coming soon",
     "inProgress": "In the works",
     "bookOut": "Book out now",

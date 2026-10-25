@@ -17,6 +17,8 @@
     "footer": "Subsol"
   },
   "ui": {
+    "imageSoon": "Imagine în curând",
+    "coverSoon": "Copertă în curând",
     "comingSoon": "În curând",
     "inProgress": "În lucru",
     "bookOut": "Cartea a apărut",

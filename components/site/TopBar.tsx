@@ -21,9 +21,10 @@ export function TopBar({
 }) {
   const t = useTranslations("nav");
   return (
-    <header className="relative z-30 mx-auto flex max-w-[75rem] items-center justify-between gap-4 px-4 pt-4 sm:px-6 lg:pt-6">
+    <header className="relative z-30 mx-auto flex max-w-[75rem] items-center justify-between gap-2 px-4 sm:gap-4 pt-4 sm:px-6 lg:pt-6">
+      {/* The name shrinks on phones under ~380px so name + RO|EN + menu fit 320px (it is 6.8 × its font size wide, the rest 148px) */}
       {/* On Acasă the hero already says her name, large: the header stays quiet until the floating bar takes over */}
-      {current === "home" ? <span aria-hidden="true" /> : <Wordmark className="text-[1.7rem] sm:text-[1.95rem]" />}
+      {current === "home" ? <span aria-hidden="true" /> : <Wordmark className="text-[min(1.7rem,calc((100vw-11.8rem)/6.9))] sm:text-[1.95rem]" />}
       <nav aria-label={t("main")} className="hidden items-center gap-5 text-[0.95rem] font-medium text-ink-soft lg:flex xl:gap-6">
         {menu.map((p) => (
           <Link

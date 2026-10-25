@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
-import { getBookSlugs, getSiteSettings, getUniverseSlugs } from "@/content";
+import { getAllSlugPairs, getSiteSettings } from "@/content";
 import { ChromeShell } from "@/components/site/ChromeShell";
 import { Creature } from "@/components/ui/creatures";
 import { ArrowRight } from "@/components/ui/icons";
@@ -14,9 +14,9 @@ const tint = ["#E3EBDA", "#A9BE95", "#56704A"] as const;
 
 export default async function NotFound() {
   const locale = (await getLocale()) as Locale;
-  const [t, site, universes, books] = await Promise.all([getTranslations("notFound"), getSiteSettings(locale), getUniverseSlugs(), getBookSlugs()]);
+  const [t, site, slugs] = await Promise.all([getTranslations("notFound"), getSiteSettings(locale), getAllSlugPairs()]);
   return (
-    <ChromeShell contacts={site.contacts} souls={site.souls} slugs={{ universes, books }}>
+    <ChromeShell contacts={site.contacts} souls={site.souls} slugs={slugs}>
       <title>{`${t("metaTitle")} · Ramona Nichifor`}</title>
       <main>
         <section className="relative isolate overflow-hidden" style={{ background: "linear-gradient(180deg, var(--color-mist) 0%, var(--color-cream) 70%)" }}>

@@ -103,6 +103,14 @@ test("lang switch keeps the page", async ({ page }) => {
   expect(await page.evaluate(() => scrollY)).toBe(0);
 });
 
+test("lang switch maps a doc's own slug in the other language", async ({ page }) => {
+  await page.goto("/carti/fluturele-dansator-de-step");
+  await page.locator("header").getByRole("radio", { name: "en" }).click();
+  await expect(page).toHaveURL(/\/en\/books\/the-tap-dancing-butterfly$/);
+  await page.locator("header").getByRole("radio", { name: "ro" }).click();
+  await expect(page).toHaveURL(/\/carti\/fluturele-dansator-de-step$/);
+});
+
 test("copy email", async ({ page, context, browserName }) => {
   if (browserName === "chromium") await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("/");

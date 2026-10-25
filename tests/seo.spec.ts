@@ -70,3 +70,56 @@ test("icons", async ({ page, request }) => {
     expect(res.status(), rel).toBe(200);
   }
 });
+
+// An inner page: „{Page} · Ramona Nichifor”, a self canonical, hreflang ro/en/x-default and its own 1200×630 card.
+const about = {
+  ro: { path: "/despre", url: `${SITE}/despre`, title: "Despre mine · Ramona Nichifor" },
+  en: { path: "/en/about", url: `${SITE}/en/about`, title: "About me · Ramona Nichifor" },
+} as const;
+
+for (const [locale, p] of Object.entries(about)) {
+  test(`${locale} inner page: title, canonical, hreflang`, async ({ page }) => {
+    await page.goto(p.path);
+    await expect(page).toHaveTitle(p.title);
+    const href = (sel: string) => page.locator(sel).getAttribute("href");
+    expect(await href('link[rel="canonical"]')).toBe(p.url);
+    expect(await page.locator('link[rel="alternate"][hreflang]').count()).toBe(3);
+    expect(await href('link[rel="alternate"][hreflang="ro"]')).toBe(about.ro.url);
+    expect(await href('link[rel="alternate"][hreflang="en"]')).toBe(about.en.url);
+    expect(await href('link[rel="alternate"][hreflang="x-default"]')).toBe(about.ro.url);
+    expect(await page.locator('meta[property="og:url"]').getAttribute("content")).toBe(p.url);
+    expect(await page.locator('meta[property="og:title"]').getAttribute("content")).toBe(p.title);
+  });
+
+  test(`${locale} inner page: og:image is a 1200×630 png`, async ({ page, request }) => {
+    await page.goto(p.path);
+    const og = await page.locator('meta[property="og:image"]').getAttribute("content");
+    expect(og).toMatch(/opengraph-image/);
+    expect(await page.locator('meta[name="twitter:image"]').getAttribute("content")).toBe(og);
+    const res = await request.get(new URL(og!).pathname, { maxRedirects: 0 }); // no redirect on the way: crawlers get the image at once
+    expect(res.status()).toBe(200);
+    expect(res.headers()["content-type"]).toBe("image/png");
+    const png = await res.body();
+    expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
+  });
+}
+
+test("sitemap lists every page in both languages, with alternates and the doc's last edit", async ({ request }) => {
+  const xml = await (await request.get("/sitemap.xml")).text();
+  for (const path of ["/universuri", "/carti", "/arta", "/consiliere", "/despre", "/comunitate", "/contact", "/confidentialitate", "/termeni"]) {
+    expect(xml, path).toContain(`<loc>${SITE}${path}</loc>`);
+  }
+  for (const path of ["/en/universes", "/en/books", "/en/art", "/en/counselling", "/en/about", "/en/community", "/en/contact", "/en/privacy", "/en/terms"]) {
+    expect(xml, path).toContain(`<loc>${SITE}${path}</loc>`);
+  }
+  // a doc: each language's own slug in loc and alternates, and a lastmod
+  const universe = xml.match(/<url>\s*<loc>https:\/\/ramonanichifor\.com\/universuri\/fluturele<\/loc>[\s\S]*?<\/url>/)?.[0];
+  expect(universe, "universe entry").toBeTruthy();
+  expect(universe).toContain(`hreflang="en" href="${SITE}/en/universes/butterfly"`);
+  expect(universe).toMatch(/<lastmod>\d{4}-\d\d-\d\dT/);
+  // a product route carries the universe and the product slug of each language
+  expect(xml).toContain(`<loc>${SITE}/en/universes/butterfly/bookmark</loc>`);
+  expect(xml).toContain(`<loc>${SITE}/universuri/fluturele/semn-de-carte</loc>`);
+  // the 404 and the admin are not pages
+  expect(xml).not.toContain("/admin");
+});

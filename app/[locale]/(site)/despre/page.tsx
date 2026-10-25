@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/lib/seo";
 import { StubPage } from "@/components/site/StubPage";
 
 type Props = { params: Promise<{ locale: Locale }> };
@@ -8,7 +9,7 @@ type Props = { params: Promise<{ locale: Locale }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "nav" });
-  return { title: t("about"), robots: { index: false, follow: false } };
+  return pageMetadata({ locale, path: "/despre", title: t("about"), description: t("about") });
 }
 
 export default async function Page({ params }: Props) {

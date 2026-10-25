@@ -23,6 +23,7 @@ import type {
   RichTextData,
   SiteSettings,
   SlugPair,
+  SlugPairs,
   Universe,
   UniverseFull,
 } from "./types";
@@ -165,15 +166,33 @@ const toPair = (slug: unknown): SlugPair => {
   return Object.fromEntries(routing.locales.map((l) => [l, s[l] || ro])) as SlugPair;
 };
 
+/** Every collection the language switch maps between (universes, books, artworks, products) */
+export async function getAllSlugPairs(): Promise<SlugPairs> {
+  const [universes, books, artworks, products] = await Promise.all([
+    getSlugPairs("universes"),
+    getSlugPairs("books"),
+    getSlugPairs("artworks"),
+    getSlugPairs("products"),
+  ]);
+  return { universes, books, artworks, products };
+}
+
 /** Every locale's slug for one universe, so the language switch and static params can map between them */
 export const getUniverseSlugs = () => getSlugPairs("universes");
 export const getBookSlugs = () => getSlugPairs("books");
 
 /** Every published product with its universe's slug pair: the routes /universuri/<universe>/<product> */
-export async function getProductPaths(): Promise<{ universe: SlugPair; product: SlugPair }[]> {
+export async function getProductPaths(): Promise<{ universe: SlugPair; product: SlugPair; updatedAt: string }[]> {
   const payload = await getPayload({ config });
-  const { docs } = await payload.find({ collection: "products", locale: "all", draft: false, depth: 1, pagination: false, select: { slug: true, universe: true } });
-  return docs.flatMap((d) => (d.universe && typeof d.universe === "object" ? [{ universe: toPair(d.universe.slug), product: toPair(d.slug) }] : []));
+  const { docs } = await payload.find({ collection: "products", locale: "all", draft: false, depth: 1, pagination: false, select: { slug: true, universe: true, updatedAt: true } });
+  return docs.flatMap((d) => (d.universe && typeof d.universe === "object" ? [{ universe: toPair(d.universe.slug), product: toPair(d.slug), updatedAt: d.updatedAt }] : []));
+}
+
+/** Published docs with their slug pair and last edit, for the sitemap (products are in getProductPaths: their routes need the universe too) */
+export async function getSlugDocs(collection: Exclude<SlugCollection, "products">): Promise<{ pair: SlugPair; updatedAt: string }[]> {
+  const payload = await getPayload({ config });
+  const { docs } = await payload.find({ collection, locale: "all", draft: false, depth: 0, pagination: false, select: { slug: true, updatedAt: true } });
+  return docs.map((d) => ({ pair: toPair(d.slug), updatedAt: d.updatedAt }));
 }
 
 /* ------------------------------------------------------------------ M3: inner pages */

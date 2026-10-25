@@ -5,27 +5,36 @@ import { useLocale, useTranslations } from "next-intl";
 import { m } from "motion/react";
 import { getPathname, usePathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
+import type { SlugPairs } from "@/content/types";
 
-/** Every locale's slug for each universe / book, so a [slug] page switches to its own translation. */
-export type SlugPairs = { universes: Record<Locale, string>[]; books: Record<Locale, string>[] };
+export type { SlugPairs };
 
 type Href = Parameters<typeof getPathname>[0]["href"];
+
+/** The routes with [params], and which collection's slugs each param holds. Products repeat under every universe, so both are looked up. */
+const dynamicRoutes: Record<string, Record<string, keyof SlugPairs>> = {
+  "/universuri/[slug]": { slug: "universes" },
+  "/universuri/[slug]/[product]": { slug: "universes", product: "products" },
+  "/carti/[slug]": { slug: "books" },
+  "/arta/[slug]": { slug: "artworks" },
+};
 
 /** RO | EN pill: the URL is the persisted choice (no cookie, no storage). */
 export function LangSwitch({ id, slugs, className = "" }: { id: string; slugs: SlugPairs; className?: string }) {
   const t = useTranslations("ui");
   const locale = useLocale() as Locale;
   const pathname = usePathname();
-  const params = useParams<{ slug?: string }>();
+  const params = useParams<Record<string, string>>();
   // the thumb starts sliding to the chosen language while the other page loads
   const [chosen, setChosen] = useState(locale);
 
   const hrefFor = (next: Locale): Href => {
     if (!(pathname in routing.pathnames)) return "/"; // the 404: nothing to translate, go home
-    if (!pathname.includes("[slug]")) return pathname as Href;
-    const pairs = pathname.startsWith("/universuri") ? slugs.universes : pathname.startsWith("/carti") ? slugs.books : [];
-    const pair = pairs.find((p) => p[locale] === params.slug);
-    return (pair ? { pathname, params: { slug: pair[next] } } : "/") as Href;
+    const shape = dynamicRoutes[pathname];
+    if (!shape) return pathname as Href;
+    // each param is looked up by the slug of THIS language and carried over as the slug of the other one (a doc's slugs are edited in the admin)
+    const target = Object.entries(shape).map(([param, collection]) => [param, slugs[collection].find((p) => p[locale] === params[param])?.[next]] as const);
+    return (target.every(([, v]) => v) ? { pathname, params: Object.fromEntries(target) } : "/") as Href;
   };
 
   // A full document load, not router.replace: in Next 16.4 a client-side switch of the root layout's [locale]
