@@ -49,6 +49,14 @@ test("a line break in the name never reaches the subject line", async () => {
   assert.equal(mails[0].subject, "[Site] Carte · Ana Bcc: x@evil.test");
 });
 
+test("bidi and other format characters never reach the subject line", async () => {
+  const { mails, deps } = setup();
+  await handleContact(form({ name: "Ana\u202Egnp.exe\u200B Pop" }), deps);
+  assert.equal(mails[0].subject, "[Site] Carte · Ana gnp.exe Pop");
+  const only = await handleContact(form({ name: "\u202E\u0007" }), deps);
+  assert.deepEqual(only.errors, { name: errors.name });
+});
+
 test("honeypot filled → success, nothing sent", async () => {
   const { mails, deps } = setup();
   assert.equal((await handleContact(form({ website: "http://spam.test" }), deps)).status, "sent");

@@ -72,6 +72,45 @@ test.describe("/contact", () => {
     await expect(page.getByLabel("Adresa de email")).toBeFocused();
   });
 
+  test("an address the server would refuse (a trailing comma) is caught inline, before sending", async ({ page }) => {
+    await open(page);
+    await fill(page, "Bună!");
+    await page.getByLabel("Adresa de email").fill("ana@gmail.com,");
+    await page.getByRole("button", { name: "Trimite mesajul" }).click();
+    await expect(page.getByLabel("Adresa de email")).toBeFocused();
+    await expect(page.getByLabel("Adresa de email")).toHaveAttribute("aria-invalid", "true");
+    await expect(page.locator("form")).toContainText("Adresa de email pare incompletă.");
+    await expect(page.locator("form").getByRole("alert")).toHaveText("Mai sunt câteva câmpuri de completat.");
+  });
+
+  test("an error only the server finds shows inline like any other, and clears once the field changes", async ({ page }) => {
+    test.skip(remote, "needs the local test keys for the token");
+    await page.setExtraHTTPHeaders({ "x-forwarded-for": `10.${[0, 0, 0].map(() => Math.floor(Math.random() * 250)).join(".")}` });
+    await open(page);
+    await fill(page, "Bună!");
+    // a name made only of a bidi override: the form lets it through, the server strips it to nothing
+    await page.getByLabel("Numele tău").fill("\u202E");
+    await page.waitForTimeout(3_200);
+    await page.getByRole("button", { name: "Trimite mesajul" }).click();
+    const name = page.getByLabel("Numele tău");
+    await expect(name).toHaveAttribute("aria-invalid", "true", { timeout: 20_000 });
+    await expect(name).toBeFocused();
+    await expect(page.locator("form")).toContainText("Scrie-mi cum te numești.");
+    await expect(page.locator("form").getByRole("alert")).toHaveText("Mai sunt câteva câmpuri de completat.");
+    await name.fill("Ana Pop");
+    await expect(name).not.toHaveAttribute("aria-invalid");
+    await expect(page.locator("form")).not.toContainText("Scrie-mi cum te numești.");
+  });
+
+  test("metadata: „Contact · Ramona Nichifor”, a self canonical, its own description", async ({ page }) => {
+    for (const path of ["/contact", "/en/contact"]) {
+      await page.goto(path);
+      await expect(page).toHaveTitle("Contact · Ramona Nichifor");
+      expect(await page.locator('link[rel="canonical"]').getAttribute("href")).toMatch(new RegExp(`${path}$`));
+      expect(await page.locator('meta[name="description"]').getAttribute("content")).toMatch(path.startsWith("/en") ? /^Write to Ramona Nichifor/ : /^Scrie-i Ramonei Nichifor/);
+    }
+  });
+
   test("a valid message shows the designed thank-you note, and the mail goes out escaped", async ({ page }) => {
     test.skip(remote, "never sends a real email from the preview");
     await page.setExtraHTTPHeaders({ "x-forwarded-for": `10.${[0, 0, 0].map(() => Math.floor(Math.random() * 250)).join(".")}` });
@@ -140,6 +179,7 @@ test.describe("legal pages", () => {
       await expect(page.locator("h1")).toHaveText(h1);
       await expect(page.locator("main")).toContainText(text);
       await expect(page).toHaveTitle(`${h1} · Ramona Nichifor`);
+      expect(await page.locator('link[rel="canonical"]').getAttribute("href")).toMatch(new RegExp(`${path}$`));
       // no date was set in the CMS, so none is shown (tests/cms.spec.ts sets one)
       await expect(page.locator("main time")).toHaveCount(0);
     });

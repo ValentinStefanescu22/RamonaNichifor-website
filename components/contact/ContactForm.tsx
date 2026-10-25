@@ -4,13 +4,10 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { sendContact } from "@/app/actions/contact";
 import type { ContactState } from "@/lib/contact";
+import { EMAIL, SUBJECTS, type Subject } from "@/lib/contact-rules";
 import { ArrowRight } from "@/components/ui/icons";
 import { Honeypot } from "./Honeypot";
 
-// the same ids and email rule as lib/contact.ts (the server decides; this only spares a round trip)
-const SUBJECTS = ["carte", "arta", "consiliere", "comunitate", "altceva"] as const;
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-type Subject = (typeof SUBJECTS)[number];
 type Values = { name: string; email: string; subject: Subject; message: string; consent: boolean };
 type Key = "name" | "email" | "subject" | "message" | "consent";
 const order: Key[] = ["name", "email", "subject", "message", "consent"];
@@ -64,6 +61,7 @@ export function ContactForm({ sitekey }: { sitekey: string }) {
   const widget = useRef<string | undefined>(undefined);
   const token = useRef("");
   const startedAt = useRef(0);
+  const sentValues = useRef<Values | null>(null);
 
   const [state, dispatch, pending] = useActionState(async (prev: ContactState, fd: FormData | null): Promise<ContactState> => {
     if (!fd) return { status: "idle" }; // „Scrie alt mesaj”
@@ -133,7 +131,9 @@ export function ContactForm({ sitekey }: { sitekey: string }) {
   }, [sitekey, locale]);
 
   // after a first try the fields re-check themselves as they are corrected; the server's word counts for what this cannot see
-  const errors: Partial<Record<Key, string>> = state.status === "invalid" && state.errors?.subject ? { subject: state.errors.subject } : {};
+  // the server's errors stand for each field until the visitor changes it
+  const errors: Partial<Record<Key, string>> = {};
+  if (state.status === "invalid") for (const k of order) if (state.errors?.[k] && v[k] === sentValues.current?.[k]) errors[k] = state.errors[k];
   if (tried) for (const k of invalid(v)) errors[k] = t(`errors.${k}`);
 
   useEffect(() => {
@@ -154,6 +154,7 @@ export function ContactForm({ sitekey }: { sitekey: string }) {
       formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
       return;
     }
+    sentValues.current = v;
     const fd = new FormData(e.currentTarget);
     startTransition(() => dispatch(fd));
   };
