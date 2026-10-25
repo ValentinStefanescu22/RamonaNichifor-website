@@ -66,7 +66,9 @@ async function upsertMedia(payload: Payload, file: string, alt: L, illustration:
   const filename = path.basename(file);
   const found = await payload.find({ collection: "media", where: { filename: { equals: filename } }, limit: 1, context });
   const doc = found.docs[0]
-    ?? (await payload.create({ collection: "media", data: { alt: alt.ro, illustration }, filePath: path.join(root, file), locale: "ro", context }));
+    // a fresh context per upload: the storage plugin keeps the upload's file in req.context (_payloadCloudStorage), so a
+    // shared object makes every later create skip its R2 upload
+    ?? (await payload.create({ collection: "media", data: { alt: alt.ro, illustration }, filePath: path.join(root, file), locale: "ro", context: { ...context } }));
   assertSameFilename(doc, filename);
   if (process.env.S3_BUCKET) await assertInBucket(filename, headObject);
   await payload.update({ collection: "media", id: doc.id, data: { alt: alt.ro, illustration }, locale: "ro", context });

@@ -34,7 +34,7 @@ export function OrbArt({ u, size, className = "", style }: { u: OrbUniverse; siz
         {u.id === "fluturele" ? (
           <Butterfly width="100%" tempo={1.1} />
         ) : u.id === "buburuza" ? (
-          // eslint-disable-next-line @next/next/no-img-element -- a small decorative cut-out (no © stamp, CLAUDE.md)
+          // eslint-disable-next-line @next/next/no-img-element -- a small decorative cut-out (no © stamp, client rules)
           <img src="/img/ladybird.webp" alt="" draggable={false} className="ladybird block h-auto w-[86%]" style={{ animation: "sway 5.4s ease-in-out infinite" }} />
         ) : u.creature ? (
           <Creature id={u.creature} size="78%" style={{ color: deep }} />
