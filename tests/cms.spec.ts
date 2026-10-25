@@ -435,3 +435,45 @@ test("a legal page given a „last updated” date shows it, formatted per langu
     await expect(page.locator("main time")).toHaveCount(0, { timeout: 1000 });
   }).toPass(FRESH);
 });
+
+// An empty legal text shows „În curând” under the title, not a bare title over a blank section
+test("a legal page with no text yet says „În curând”", async ({ page, request }) => {
+  const doc = (await (await request.get("/api/legal-pages?locale=ro&depth=0&where[kind][equals]=terms", { headers: auth })).json()).docs[0];
+  const save = async (body: unknown) => {
+    const res = await request.patch(`/api/legal-pages/${doc.id}?locale=ro`, { headers: auth, data: { body, _status: "published" } });
+    expect(res.ok(), "save legal page").toBeTruthy();
+  };
+  try {
+    await save(null);
+    await expect(async () => {
+      await page.goto("/termeni");
+      await expect(page.locator("main")).toContainText("În curând", { timeout: 1000 });
+    }).toPass(FRESH);
+  } finally {
+    await save(doc.body ?? null);
+  }
+  await expect(async () => {
+    await page.goto("/termeni");
+    await expect(page.locator("main")).not.toContainText("În curând", { timeout: 1000 });
+  }).toPass(FRESH);
+});
+
+// A profile link typed without https:// must not take /despre down
+test("a malformed profile link (no https://) does not break /despre", async ({ page, request }) => {
+  const res = await request.get("/api/globals/site-settings?locale=ro&depth=0", { headers: auth });
+  const original = (await res.json()).sameAs ?? [];
+  const save = async (sameAs: unknown) => {
+    const r = await request.post("/api/globals/site-settings?locale=ro", { headers: auth, data: { sameAs, _status: "published" } });
+    expect(r.ok(), "save sameAs").toBeTruthy();
+  };
+  try {
+    await save([...original, { url: "instagram.com/ramona.typo" }]);
+    await expect(async () => {
+      const r = await page.goto("/despre");
+      expect(r?.status()).toBe(200);
+      await expect(page.locator("main")).toContainText("instagram.com/ramona.typo", { timeout: 1000 });
+    }).toPass(FRESH);
+  } finally {
+    await save(original);
+  }
+});

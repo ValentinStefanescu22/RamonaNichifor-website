@@ -64,7 +64,16 @@ export async function renderOg({
   image?: string;
   tint?: [string, string, string];
 }) {
-  const [data, picture] = await Promise.all([fraunces(), image ? loadImage(image, { width: 420, height: 462 }) : undefined]);
+  // a missing upload must not fail the build (every card is rendered at build): fall back to the text-only card
+  const [data, picture] = await Promise.all([
+    fraunces(),
+    image
+      ? loadImage(image, { width: 420, height: 462 }).catch((err) => {
+          console.warn(`og: no picture for "${title}" (${err instanceof Error ? err.message : err}), rendering the text-only card`);
+          return undefined;
+        })
+      : undefined,
+  ]);
   const [light, , deep] = tint ?? ["#f6dde6", "#c9b8e6", VIOLET];
   const textWidth = picture ? 640 : 1024;
   return new ImageResponse(

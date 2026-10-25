@@ -34,7 +34,10 @@ function Craft({ name, line, href, tint, index }: About["crafts"]["items"][numbe
 }
 
 const profile = (url: string) => {
-  const host = new URL(url).hostname.replace(/^www\./, "");
+  let host = url; // a typo in the CMS (no https://) must not take the page down: show the text as is
+  try {
+    host = new URL(url).hostname.replace(/^www\./, "");
+  } catch {}
   if (host.endsWith("instagram.com")) return { label: "Instagram", icon: <Instagram size={17} /> };
   if (host.endsWith("facebook.com")) return { label: "Facebook", icon: <Facebook size={17} /> };
   return { label: host, icon: null };

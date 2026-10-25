@@ -39,7 +39,11 @@ export async function Legal({ locale, kind }: { locale: Locale; kind: Kind }) {
       />
       <section className="bg-cream px-4 pb-20 sm:px-6 lg:pb-28">
         <div className="mx-auto max-w-[75rem]">
-          <RichText data={doc?.body} className="max-w-[64ch] space-y-4 text-[1.06rem] leading-[1.7] text-ink" />
+          {doc?.body ? (
+            <RichText data={doc.body} className="max-w-[64ch] space-y-4 text-[1.06rem] leading-[1.7] text-ink" />
+          ) : (
+            <p className="text-[1.06rem] text-ink-soft">{t("ui.comingSoon")}</p>
+          )}
         </div>
       </section>
     </main>

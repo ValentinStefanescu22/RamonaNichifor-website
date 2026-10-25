@@ -25,26 +25,9 @@ import { Universes } from "./payload/collections/Universes";
 import { Users } from "./payload/collections/Users";
 import { AboutPage, BooksPage, CommunityPage, ContactPage, CounsellingPage } from "./payload/globals/Pages";
 import { SiteSettings } from "./payload/globals/SiteSettings";
+import { previewPath } from "./payload/livePreviewPath";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-
-/** The public page a document shows on, in the admin's current locale (mirrors the next-intl pathnames). */
-function publicPath({ collection, slug, locale, universe }: { collection?: string; slug?: unknown; locale: string; universe?: unknown }) {
-  const en = locale === "en";
-  const home = en ? "/en" : "/";
-  if (typeof slug !== "string" || !slug) return home;
-  const base = {
-    universes: en ? "/en/universes" : "/universuri",
-    books: en ? "/en/books" : "/carti",
-    artworks: en ? "/en/art" : "/arta",
-  }[collection ?? ""];
-  if (base) return `${base}/${slug}`;
-  // a product lives under its universe; the relation carries a slug only when populated (the form usually holds just an id)
-  const universeSlug = universe && typeof universe === "object" && "slug" in universe ? (universe as { slug?: unknown }).slug : undefined;
-  if (collection === "products" && typeof universeSlug === "string" && universeSlug)
-    return `${en ? "/en/universes" : "/universuri"}/${universeSlug}/${slug}`;
-  return home;
-}
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET ?? "",
@@ -64,8 +47,16 @@ export default buildConfig({
     livePreview: {
       collections: ["universes", "books", "products", "artworks", "events", "projects", "partners", "legal-pages"],
       globals: ["site-settings", "counselling-page", "about-page", "books-page", "community-page", "contact-page"],
-      url: ({ collectionConfig, data, locale, req }) => {
-        const p = publicPath({ collection: collectionConfig?.slug, slug: data?.slug, universe: data?.universe, locale: locale.code });
+      url: async ({ collectionConfig, globalConfig, data, locale, req }) => {
+        // a product lives under its universe; the form usually holds just the universe's id, so look the slug up
+        const u = data?.universe;
+        const universeSlug =
+          collectionConfig?.slug !== "products" || !u
+            ? undefined
+            : typeof u === "object"
+              ? (u as { slug?: string }).slug
+              : (await req.payload.findByID({ collection: "universes", id: u as number, locale: locale.code as "ro" | "en", depth: 0, select: { slug: true } }).catch(() => null))?.slug;
+        const p = previewPath({ collection: collectionConfig?.slug, global: globalConfig?.slug, slug: data?.slug, kind: data?.kind, universeSlug, locale: locale.code });
         const q = new URLSearchParams({ secret: process.env.PREVIEW_SECRET ?? "", path: p });
         // absolute: the admin posts messages to this URL's origin
         return `${req.origin}/api/preview?${q}`;

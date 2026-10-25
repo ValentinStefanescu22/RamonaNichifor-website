@@ -146,6 +146,82 @@ const checks: [string, () => Promise<void>][] = [
       for (const d of made) await payload.delete({ collection: d.collection, id: d.id });
     }
   }],
+  ["a never-published book, artwork, event, project or partner is on no public list; a product under an unpublished universe is not in the sitemap paths", async () => {
+    const payload = await getPayload({ config });
+    const made: { collection: "books" | "artworks" | "events" | "projects" | "partners" | "universes" | "products"; id: number }[] = [];
+    const draft = async (collection: (typeof made)[number]["collection"], data: Record<string, unknown>) => {
+      const d = await payload.create({ collection, draft: true, locale: "ro", data: data as never });
+      made.push({ collection, id: d.id });
+      return d;
+    };
+    try {
+      await draft("books", { title: "Carte nepublicată", slug: "unit-draft-book" });
+      await draft("artworks", { title: "Pictură nepublicată", slug: "unit-draft-art" });
+      await draft("events", { title: "Eveniment nepublicat", kind: "lansare" });
+      await draft("projects", { title: "Proiect nepublicat" });
+      await draft("partners", { name: "Partener nepublicat" });
+      assert.ok(!(await c.getBooks("ro")).some((b) => b.slug === "unit-draft-book"), "book");
+      assert.ok(!(await c.getArtworks("ro")).some((a) => a.slug === "unit-draft-art"), "artwork");
+      const community = await c.getCommunity("ro");
+      assert.ok(!community.events.some((e) => e.title === "Eveniment nepublicat"), "event");
+      assert.ok(!community.projects.some((p) => p.title === "Proiect nepublicat"), "project");
+      assert.ok(!community.partners.some((p) => p.name === "Partener nepublicat"), "partner");
+      // a published product whose universe was never published: no sitemap route (its page 404s)
+      const u = await draft("universes", { slug: "unit-draft-universe-2", name: "U", bookTitle: "B", hook: "h" });
+      const pr = await payload.create({ collection: "products", locale: "ro", data: { slug: "unit-pub-product", kind: "puzzle", name: "P", universe: u.id, _status: "published" } as never, context: { seeding: true } });
+      made.push({ collection: "products", id: pr.id });
+      assert.ok(!(await c.getProductPaths()).some((x) => x.product.ro === "unit-pub-product"));
+    } finally {
+      for (const d of made.reverse()) await payload.delete({ collection: d.collection, id: d.id });
+    }
+  }],
+  ["an orphaned or url-less image is dropped, not a render error (artwork, book leaf pages)", async () => {
+    const payload = await getPayload({ config });
+    const sharp = (await import("sharp")).default;
+    const data = await sharp({ create: { width: 40, height: 40, channels: 3, background: "#d8c4a0" } }).jpeg().toBuffer();
+    const file = { data, mimetype: "image/jpeg", name: "unit-orphan.jpg", size: data.length };
+    const ctx = { skipStamp: true, seeding: true };
+    const m = await payload.create({ collection: "media", data: { alt: "x" }, file, context: ctx });
+    const a = await payload.create({ collection: "artworks", locale: "ro", context: ctx, data: { title: "Cu poză orfană", slug: "unit-orphan-art", kind: "original", availability: "preorder", images: [m.id], _status: "published" } as never });
+    try {
+      // the media row loses its url (as when its file was removed): the artwork still renders, with no picture
+      await (payload.db as unknown as { pool: { query: (q: string, v: unknown[]) => Promise<unknown> } }).pool.query("update media set filename = null, url = null where id = $1", [m.id]);
+      const art = (await c.getArtworks("ro")).find((x) => x.slug === "unit-orphan-art");
+      assert.ok(art, "artwork still listed");
+      assert.deepEqual(art.images, []);
+      assert.equal((await c.getArtwork("ro", "unit-orphan-art"))?.images.length, 0);
+    } finally {
+      await payload.delete({ collection: "artworks", id: a.id });
+      await payload.delete({ collection: "media", id: m.id });
+    }
+  }],
+  ["Live Preview opens the page a document shows on (page globals, community docs, legal pages, a product with only a universe id)", async () => {
+    const payload = await getPayload({ config });
+    const url = payload.config.admin.livePreview.url as unknown as (a: unknown) => Promise<string>;
+    const open = async (a: Record<string, unknown>) => new URL(await url({ locale: { code: "ro" }, ...a, req: { origin: "http://x", payload } })).searchParams.get("path");
+    const universe = (await payload.find({ collection: "universes", where: { slug: { equals: "fluturele" } }, locale: "ro", limit: 1, depth: 0 })).docs[0];
+    assert.equal(await open({ globalConfig: { slug: "counselling-page" }, data: {} }), "/consiliere");
+    assert.equal(await open({ globalConfig: { slug: "about-page" }, data: {}, locale: { code: "en" } }), "/en/about");
+    assert.equal(await open({ collectionConfig: { slug: "events" }, data: { id: 1 } }), "/comunitate");
+    assert.equal(await open({ collectionConfig: { slug: "legal-pages" }, data: { kind: "terms" }, locale: { code: "en" } }), "/en/terms");
+    assert.equal(await open({ collectionConfig: { slug: "products" }, data: { slug: "puzzle", universe: universe.id } }), "/universuri/fluturele/puzzle");
+    assert.equal(await open({ collectionConfig: { slug: "products" }, data: { slug: "puzzle", universe: { slug: "fluturele" } } }), "/universuri/fluturele/puzzle");
+    assert.equal(await open({ collectionConfig: { slug: "books" }, data: { slug: "x" } }), "/carti/x");
+  }],
+  ["an OG card whose upload is missing renders text-only instead of failing the build", async () => {
+    const { renderOg } = await import("../../lib/og");
+    const warn = console.warn;
+    const warned: string[] = [];
+    console.warn = (m: string) => warned.push(m);
+    try {
+      const res = await renderOg({ title: "Titlu", image: "/api/media/file/nu-exista-deloc.webp" });
+      assert.equal(res.status, 200);
+      assert.equal(res.headers.get("content-type"), "image/png");
+      assert.ok(warned.some((w) => w.includes("text-only card")));
+    } finally {
+      console.warn = warn;
+    }
+  }],
   ["keepsake photos play their part by file number, not by their place in the list", async () => {
     const { byNumber, fanOf, pickNumbered } = await import("../../components/product/images");
     const m = (src: string) => ({ src, alt: "", width: 460, height: 644 });

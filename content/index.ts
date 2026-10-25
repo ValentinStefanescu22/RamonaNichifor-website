@@ -196,7 +196,8 @@ export const getBookSlugs = () => getSlugPairs("books");
 export async function getProductPaths(): Promise<{ universe: SlugPair; product: SlugPair; updatedAt: string }[]> {
   const payload = await getPayload({ config });
   const { docs } = await payload.find({ collection: "products", locale: "all", where: published, draft: false, depth: 1, pagination: false, select: { slug: true, universe: true, updatedAt: true } });
-  return docs.flatMap((d) => (d.universe && typeof d.universe === "object" ? [{ universe: toPair(d.universe.slug), product: toPair(d.slug), updatedAt: d.updatedAt }] : []));
+  // a product under an unpublished universe 404s, so it is not listed
+  return docs.flatMap((d) => (d.universe && typeof d.universe === "object" && d.universe._status === "published" ? [{ universe: toPair(d.universe.slug), product: toPair(d.slug), updatedAt: d.updatedAt }] : []));
 }
 
 /** Published docs with their slug pair and last edit, for the sitemap (products are in getProductPaths: their routes need the universe too) */
@@ -210,7 +211,13 @@ export async function getSlugDocs(collection: Exclude<SlugCollection, "products"
 
 const rich = (r: unknown) => (r ?? null) as RichTextData | null;
 const rows = <T extends { text: string }>(r: T[] | null | undefined) => (r ?? []).map((x) => x.text);
-const mediaOrNull = (m: number | MediaDoc | null | undefined) => (m && typeof m === "object" ? media(m) : null);
+const mediaOrNull = (m: number | MediaDoc | null | undefined) => (m && typeof m === "object" && m.url ? media(m) : null);
+/** A list of images: an orphaned (deleted but still referenced) or url-less one is dropped, not a render error */
+const mediaList = (l: (number | MediaDoc | null | undefined)[] | null | undefined): Media[] =>
+  (l ?? []).flatMap((m) => {
+    const x = mediaOrNull(m);
+    return x ? [x] : [];
+  });
 /** A doc's `seo` group; empty strings are dropped so pageMetadata falls back to the page's own text */
 const seoOf = (g: { title?: string | null; description?: string | null; image?: number | MediaDoc | null } | null | undefined): Seo | undefined =>
   g ? { title: g.title || undefined, description: g.description || undefined, image: mediaOrNull(g.image) } : undefined;
@@ -249,7 +256,7 @@ const productCard = (p: ProductDoc, universeSlug: string): ProductCard => ({
   status: p.status,
   universeSlug,
   image: mediaOrNull((p.images ?? [])[0]),
-  images: (p.images ?? []).filter((m) => typeof m === "object").map(media),
+  images: mediaList(p.images),
   gallery: p.gallery ?? null,
 });
 
@@ -258,7 +265,10 @@ const bookFull = (b: BookDoc): BookFull => ({
   pages: b.pages ?? null,
   format: b.format ?? "",
   formats: (b.formats ?? []).map((f) => ({ label: f.label, status: f.status ?? "soon" })),
-  leafPages: (b.leafPages ?? []).map((p) => ({ ...media(p.image), label: p.label ?? "" })),
+  leafPages: (b.leafPages ?? []).flatMap((p) => {
+    const m = mediaOrNull(p.image);
+    return m ? [{ ...m, label: p.label ?? "" }] : [];
+  }),
   blurbRich: rich(b.blurb),
   seo: seoOf(b.seo),
 });
@@ -297,7 +307,7 @@ export async function getProduct(l: Locale, universeSlug: string, slug: string):
 
 export async function getBooks(l: Locale): Promise<BookCard[]> {
   const { payload, opts } = await read(l);
-  const { docs } = await payload.find({ collection: "books", ...opts, sort: "createdAt", pagination: false });
+  const { docs } = await payload.find({ collection: "books", ...opts, sort: "createdAt", pagination: false, ...(opts.draft ? {} : { where: published }) });
   return docs.map(book);
 }
 
@@ -311,7 +321,7 @@ const artwork = (a: ArtworkDoc): ArtworkFull => ({
   title: a.title,
   technique: a.technique ?? "",
   kind: a.kind,
-  images: a.images.map(media),
+  images: mediaList(a.images),
   availability: a.availability,
   size: a.size ?? "",
   year: a.year ?? null,
@@ -322,7 +332,7 @@ const artwork = (a: ArtworkDoc): ArtworkFull => ({
 
 export async function getArtworks(l: Locale): Promise<ArtworkFull[]> {
   const { payload, opts } = await read(l);
-  const { docs } = await payload.find({ collection: "artworks", ...opts, sort: "createdAt", pagination: false });
+  const { docs } = await payload.find({ collection: "artworks", ...opts, sort: "createdAt", pagination: false, ...(opts.draft ? {} : { where: published }) });
   return docs.map(artwork);
 }
 
@@ -410,11 +420,12 @@ export async function getBooksPage(l: Locale): Promise<BooksPage> {
 
 export async function getCommunity(l: Locale): Promise<CommunityFull> {
   const { payload, opts } = await read(l);
+  const vis = opts.draft ? {} : { where: published };
   const [c, events, projects, partners] = await Promise.all([
     payload.findGlobal({ slug: "community-page", ...opts }),
-    payload.find({ collection: "events", ...opts, sort: "createdAt", pagination: false }), // ties (no date yet) keep the order they were made in
-    payload.find({ collection: "projects", ...opts, sort: "order", pagination: false }),
-    payload.find({ collection: "partners", ...opts, sort: "order", pagination: false }),
+    payload.find({ collection: "events", ...opts, sort: "createdAt", pagination: false, ...vis }), // ties (no date yet) keep the order they were made in
+    payload.find({ collection: "projects", ...opts, sort: "order", pagination: false, ...vis }),
+    payload.find({ collection: "partners", ...opts, sort: "order", pagination: false, ...vis }),
   ]);
   return {
     titleA: c.titleA ?? "",
@@ -459,7 +470,7 @@ export async function getContactPage(l: Locale): Promise<ContactPage> {
 
 export async function getLegal(l: Locale, kind: "privacy" | "terms"): Promise<LegalPage | null> {
   const { payload, opts } = await read(l);
-  const { docs } = await payload.find({ collection: "legal-pages", ...opts, where: { kind: { equals: kind } }, limit: 1 });
+  const { docs } = await payload.find({ collection: "legal-pages", ...opts, where: { and: [{ kind: { equals: kind } }, ...(opts.draft ? [] : [published])] }, limit: 1 });
   const d = docs[0];
   return d ? { kind: d.kind, title: d.title, body: rich(d.body), lastUpdated: d.lastUpdated ?? null } : null;
 }

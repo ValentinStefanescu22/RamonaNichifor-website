@@ -1,3 +1,5 @@
+import os from "node:os";
+import path from "node:path";
 import type { CollectionConfig } from "payload";
 import { revalidateCollection } from "../hooks/revalidate";
 import { stampIllustration } from "../hooks/stampIllustration";
@@ -10,7 +12,9 @@ export const Media: CollectionConfig = {
   // her illustrations: © stamp + 1800px cap before Payload makes the sizes
   hooks: { ...revalidateCollection(), beforeOperation: [stampIllustration] },
   upload: {
-    staticDir: "media",
+    // with R2 nothing is written locally, but Payload still renames an upload whose name exists under staticDir: point it at a
+    // folder that never holds anything, so a local media/ cannot turn fluture-01.webp into fluture-2.webp on a Neon/R2 run
+    staticDir: process.env.S3_BUCKET ? path.join(os.tmpdir(), "ramona-media-unused") : "media",
     mimeTypes: ["image/*"],
     focalPoint: true,
     adminThumbnail: "sm",

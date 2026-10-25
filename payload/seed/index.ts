@@ -9,6 +9,7 @@ import config from "@payload-config";
 import { counselling, featuredBook, homeArtworks, site, universes } from "../../content/data";
 import { about, bookmarks, booksPage, community, contactPage, counsellingPage, deck, flutureProducts, kindCopy, legalTemplates, specsSoon } from "../../content/pages-data";
 import { slugify } from "../fields";
+import { assertInBucket, assertSameFilename, headObject } from "./media-check";
 
 type L = { ro: string; en: string };
 const t = (ro: string, en: string): L => ({ ro, en });
@@ -66,6 +67,8 @@ async function upsertMedia(payload: Payload, file: string, alt: L, illustration:
   const found = await payload.find({ collection: "media", where: { filename: { equals: filename } }, limit: 1, context });
   const doc = found.docs[0]
     ?? (await payload.create({ collection: "media", data: { alt: alt.ro, illustration }, filePath: path.join(root, file), locale: "ro", context }));
+  assertSameFilename(doc, filename);
+  if (process.env.S3_BUCKET) await assertInBucket(filename, headObject);
   await payload.update({ collection: "media", id: doc.id, data: { alt: alt.ro, illustration }, locale: "ro", context });
   await payload.update({ collection: "media", id: doc.id, data: { alt: alt.en }, locale: "en", context });
   return doc.id;
