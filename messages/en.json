@@ -71,6 +71,47 @@
       "next": "Next bookmark"
     }
   },
+  "books": {
+    "ages": {
+      "copii": "Children",
+      "adolescenti": "Teens",
+      "adulti": "Adults"
+    },
+    "ageLine": {
+      "copii": "Illustrated stories to read aloud.",
+      "adolescenti": "The first titles are in the works.",
+      "adulti": "The first titles are in the works."
+    },
+    "status": {
+      "published": "Out now",
+      "soon": "Coming soon",
+      "writing": "In the works"
+    },
+    "where": "Where to find the books",
+    "planned": "Planned",
+    "back": "All books",
+    "labels": {
+      "age": "Age",
+      "year": "Year",
+      "pages": "Pages",
+      "format": "Format",
+      "isbn": "ISBN"
+    },
+    "placeholderBlurb": "The story is taking shape in the studio. This is where you'll read what the book is about, who it's for and which feelings it touches, as soon as it's ready.",
+    "ageRange": {
+      "copii": "1–10 years",
+      "adolescenti": "12–16 years",
+      "adulti": "Adults"
+    },
+    "moreBooks": "More books",
+    "leaf": "Leaf through",
+    "leafHint": "Tap a page to see it large.",
+    "leafNote": "Pages from the book, coming soon.",
+    "prev": "Previous page",
+    "next": "Next page",
+    "universe": "The book's universe",
+    "series": "From the same series"
+  },
   "footer": {
     "placeholders": "All illustrations and texts are protected by copyright. Some images and details are placeholders."
   },

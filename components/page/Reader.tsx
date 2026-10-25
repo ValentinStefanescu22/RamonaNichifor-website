@@ -176,12 +176,14 @@ function Panel({ r, index, pages, title, frame, labels }: { r: ReaderState; inde
         </button>
       </m.div>
 
-      <div className="relative flex min-h-0 w-full max-w-5xl flex-1 items-center justify-center">
+      {/* The frame takes the largest size of the picture's own proportions that fits this box (width, height, 78% of the screen):
+          with both a height and a max-width the frame would squeeze to a narrower ratio on a phone and letterbox the picture. */}
+      <div className="relative flex min-h-0 w-full max-w-5xl flex-1 items-center justify-center" style={{ containerType: "size" }}>
         <m.div
           layoutId={layoutId}
           transition={layoutId ? r.layoutTransition : fade.transition}
-          className={`shadow-book relative h-full max-h-[min(78svh,1300px)] max-w-full overflow-hidden bg-paper-mat ${frame}`}
-          style={{ aspectRatio: ratioOf(page) }}
+          className={`shadow-book relative overflow-hidden bg-paper-mat ${frame}`}
+          style={{ aspectRatio: ratioOf(page), width: `min(100cqw, calc(min(100cqh, 78svh, 1300px) * ${page.width / page.height}))` }}
           drag={reduce ? false : "x"}
           dragSnapToOrigin
           dragElastic={0.35}

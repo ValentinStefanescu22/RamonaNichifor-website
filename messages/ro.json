@@ -71,6 +71,47 @@
       "next": "Semnul următor"
     }
   },
+  "books": {
+    "ages": {
+      "copii": "Copii",
+      "adolescenti": "Adolescenți",
+      "adulti": "Adulți"
+    },
+    "ageLine": {
+      "copii": "Povești ilustrate, de citit cu voce tare.",
+      "adolescenti": "Primele titluri sunt în lucru.",
+      "adulti": "Primele titluri sunt în lucru."
+    },
+    "status": {
+      "published": "Apărută",
+      "soon": "În curând",
+      "writing": "În lucru"
+    },
+    "where": "Unde găsești cărțile",
+    "planned": "Planificat",
+    "back": "Toate cărțile",
+    "labels": {
+      "age": "Vârstă",
+      "year": "Anul",
+      "pages": "Pagini",
+      "format": "Format",
+      "isbn": "ISBN"
+    },
+    "placeholderBlurb": "Povestea prinde contur în atelier. Aici vei găsi despre ce este cartea, pentru cine și ce emoții atinge, imediat ce e gata.",
+    "ageRange": {
+      "copii": "1–10 ani",
+      "adolescenti": "12–16 ani",
+      "adulti": "Adulți"
+    },
+    "moreBooks": "Mai multe cărți",
+    "leaf": "Răsfoiește",
+    "leafHint": "Atinge o pagină ca s-o vezi mare.",
+    "leafNote": "Pagini din carte, în curând.",
+    "prev": "Pagina anterioară",
+    "next": "Pagina următoare",
+    "universe": "Universul cărții",
+    "series": "Din aceeași serie"
+  },
   "footer": {
     "placeholders": "Toate ilustrațiile și textele sunt protejate de drepturi de autor. Unele imagini și detalii sunt provizorii."
   },

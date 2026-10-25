@@ -295,3 +295,9 @@ html:active-view-transition-type(morph)::view-transition-new(root) { animation-d
   /* the * , ::before, ::after rule does not reach view-transition pseudos: the morph and the language fade switch instantly */
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
+
+/* A list that has just been chosen (Cărți age groups): fades up, short */
+@keyframes tab-in {
+  from { opacity: 0; transform: translateY(12px); }
+}
+.tab-in { animation: tab-in 0.35s var(--ease-bloom) both; }
