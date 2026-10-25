@@ -78,7 +78,7 @@ export default async function Page({ params }: Props) {
   ];
 
   return (
-    <main className="sky-tint relative isolate overflow-hidden" style={{ "--tint": u.tint[0] } as CSSProperties}>
+    <main className="sky-tint relative isolate overflow-clip" style={{ "--tint": u.tint[0] } as CSSProperties}>
       {ld.map((data, i) => (
         <JsonLd key={i} data={data} />
       ))}

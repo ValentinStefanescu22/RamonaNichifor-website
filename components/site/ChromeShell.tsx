@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import type { SiteSettings } from "@/content/types";
 import { usePathname } from "@/i18n/navigation";
 import { pageOf, type PageId } from "@/lib/menu";
@@ -33,6 +33,15 @@ export function ChromeShell({
   children: ReactNode;
 }) {
   const pathname = usePathname();
+
+  // Entrances (the Universuri orbs painting in) belong to the first document load only. After a client navigation the
+  // page is already there, and the morph's new snapshot must not fly into an orb still at opacity 0 (globals.css).
+  // A layout effect: it runs in the commit, before the view transition captures the new page.
+  const firstPath = useRef(true);
+  useLayoutEffect(() => {
+    if (firstPath.current) firstPath.current = false;
+    else document.documentElement.dataset.clientNav = "";
+  }, [pathname]);
   const page = current ?? pageOf(pathname);
   const [menuOpen, setMenuOpen] = useState(false);
   const opener = useRef<HTMLElement | null>(null);

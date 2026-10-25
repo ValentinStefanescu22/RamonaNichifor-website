@@ -38,15 +38,26 @@ test.describe("/universuri", () => {
     expect(hrefs).toEqual(["/en/universes/butterfly", "/en/universes/ladybird", "/en/universes/mosquito", "/en/universes/fly"]);
   });
 
-  test("phone: all four worlds fit on the first screen", async ({ page }, info) => {
+  test("phone: all four worlds fit on the first screen, names and badges included", async ({ page }, info) => {
     test.skip(!isPhone(info.project.name), "phone only");
-    await page.emulateMedia({ reducedMotion: "reduce" }); // no entrance or drift: the orbs at rest
-    await page.goto("/universuri");
-    const vh = page.viewportSize()!.height;
-    const orbs = page.locator("main [data-orb]");
-    await expect(orbs).toHaveCount(4);
-    for (const box of await orbs.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON() as DOMRect)))
-      expect(box.y + box.height).toBeLessThanOrEqual(vh);
+    await page.emulateMedia({ reducedMotion: "reduce" }); // no drift: the worlds at rest
+    for (const path of ["/universuri", "/en/universes"]) {
+      await page.goto(path);
+      // measure once nothing runs any more (no entrance holding an orb at its start frame)
+      await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== "running"));
+      const vh = page.viewportSize()!.height;
+      const worlds = await orbLinks(page).evaluateAll((els) =>
+        els.map((a) => {
+          const orb = a.querySelector("[data-orb]")!.getBoundingClientRect();
+          return { orb: orb.height, bottom: Math.max(...[...a.children].map((c) => c.getBoundingClientRect().bottom)) };
+        }),
+      );
+      expect(worlds).toHaveLength(4);
+      for (const w of worlds) {
+        expect(w.orb).toBeGreaterThan(80); // full size, not caught mid-entrance
+        expect(w.bottom, path).toBeLessThanOrEqual(vh - 10); // 10px: the drift's ±10px when motion is allowed
+      }
+    }
   });
 
   test("laptop: the world under the mouse grows, the others step back", async ({ page }, info) => {
@@ -71,6 +82,20 @@ test.describe("/universuri", () => {
     const b = await canvas.evaluate((c: HTMLCanvasElement) => c.toDataURL());
     expect(a.length).toBeGreaterThan(1000); // something is drawn
     expect(a === b).toBe(true);
+  });
+
+  test("the pollen stays with the visitor while a universe page scrolls", async ({ page }) => {
+    await page.goto("/universuri/fluturele");
+    // far down the page (the other universes, near its end): the canvas, sticky inside the page, is still on screen
+    await page.getByRole("navigation", { name: "Alte universuri" }).evaluate((el) => el.scrollIntoView({ block: "end", behavior: "instant" }));
+    await page.waitForTimeout(200);
+    const y = await page.evaluate(() => scrollY);
+    const vh = page.viewportSize()!.height;
+    expect(y).toBeGreaterThan(vh / 2); // far enough that a canvas scrolling with the page would be mostly gone
+    const box = await page.locator("canvas[data-pollen]").evaluate((c) => c.getBoundingClientRect().toJSON() as DOMRect);
+    expect(box.bottom).toBeGreaterThan(vh / 2);
+    expect(box.top).toBeLessThan(vh / 2);
+    expect(await hasSideScroll(page)).toBe(false);
   });
 
   test("the pollen moves when motion is allowed", async ({ page }) => {
@@ -205,7 +230,9 @@ test.describe("/universuri/[slug]/[product]", () => {
 
     await expect(page.getByText("Preț în curând")).toBeVisible();
     await expect(page.locator("main").getByRole("link", { name: /^Anunță-mă/ })).toHaveAttribute("href", /instagram\.com/);
-    await expect(page.locator("main").getByRole("button", { name: /cumpără|comandă|adaugă în coș/i })).toHaveCount(0);
+    // the buy control would be a link (PillLink): neither a link nor a button may offer to buy
+    await expect(page.locator("main").getByRole("link", { name: /cumpără|comandă|buy/i })).toHaveCount(0);
+    await expect(page.locator("main").getByRole("button", { name: /cumpără|comandă|buy/i })).toHaveCount(0);
   });
 
   test("a card opens the reader; Escape closes it", async ({ page }) => {

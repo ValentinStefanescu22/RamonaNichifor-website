@@ -8,16 +8,19 @@ import { MorphOrb, OrbArt, type OrbUniverse } from "./OrbArt";
 export type MapWorld = OrbUniverse & Pick<Universe, "slug" | "name">;
 
 // The map is pure CSS, so the server sends it laid out (every world a real link, no JS needed): positions are fractions of
-// the map's width (cqw), so they scale with it. Phones: four worlds in a zig-zag, same-side worlds a label stack (LABEL) apart,
-// so all four fit on the first screen of a 393×659 iPhone. Laptops (≥1024): the mockup's spots (map 1.05 × width).
-const LABEL = 92; // px: the name pill (two lines of Fraunces) and the status badge under an orb, plus air
+// the map's width (cqw), so they scale with it. Phones: orbs 25% of the width in a gentle zig-zag, same-side worlds one label
+// stack plus air apart, so all four worlds, labels and badges included, end inside the first screen of a 393×659 iPhone
+// (tests/universes.spec.ts). Laptops (≥1024): the mockup's spots (map 1.05 × width, orbs 26%).
+const STACK = 80; // px under an orb: the name pill (two lines of Fraunces) and the status badge
+const AIR = 12; // px between a badge and the orb below it on the same side
 type Spot = { x: number; top: string };
 const PHONE: Spot[] = [
-  { x: 0.7, top: "0cqw" },
-  { x: 0.28, top: "20cqw" },
-  { x: 0.7, top: `calc(30cqw + ${LABEL}px)` },
-  { x: 0.28, top: `calc(50cqw + ${LABEL}px)` },
+  { x: 0.72, top: "0cqw" },
+  { x: 0.28, top: "8cqw" },
+  { x: 0.72, top: `calc(25cqw + ${STACK + AIR}px)` },
+  { x: 0.28, top: `calc(33cqw + ${STACK + AIR}px)` },
 ];
+const PHONE_HEIGHT = `calc(58cqw + ${2 * STACK + AIR}px)`;
 const WIDE: Spot[] = [0.18, 0.3, 0.64, 0.78].map((y, i) => ({ x: [0.3, 0.76, 0.3, 0.74][i], top: `${(y * 105 - 13).toFixed(1)}cqw` }));
 
 // Each world drifts on its own slow Lissajous loop (x, y and a slight tilt); the periods never fall into step (DESIGN.md Orb drift)
@@ -101,13 +104,13 @@ export function WorldMap({ worlds }: { worlds: MapWorld[] }) {
 
   return (
     <div className="@container w-full">
-      <ul className="relative h-(--map-h) w-full lg:h-[105cqw]" style={{ "--map-h": `calc(80cqw + ${2 * LABEL}px)` } as CSSProperties}>
+      <ul className="relative h-(--map-h) w-full lg:h-[105cqw]" style={{ "--map-h": PHONE_HEIGHT } as CSSProperties}>
         {worlds.map((w, i) => {
           const live = w.status === "available";
           return (
             <li
               key={w.id}
-              className="absolute top-(--top) left-(--x) w-[max(var(--orb),144px)] -translate-x-1/2 [--orb:30cqw] lg:top-(--top-wide) lg:left-(--x-wide) lg:[--orb:26cqw]"
+              className="absolute top-(--top) left-(--x) w-[max(var(--orb),144px)] -translate-x-1/2 [--orb:25cqw] lg:top-(--top-wide) lg:left-(--x-wide) lg:[--orb:26cqw]"
               style={
                 {
                   "--x": `${PHONE[i % 4].x * 100}cqw`,

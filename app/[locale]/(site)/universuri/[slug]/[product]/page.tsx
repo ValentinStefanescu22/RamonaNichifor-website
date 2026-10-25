@@ -16,6 +16,7 @@ import { DeckSections, Fan } from "@/components/product/Deck";
 import { byNumber, pickNumbered } from "@/components/product/images";
 import { ArrowRight, ArrowUpRight, Instagram } from "@/components/ui/icons";
 import { PillLink, TextLink } from "@/components/ui/links";
+import { BuySoon } from "@/components/ui/BuySoon";
 import { StatusChip } from "@/components/ui/StatusChip";
 import { UniverseItems } from "@/components/universe/UniverseItems";
 
@@ -134,18 +135,26 @@ export default async function Page({ params }: Props) {
                   ))}
                 </dl>
               )}
-              <div className="fade-up mt-8 flex flex-wrap items-center gap-x-6 gap-y-3" style={{ "--d": "0.5s" } as CSSProperties}>
-                {/* nothing can be bought yet: „Anunță-mă” (Instagram, for now) instead of a buy button */}
-                {!soon && p.externalLink ? (
-                  <PillLink href={p.externalLink} external icon={<ArrowUpRight size={18} />}>
-                    {t("product.buy")}
-                  </PillLink>
+              <div className="fade-up mt-8" style={{ "--d": "0.5s" } as CSSProperties}>
+                {soon ? (
+                  // nothing to buy yet: „Anunță-mă” (Instagram, for now) instead of a buy button
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <PillLink href={site.contacts.instagram.href} external icon={<Instagram size={18} />}>
+                      {t("universes.notifyMe")}
+                    </PillLink>
+                    <TextLink href="/contact">{t("ui.writeToMe")}</TextLink>
+                  </div>
+                ) : p.externalLink ? (
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <PillLink href={p.externalLink} external icon={<ArrowUpRight size={18} />}>
+                      {t("product.buy")}
+                    </PillLink>
+                    <TextLink href="/contact">{t("ui.writeToMe")}</TextLink>
+                  </div>
                 ) : (
-                  <PillLink href={site.contacts.instagram.href} external icon={<Instagram size={18} />}>
-                    {t("universes.notifyMe")}
-                  </PillLink>
+                  // available but no shop link yet: say so plainly, like a book that is out
+                  <BuySoon />
                 )}
-                <TextLink href="/contact">{t("ui.writeToMe")}</TextLink>
               </div>
             </div>
           </div>

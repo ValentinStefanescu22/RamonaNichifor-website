@@ -25,7 +25,7 @@ export default async function Page({ params }: Props) {
   setRequestLocale(locale);
   const [t, site, worlds] = await Promise.all([getTranslations(), getSiteSettings(locale), getWorlds(locale)]);
   return (
-    <main className="sky-day relative isolate overflow-hidden">
+    <main className="sky-day relative isolate overflow-clip">
       <JsonLd data={breadcrumbLd(locale, [{ name: t("nav.universes"), path: "/universuri" }])} />
       <Pollen colors={["#b8468a", "#7a5fb0"]} strength={0.5} />
       <img
@@ -45,18 +45,19 @@ export default async function Page({ params }: Props) {
         style={wash("ellipse 58% 44% at 68% 52%")}
       />
       {/* phones pick the world nearest mid-screen, so the page leaves room for the last world to reach the middle */}
-      <div className="mx-auto grid max-w-[75rem] gap-6 px-4 pt-28 pb-[45svh] sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:pt-36 lg:pb-24">
+      {/* a compact intro on phones (pt-24, gap-3), so the four worlds fit on the first screen */}
+      <div className="mx-auto grid max-w-[75rem] gap-3 px-4 pt-24 pb-[45svh] sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-6 lg:pt-36 lg:pb-24">
         <div className="lg:sticky lg:top-16 lg:self-start lg:pt-10">
           <h1 className="fade-up display text-[clamp(3rem,13vw,6rem)] font-[380] text-ink" style={d(0.1)}>
             {t("nav.universes")}
           </h1>
-          <p className="fade-up display mt-3 text-[1.35rem] text-violet italic" style={d(0.2)}>
+          <p className="fade-up display mt-2 text-[1.35rem] text-violet italic lg:mt-3" style={d(0.2)}>
             „{site.series}”
           </p>
           <p className="fade-up mt-2 max-w-[36ch] text-[1.05rem] text-ink-soft" style={d(0.3)}>
             {t("universes.lead")}
           </p>
-          <p className="fade-up mt-4 flex items-center gap-2 text-[0.95rem] font-bold text-magenta" style={d(0.4)}>
+          <p className="fade-up mt-3 flex items-center gap-2 text-[0.95rem] font-bold text-magenta lg:mt-4" style={d(0.4)}>
             <span className="size-2 animate-pulse rounded-full bg-magenta" aria-hidden="true" />
             {t("universes.tap")}
           </p>
