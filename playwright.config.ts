@@ -18,7 +18,19 @@ export default defineConfig({
   use: { baseURL, trace: "retain-on-failure" },
   webServer: process.env.BASE_URL
     ? undefined
-    : { command: `npm run build && npx next start -p ${port}`, url: baseURL, reuseExistingServer: true, timeout: 240_000 },
+    : {
+        command: `npm run build && npx next start -p ${port}`,
+        url: baseURL,
+        reuseExistingServer: true,
+        timeout: 240_000,
+        // the contact form: mails land in reports/mail/ (never Resend), and Turnstile's published test keys always pass.
+        // NEXT_PUBLIC_* is inlined at build time, so this reaches `npm run build` too; process env beats .env.local
+        env: {
+          CONTACT_TRANSPORT: "log",
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA",
+          TURNSTILE_SECRET_KEY: "1x0000000000000000000000000000000AA",
+        },
+      },
   projects: [
     ...[
       // phone = Ramona's visitors: iPhone 15 (393px) in WebKit

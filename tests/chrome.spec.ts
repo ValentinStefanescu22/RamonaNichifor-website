@@ -136,10 +136,3 @@ test("404 is localized", async ({ page, errors }) => {
   expect((await page.goto("/universuri/fluturele/nu-exista"))?.status()).toBe(404);
   allow404(errors);
 });
-
-test("stub pages are noindex and say „În curând”", async ({ page }) => {
-  await page.goto("/contact");
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
-  await expect(page.locator("main")).toContainText("În curând");
-  await expect(page.locator("main")).toContainText("Pagina aceasta se pregătește.");
-});

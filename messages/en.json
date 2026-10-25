@@ -117,9 +117,6 @@
   "footer": {
     "placeholders": "All illustrations and texts are protected by copyright. Some images and details are placeholders."
   },
-  "stub": {
-    "line": "This page is on its way."
-  },
   "notFound": {
     "title": "This page wandered off,",
     "italic": "like the Fly",
@@ -202,5 +199,49 @@
       "in-desfasurare": "Under way",
       "incheiat": "Finished"
     }
+  },
+  "contact": {
+    "formTitle": "Send a message",
+    "fields": {
+      "name": "Your name",
+      "email": "Email address",
+      "subject": "What would you like to talk about?",
+      "message": "Your message",
+      "messageHint": "A few lines are plenty.",
+      "consent": "I am at least 16 and agree that Ramona may use <link>these details</link> only to reply to me."
+    },
+    "subjects": {
+      "carte": "A book",
+      "arta": "Art",
+      "consiliere": "Counselling",
+      "comunitate": "Community",
+      "altceva": "Something else"
+    },
+    "errors": {
+      "name": "Tell me your name.",
+      "email": "That email looks incomplete. Check it has an @ and a domain.",
+      "subject": "Choose what you would like to talk about.",
+      "message": "Write a few words so I know how to help.",
+      "consent": "Tick the confirmation so I can reply.",
+      "summary": "A few fields still need attention."
+    },
+    "send": "Send message",
+    "sending": "Sending…",
+    "success": {
+      "title": "Thank you!",
+      "body": "Your message has reached me. I will reply by email.",
+      "again": "Write another message"
+    },
+    "failed": "The message did not go out. Your text is still here: try again in a few minutes or write to me by email.",
+    "limited": "You have already sent a few messages. Try again in 10 minutes or write to me by email.",
+    "noscript": "The form needs JavaScript. You can write to me by email or on WhatsApp.",
+    "aboutArtwork": "Hello Ramona! I would like to know more about the piece “{title}”.",
+    "otherWays": "Or find me here",
+    "description": "Write to Ramona Nichifor about a book, a piece of art, a counselling session or a gathering."
+  },
+  "legal": {
+    "lastUpdated": "Last updated: {date}",
+    "privacyDescription": "How Ramona Nichifor uses the details you send her through the site.",
+    "termsDescription": "The terms of use of Ramona Nichifor's site."
   }
 }

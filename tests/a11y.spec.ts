@@ -14,7 +14,8 @@ for (const { path, name, pending } of PAGES) {
       test.skip(true, "page not built yet (tests/pages.ts)");
     }
     expect(res?.status()).toBe(200);
-    await page.waitForLoadState("networkidle");
+    // Turnstile (/contact) keeps a connection open, so the network never idles there
+    await page.waitForLoadState("networkidle", { timeout: 5_000 }).catch(() => {});
     const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
     const bad = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
     expect(

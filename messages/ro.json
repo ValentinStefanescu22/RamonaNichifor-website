@@ -117,9 +117,6 @@
   "footer": {
     "placeholders": "Toate ilustrațiile și textele sunt protejate de drepturi de autor. Unele imagini și detalii sunt provizorii."
   },
-  "stub": {
-    "line": "Pagina aceasta se pregătește."
-  },
   "notFound": {
     "title": "Pagina asta s-a rătăcit,",
     "italic": "ca Musca",
@@ -202,5 +199,49 @@
       "in-desfasurare": "În desfășurare",
       "incheiat": "Încheiat"
     }
+  },
+  "contact": {
+    "formTitle": "Trimite un mesaj",
+    "fields": {
+      "name": "Numele tău",
+      "email": "Adresa de email",
+      "subject": "Despre ce vrei să vorbim?",
+      "message": "Mesajul tău",
+      "messageHint": "Câteva rânduri sunt de ajuns.",
+      "consent": "Am cel puțin 16 ani și sunt de acord ca Ramona să folosească <link>aceste date</link> doar pentru a-mi răspunde."
+    },
+    "subjects": {
+      "carte": "O carte",
+      "arta": "Artă",
+      "consiliere": "Consiliere",
+      "comunitate": "Comunitate",
+      "altceva": "Altceva"
+    },
+    "errors": {
+      "name": "Scrie-mi cum te numești.",
+      "email": "Adresa de email pare incompletă. Verifică dacă are @ și un domeniu.",
+      "subject": "Alege despre ce vrei să vorbim.",
+      "message": "Scrie câteva cuvinte, ca să știu cum te pot ajuta.",
+      "consent": "Bifează confirmarea, ca să-ți pot răspunde.",
+      "summary": "Mai sunt câteva câmpuri de completat."
+    },
+    "send": "Trimite mesajul",
+    "sending": "Se trimite…",
+    "success": {
+      "title": "Mulțumesc!",
+      "body": "Mesajul tău a ajuns la mine. Îți răspund pe email.",
+      "again": "Scrie alt mesaj"
+    },
+    "failed": "Mesajul nu a plecat. Textul tău e încă aici: mai încearcă o dată peste câteva minute sau scrie-mi direct pe email.",
+    "limited": "Ai trimis deja câteva mesaje. Mai încearcă peste 10 minute sau scrie-mi direct pe email.",
+    "noscript": "Formularul are nevoie de JavaScript. Îmi poți scrie direct pe email sau pe WhatsApp.",
+    "aboutArtwork": "Bună, Ramona! Aș vrea să aflu mai multe despre lucrarea „{title}”.",
+    "otherWays": "Sau găsește-mă aici",
+    "description": "Scrie-i Ramonei Nichifor despre o carte, o lucrare, o ședință de consiliere sau o întâlnire."
+  },
+  "legal": {
+    "lastUpdated": "Ultima actualizare: {date}",
+    "privacyDescription": "Cum folosește Ramona Nichifor datele pe care i le trimiți prin site.",
+    "termsDescription": "Termenii de folosire a site-ului Ramonei Nichifor."
   }
 }

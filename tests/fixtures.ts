@@ -2,9 +2,11 @@ import { test as base, expect } from "@playwright/test";
 
 // WebKit reports a Next.js prefetch (?_rsc=) that the next navigation cancels as an error; it is not one.
 // Chromium logs a cross-document view transition (globals.css) that a new navigation interrupts; the page is fine.
+// Turnstile's own iframe (on /contact) logs its internal blob and preload noise; a broken Turnstile fails the contact send test.
 const benignBrowserLog = (text: string) =>
   (text.includes("_rsc=") && text.includes("due to access control checks")) ||
-  text.startsWith("Transition was aborted because of invalid state");
+  text.startsWith("Transition was aborted because of invalid state") ||
+  text.includes("challenges.cloudflare.com");
 
 /** Every test fails on a console error or an uncaught page error. */
 export const test = base.extend<{ errors: string[] }>({
@@ -13,8 +15,9 @@ export const test = base.extend<{ errors: string[] }>({
       const errors: string[] = [];
       page.on("console", (m) => {
         if (m.type() !== "error") return;
-        if (benignBrowserLog(m.text())) return;
-        errors.push(`${m.text()} (${m.location().url})`);
+        const line = `${m.text()} (${m.location().url})`;
+        if (benignBrowserLog(line)) return;
+        errors.push(line);
       });
       page.on("pageerror", (e) => !benignBrowserLog(e.message) && errors.push(e.message));
       await use(errors);

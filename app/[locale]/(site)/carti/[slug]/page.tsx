@@ -145,7 +145,7 @@ export default async function Page({ params }: Props) {
                     <PillLink href={site.contacts.instagram.href} external icon={<Instagram size={18} />}>
                       {t("universes.notifyMe")}
                     </PillLink>
-                    <TextLink href={{ pathname: "/contact", hash: "carte" }}>{t("ui.writeToMe")}</TextLink>
+                    <TextLink href={{ pathname: "/contact", query: { subiect: "carte" } }}>{t("ui.writeToMe")}</TextLink>
                   </div>
                 ) : stores.length ? (
                   <div className="flex flex-wrap gap-3">

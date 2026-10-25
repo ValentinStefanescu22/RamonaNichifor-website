@@ -403,3 +403,27 @@ html:active-view-transition-type(morph)::view-transition-new(root) { animation-d
     }
   }
 }
+
+/* Contact form fields (mockups/src/site/site.css) */
+.field {
+  width: 100%;
+  min-height: 3rem;
+  border-radius: 1rem;
+  background: rgb(255 255 255 / 0.72);
+  box-shadow: inset 0 0 0 1px rgb(52 34 74 / 0.14);
+  padding: 0.7rem 1rem;
+  font: inherit;
+  font-size: 1.0625rem;
+  color: var(--color-ink);
+  transition: box-shadow 0.2s ease;
+}
+.field::placeholder {
+  color: rgb(94 74 117 / 0.6);
+}
+.field:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color-magenta);
+}
+.field[aria-invalid="true"] {
+  box-shadow: inset 0 0 0 2px #b4374f;
+}

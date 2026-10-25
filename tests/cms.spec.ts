@@ -407,3 +407,31 @@ test("an event given a date shows it with a sign-up link and Event JSON-LD, and 
   await expect(rows().getByRole("heading", { level: 3 })).toHaveText(["Ateliere de pictură", "Lansări de carte", "Sesiuni de autografe", "Ateliere de citit"]);
   expect((await ld()).filter((d) => d["@type"] === "Event")).toHaveLength(0);
 });
+
+// Confidențialitate: the date Ramona last changed the text shows under the title, per language, and goes away when cleared
+test("a legal page given a „last updated” date shows it, formatted per language", async ({ page, request }) => {
+  const doc = (await (await request.get("/api/legal-pages?locale=ro&depth=0&where[kind][equals]=privacy", { headers: auth })).json()).docs[0];
+  const save = async (lastUpdated: string | null) => {
+    const res = await request.patch(`/api/legal-pages/${doc.id}?locale=ro`, { headers: auth, data: { lastUpdated, _status: "published" } });
+    expect(res.ok(), "save legal page").toBeTruthy();
+  };
+  try {
+    await save("2026-10-20T09:00:00.000Z");
+    await expect(async () => {
+      await page.goto("/confidentialitate");
+      await expect(page.locator("main time")).toHaveText("Ultima actualizare: 20 octombrie 2026", { timeout: 1000 });
+    }).toPass(FRESH);
+    await expect(page.locator("main time")).toHaveAttribute("datetime", "2026-10-20T09:00:00.000Z");
+    await expect(page.locator("main")).toContainText("Text în lucru, de aprobat de Ramona.");
+    await expect(async () => {
+      await page.goto("/en/privacy");
+      await expect(page.locator("main time")).toHaveText("Last updated: 20 October 2026", { timeout: 1000 });
+    }).toPass(FRESH);
+  } finally {
+    await save(doc.lastUpdated ?? null);
+  }
+  await expect(async () => {
+    await page.goto("/confidentialitate");
+    await expect(page.locator("main time")).toHaveCount(0, { timeout: 1000 });
+  }).toPass(FRESH);
+});

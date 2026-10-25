@@ -35,7 +35,7 @@ export default async function NotFound() {
                   <span className="rise block" style={d(0.1)}>
                     {t("title")}
                   </span>
-                </span>
+                </span>{" "}
                 <span className="block overflow-hidden pb-[0.12em] pl-[0.6em] sm:pl-[0.9em]">
                   <span className="rise display-wonk block italic text-violet" style={d(0.22)}>
                     {t("italic")}

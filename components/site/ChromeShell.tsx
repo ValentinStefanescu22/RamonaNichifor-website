@@ -11,7 +11,7 @@ import { OpenAtTop } from "./OpenAtTop";
 import { TopBar } from "./TopBar";
 
 // The light above the footer meadow equals the colour each page ends on (DESIGN.md Footer); M3 pages may change theirs.
-const groundOf: Partial<Record<PageId, Ground>> = { universuri: "sky", consiliere: "sage", arta: "mist", contact: "mist" };
+const groundOf: Partial<Record<PageId, Ground>> = { universuri: "sky", consiliere: "sage", arta: "mist" };
 
 /**
  * Every page: the header over the page's own ground, the floating bar and the menu sheet,
