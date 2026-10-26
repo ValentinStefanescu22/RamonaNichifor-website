@@ -66,7 +66,17 @@ export function Footer({
             ))}
           </nav>
         </div>
-        <p className="relative z-10 mt-10 pb-3 text-[0.85rem] text-ink-soft">© 2026 Ramona Nichifor · {t("footer.placeholders")}</p>
+        <div className="relative z-10 mt-10 flex flex-wrap gap-x-6 pb-3 text-[0.85rem] text-ink-soft">
+          <p>© 2026 Ramona Nichifor · {t("footer.placeholders")}</p>
+          {/* inline in the © line (24px targets, WCAG 2.2 AA) so the footer keeps its height */}
+          <nav aria-label={t("nav.legal")} className="flex gap-x-5">
+            {([["/confidentialitate", "nav.privacy"], ["/termeni", "nav.terms"]] as const).map(([href, label]) => (
+              <Link key={href} href={href} className="inline-flex min-h-6 items-center underline decoration-lilac decoration-1 underline-offset-4 hover:text-ink">
+                {t(label)}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
       <img
         loading="lazy"

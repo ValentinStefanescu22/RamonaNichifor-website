@@ -7,7 +7,7 @@ const isPhone = (name: string) => name === "phone";
 test("menu order", async ({ page }, info) => {
   for (const [path, labels] of [["/", RO], ["/en", EN]] as const) {
     await page.goto(path);
-    expect(await page.locator("footer nav a").allInnerTexts()).toEqual(labels);
+    expect(await page.locator("footer nav").first().locator("a").allInnerTexts()).toEqual(labels);
     if (isPhone(info.project.name)) {
       await page.locator("header [data-menu-button]").click();
       await expect(page.getByRole("dialog")).toBeVisible();
@@ -135,4 +135,17 @@ test("404 is localized", async ({ page, errors }) => {
   // the RO slug under /en is not a 404: it redirects to the English slug (Ruling 6, tests/universes.spec.ts)
   expect((await page.goto("/universuri/fluturele/nu-exista"))?.status()).toBe(404);
   allow404(errors);
+});
+
+test("the footer links the legal pages in both languages (spec §5.10)", async ({ page }) => {
+  for (const [path, links] of [
+    ["/", [["Confidențialitate", "/confidentialitate"], ["Termeni", "/termeni"]]],
+    ["/en/books", [["Privacy", "/en/privacy"], ["Terms", "/en/terms"]]],
+  ] as const) {
+    await page.goto(path);
+    const legal = page.locator("footer nav").nth(1);
+    for (const [name, href] of links) await expect(legal.getByRole("link", { name })).toHaveAttribute("href", href);
+  }
+  await page.locator("footer").getByRole("link", { name: "Terms" }).click();
+  await expect(page.locator("h1")).toContainText("Terms");
 });
