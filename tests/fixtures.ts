@@ -7,7 +7,12 @@ const benignBrowserLog = (text: string) =>
   text.startsWith("Transition was aborted because of invalid state");
 // Turnstile's own iframe (on /contact) logs its internal blob noise; only messages located in that frame are dropped
 // (our page refusing its script would be located on our page). A broken Turnstile fails the contact send test.
-const turnstileFrame = (url: string) => /^(blob:)?https:\/\/challenges\.cloudflare\.com\//.test(url);
+const turnstileFrame = (url: string) => /^(blob:)?https:\/\/([a-z0-9-]+\.)?challenges\.cloudflare\.com\//.test(url);
+// With a real sitekey (the preview), WebKit logs two more from that frame without a location: its script probing our
+// window, and its own CSP refusing a data: fetch (the site sends no CSP, so a data: refusal cannot be ours).
+const turnstileWebKit = (text: string, url: string) =>
+  text.includes('challenges.cloudflare.com" from accessing a frame with origin') ||
+  (url === "" && text.startsWith("Refused to connect to data:"));
 
 /** Every test fails on a console error or an uncaught page error. */
 export const test = base.extend<{ errors: string[] }>({
@@ -16,10 +21,11 @@ export const test = base.extend<{ errors: string[] }>({
       const errors: string[] = [];
       page.on("console", (m) => {
         if (m.type() !== "error") return;
-        if (benignBrowserLog(m.text()) || turnstileFrame(m.location().url)) return;
+        if (benignBrowserLog(m.text()) || turnstileFrame(m.location().url) || turnstileWebKit(m.text(), m.location().url)) return;
         errors.push(`${m.text()} (${m.location().url})`);
       });
-      page.on("pageerror", (e) => !benignBrowserLog(e.message) && errors.push(e.message));
+      // Turnstile's api.js (on our page) throws WebKit's cross-origin SecurityError while probing its frame: a page error, not a log
+      page.on("pageerror", (e) => !benignBrowserLog(e.message) && !turnstileWebKit(e.message, "-") && errors.push(e.message));
       await use(errors);
       expect(errors, "console / page errors").toEqual([]);
     },

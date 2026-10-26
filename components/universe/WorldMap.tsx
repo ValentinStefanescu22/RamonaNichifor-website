@@ -12,7 +12,9 @@ export type MapWorld = OrbUniverse & Pick<Universe, "slug" | "name">;
 // stack plus air apart, so all four worlds, labels and badges included, end inside the first screen of a 393×659 iPhone
 // (tests/universes.spec.ts). Laptops (≥1024): the mockup's spots (map 1.05 × width, orbs 26%).
 const STACK = 80; // px under an orb: the name pill (two lines of Fraunces) and the status badge
-const AIR = 12; // px between a badge and the orb below it on the same side
+// px between a badge and the orb below it on the same side: room for that orb's 1.22× touch focus, which grows ~18px upward
+// (origin 85%), while the fourth world's badge still ends inside the 659px first screen
+const AIR = 20;
 type Spot = { x: number; top: string };
 const PHONE: Spot[] = [
   { x: 0.72, top: "0cqw" },

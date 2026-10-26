@@ -140,7 +140,8 @@ test.describe("/contact", () => {
     await page.route("**/contact", (r) => (r.request().method() === "POST" ? r.abort() : r.continue()));
     await fill(page, "Textul meu, scris cu grijă.");
     await page.getByRole("button", { name: "Trimite mesajul" }).click();
-    await expect(page.locator('[data-status="failed"]')).toContainText("Mesajul nu a plecat.");
+    // a real sitekey (BASE_URL runs) gives an automated browser no token: the form gives up after its 10 s wait instead
+    await expect(page.locator('[data-status="failed"]')).toContainText("Mesajul nu a plecat.", { timeout: 15_000 });
     await expect(page.locator('[data-status="failed"]')).toContainText("scrie-mi direct pe email");
     await expect(page.getByLabel("Mesajul tău")).toHaveValue("Textul meu, scris cu grijă.");
     await expect(page.getByLabel("Numele tău")).toHaveValue("Ana Pop");
