@@ -62,7 +62,7 @@ test("counselling teaser", async ({ page }) => {
 test("EN copy", async ({ page }) => {
   await page.goto("/en");
   await expect(page.getByRole("heading", { level: 2, name: "About me" })).toBeVisible();
-  await expect(page.getByRole("heading", { level: 2, name: "The Tap-Dancing Butterfly" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "The Tap Dancer Butterfly" })).toBeVisible();
   await expect(page.locator("#arta").getByRole("link", { name: "See the whole gallery" })).toBeVisible();
   await expect(page.locator("#despre").getByRole("link", { name: "My story" })).toHaveAttribute("href", "/en/about");
   expect(await hasSideScroll(page)).toBe(false);

@@ -11,7 +11,7 @@ export const Artworks: CollectionConfig = {
   fields: [
     { name: "title", label: "Titlu", type: "text", localized: true, required: true },
     slugField("title"),
-    { name: "images", label: "Imagini (prima e principala)", type: "upload", relationTo: "media", hasMany: true, required: true, minRows: 1 },
+    { name: "images", label: "Imagini (prima e principala)", type: "upload", relationTo: "media", hasMany: true, required: true, minRows: 1, localized: true },
     {
       name: "kind",
       label: "Tip",

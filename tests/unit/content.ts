@@ -118,7 +118,7 @@ const checks: [string, () => Promise<void>][] = [
   ["slug pairs map every locale, products included", async () => {
     assert.ok((await c.getSlugPairs("products")).some((p) => p.ro === "semn-de-carte" && p.en === "bookmark"));
     assert.ok((await c.getSlugPairs("universes")).some((p) => p.ro === "fluturele" && p.en === "butterfly"));
-    assert.ok((await c.getSlugPairs("books")).some((p) => p.en === "the-tap-dancing-butterfly"));
+    assert.ok((await c.getSlugPairs("books")).some((p) => p.en === "the-tap-dancer-butterfly"));
     assert.ok((await c.getSlugPairs("artworks")).some((p) => p.ro === "poiana-fluturelui"));
     const paths = await c.getProductPaths();
     assert.equal(paths.length, 16);
@@ -242,7 +242,7 @@ const checks: [string, () => Promise<void>][] = [
     assert.equal(en("/universuri/fluturele#carti"), "/en/universes/butterfly");
     assert.equal(localizeDynamicPath("/universuri/fluturele#carti", "en", slugs)?.hash, "carti");
     assert.equal(en("/universuri/fluturele/semn-de-carte"), "/en/universes/butterfly/bookmark");
-    assert.equal(en("/carti/fluturele-dansator-de-step"), "/en/books/the-tap-dancing-butterfly");
+    assert.equal(en("/carti/fluturele-dansator-de-step"), "/en/books/the-tap-dancer-butterfly");
     assert.equal(getPathname({ locale: "ro", href: localizeDynamicPath("/arta/poiana-fluturelui", "ro", slugs) as never }), "/arta/poiana-fluturelui");
     assert.equal(en("/universuri/nu-exista"), null, "unknown slug: the caller keeps the path as written");
     assert.equal(en("/carti"), null, "a static page is the Link's own job");

@@ -31,6 +31,7 @@ export const Products: CollectionConfig = {
       type: "upload",
       relationTo: "media",
       hasMany: true,
+      localized: true,
       admin: {
         description:
           "Ordinea e liberă. Pentru cărțile de joc și semnele de carte, pagina alege imaginile după numărul din numele fișierului (fluturele-01 = cartea câștigătoare, 02–05 = cele două perechi arătate, 24 = cardul cu reguli): păstrați numele fișierelor de la tipografie.",

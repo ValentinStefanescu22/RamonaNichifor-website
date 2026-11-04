@@ -366,3 +366,29 @@ if BOOKMARKS.exists():
     rgb = np.where(core[..., None], px, 255 - (255 - px) / np.maximum(c2a, 1e-3)[..., None])
     cut = Image.fromarray(np.dstack([rgb.clip(0, 255), alpha * 255]).astype(np.uint8), "RGBA")
     save(cut.crop(cut.getbbox()), "butterfly-bookmark.webp", 90)
+
+
+# --- English editions (Ramona, 2026-10-27), rendered into assets-src/en/ like the Romanian ones:
+#   swift scripts/pdf-pages.swift "<COVER the STEP DANCER BUTTERFLY.pdf>" assets-src/en/fluturele-cop 1 2   (front, back)
+#   swift scripts/pdf-pages.swift "<pg 4,9,31 pt site engleza Fluturele.pdf>" assets-src/en/fluturele 1 2 3
+#   swift scripts/pdf-pages.swift "<coperta LADY BUG noua ENGLEZA.pdf>" assets-src/en/buburuza-cop 1
+#   swift scripts/pdf-pages.swift "<pg 3,9,26 Ladybug interior.pdf>" assets-src/en/buburuza 1 2 3
+#   swift scripts/pdf-pages.swift "<bookmarks MOTTO in engl Butterfly.pdf>" assets-src/en/bookmark $(seq 2 10)
+EN = SRC / "en"
+if EN.exists():
+    (OUT / "en").mkdir(exist_ok=True)
+    page = lambda f: Image.open(EN / f).convert("RGB")
+    save(stamp(tall(page("fluturele-cop-p1.png"), 1120)), "en/cover-fluturele-en.webp", 86)
+    save(stamp(tall(page("fluturele-cop-p2.png"), 1300)), "en/fluturele-en-coperta-spate.webp", 82)
+    for i, n in enumerate((4, 9, 31), 1):
+        save(stamp(tall(page(f"fluturele-p{i}.png"), 1300)), f"en/fluturele-en-p{n}.webp", 82)
+    # the wrap has no guide lines: the plain cream back ends where the painted front starts (x 1616 of 3029 at 2.4x),
+    # and the back's text is centred on its first 1413px, the front's width
+    wrap = page("buburuza-cop-p1.png")
+    save(stamp(tall(wrap.crop((1616, 0, wrap.width, wrap.height)), 1120)), "en/cover-buburuza-en.webp", 84)
+    save(stamp(tall(wrap.crop((0, 0, wrap.width - 1616, wrap.height)), 1300)), "en/buburuza-en-coperta-spate.webp", 82)
+    for i, n in enumerate((3, 9, 26), 1):
+        save(stamp(tall(page(f"buburuza-p{i}.png"), 1300)), f"en/buburuza-en-p{n}.webp", 82)
+    size = Image.open(EN / "bookmark-p3.png").size
+    for i, n in enumerate(range(2, 11), 1):
+        save(stamp(ImageOps.fit(page(f"bookmark-p{n}.png"), size, Image.LANCZOS)), f"en/fluture-en-{i:02d}.webp", 80)

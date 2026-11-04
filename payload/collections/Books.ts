@@ -39,7 +39,8 @@ export const Books: CollectionConfig = {
       ],
       admin: { position: "sidebar" },
     },
-    { name: "cover", label: "Coperta", type: "upload", relationTo: "media", required: true },
+    // per language: each edition has its own printed cover and pages (EN falls back to RO when left empty)
+    { name: "cover", label: "Coperta", type: "upload", relationTo: "media", required: true, localized: true },
     { name: "blurb", label: "Descriere", type: "richText", localized: true },
     {
       type: "row",
@@ -84,9 +85,10 @@ export const Books: CollectionConfig = {
       name: "leafPages",
       label: "Răsfoiește (coperta spate, apoi paginile alese)",
       type: "array",
+      localized: true,
       fields: [
         { name: "image", label: "Pagina", type: "upload", relationTo: "media", required: true },
-        { name: "label", label: "Etichetă", type: "text", localized: true },
+        { name: "label", label: "Etichetă", type: "text" },
       ],
     },
     seoField,

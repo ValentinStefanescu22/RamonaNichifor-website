@@ -1,6 +1,6 @@
 // Local stand-in for the Payload documents (M2 imports this through the seed script). Copy from
 // mockups/src/shared/content.ts, exactly as Ramona wrote it. Localized fields are { ro, en }.
-// English book titles and the slugs of the unreleased universes are working copy awaiting her approval.
+// English book and series titles are Ramona's, from her English editions (2026-10-27).
 import type { Locale } from "@/i18n/routing";
 
 type L = Record<Locale, string>;
@@ -10,13 +10,13 @@ export const site = {
   name: "Ramona Nichifor",
   roles: t("Autor · Ilustrator · Consilier pentru dezvoltare personală", "Author · Illustrator · Personal development counsellor"),
   rolesShort: t("Autor · Ilustrator · Consilier", "Author · Illustrator · Counsellor"),
-  series: t("Magia suntem noi", "The Magic Is Us"),
+  series: t("Magia suntem noi", "We Are the Magic"),
   seriesLead: t(
     "O serie de povești blânde despre acceptare, iubire, curiozitate și emoții adevărate.",
     "A series of gentle stories about acceptance, love, curiosity and honest feelings.",
   ),
   souls: t("Povești pentru suflete mici și mari", "Stories for young and grown-up souls"),
-  whisper: t("O poveste pentru copii… o șoaptă pentru adulți", "A story for children… a whisper for grown-ups"),
+  whisper: t("O poveste pentru copii… o șoaptă pentru adulți", "A story for children… and a whisper for adults"),
   intro: t(
     "Scriu povești, le pictez și însoțesc oameni în drumul spre ei înșiși.",
     "I write stories, paint them, and walk alongside people on their way back to themselves.",
@@ -66,7 +66,7 @@ export const universes = [
   {
     slug: t("fluturele", "butterfly"),
     name: t("Universul Fluturelui", "The Butterfly Universe"),
-    bookTitle: t("Fluturele dansator de step", "The Tap-Dancing Butterfly"),
+    bookTitle: t("Fluturele dansator de step", "The Tap Dancer Butterfly"),
     hook: t(
       "Un fluture care simte alt ritm decât ceilalți și învață să-și asculte vocea interioară.",
       "A butterfly who hears a different rhythm and learns to trust his inner voice.",
@@ -77,12 +77,12 @@ export const universes = [
     homeWindow: "meadow",
   },
   {
-    slug: t("buburuza", "ladybird"),
-    name: t("Universul Buburuzei", "The Ladybird Universe"),
-    bookTitle: t("Buburuza rotunjoară", "The Roly-Poly Ladybird"),
+    slug: t("buburuza", "ladybug"),
+    name: t("Universul Buburuzei", "The Ladybug Universe"),
+    bookTitle: t("Buburuza rotunjoară", "The Round Ladybug"),
     hook: t(
       "O buburuză rotunjoară care descoperă că adevărata magie izvorăște din iubirea și acceptarea de sine.",
-      "A roly-poly ladybird who discovers that real magic springs from love and self-acceptance.",
+      "A round little ladybug who discovers that true magic begins with self-acceptance.",
     ),
     status: "available",
     tint: ["#FBE1DA", "#EE9B8C", "#A8483C"],
@@ -93,7 +93,7 @@ export const universes = [
   {
     slug: t("tantarul", "mosquito"),
     name: t("Universul Țânțarului", "The Mosquito Universe"),
-    bookTitle: t("Țânțarul cu cizme de cauciuc", "The Mosquito in Rubber Boots"),
+    bookTitle: t("Țânțarul cu cizme de cauciuc", "The Mosquito with Rubber Boots"),
     hook: t("Povestea prinde contur în atelier.", "The story is taking shape in the studio."),
     status: "soon",
     tint: ["#DCE9F6", "#97BCE0", "#3F6A98"],
@@ -104,7 +104,7 @@ export const universes = [
   {
     slug: t("musca", "fly"),
     name: t("Universul Muștei", "The Fly Universe"),
-    bookTitle: t("Musca rătăcită", "The Wandering Fly"),
+    bookTitle: t("Musca rătăcită", "The Lost Fly"),
     hook: t("Povestea prinde contur în atelier.", "The story is taking shape in the studio."),
     status: "soon",
     tint: ["#E3EBDA", "#A9BE95", "#56704A"],
@@ -115,19 +115,19 @@ export const universes = [
 ] as const;
 
 export const featuredBook = {
-  slug: t("fluturele-dansator-de-step", "the-tap-dancing-butterfly"),
-  title: t("Fluturele dansator de step", "The Tap-Dancing Butterfly"),
+  slug: t("fluturele-dansator-de-step", "the-tap-dancer-butterfly"),
+  title: t("Fluturele dansator de step", "The Tap Dancer Butterfly"),
   subtitle: site.whisper,
   ageGroup: "copii",
-  cover: { src: "/img/cover-fluturele.webp", alt: t("Fluturele dansator de step", "The Tap-Dancing Butterfly"), width: 766, height: 1120 },
+  cover: { src: "/img/cover-fluturele.webp", alt: t("Fluturele dansator de step", "The Tap Dancer Butterfly"), width: 766, height: 1120 },
   blurb: [
     t(
       "Într-o poiană magică și plină de culoare, un fluture simte un ritm diferit de al celorlalți. În timp ce toți se așteptau să zboare lin și grațios, inima lui visa la altceva.",
-      "In a magical, colourful meadow, one butterfly feels a different rhythm from everyone else. While the others were expected to glide gently and gracefully, his heart dreamed of something else.",
+      "In a colorful magical meadow, a little butterfly feels a rhythm different from everyone else. While others expect him to fly quietly like all butterflies do, his heart dreams of tap dancing. With curiosity and courage, he steps beyond what feels familiar and begins a journey of discovery — meeting new friends, facing doubts, and learning to listen to his own inner voice.",
     ),
     t(
       "Pentru copii, o poveste blândă despre încrederea în sine și curajul de a fi diferit. Pentru adulți, o reflecție despre a privi dincolo de frică, așteptări și tipare vechi.",
-      "For children, a gentle story about self-belief and the courage to be different. For grown-ups, a reflection on looking past fear, expectations and old patterns.",
+      "For children, this is a gentle story about believing in yourself, exploring the world with bravery, and understanding emotions with kindness. It speaks softly about being different, following your dreams, and discovering that true magic comes from being exactly who you are.\n\nFor adults, the butterfly’s journey carries a deeper reflection. Sometimes children who dare to follow their own rhythm are seen as too bold, too sensitive, or too different. Yet their courage can awaken new awareness — reminding us to look beyond fear, expectations, and old patterns.",
     ),
   ],
   year: 2026,
@@ -146,11 +146,11 @@ export const homeArtworks = [
     images: [{ src: "/img/cover-fluturele.webp", alt: t("Poiana fluturelui", "The butterfly's meadow"), width: 766, height: 1120 }],
   },
   {
-    slug: t("buburuza-rotunjoara", "the-roly-poly-ladybird"),
-    title: t("Buburuza rotunjoară", "The roly-poly ladybird"),
+    slug: t("buburuza-rotunjoara", "the-round-ladybug"),
+    title: t("Buburuza rotunjoară", "The Round Ladybug"),
     technique: t("Ilustrația de copertă", "Cover illustration"),
     kind: "original",
-    images: [{ src: "/img/cover-buburuza.webp", alt: t("Buburuza rotunjoară", "The roly-poly ladybird"), width: 758, height: 1120 }],
+    images: [{ src: "/img/cover-buburuza.webp", alt: t("Buburuza rotunjoară", "The Round Ladybug"), width: 758, height: 1120 }],
   },
 ] as const;
 

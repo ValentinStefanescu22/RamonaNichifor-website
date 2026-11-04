@@ -277,36 +277,36 @@ export const counsellingPage = {
 /* ---------------------------------------------------------------- Cărți */
 
 export const booksPage = {
-  seriesNote: t("Seria „Magia suntem noi”", "The „Magic Is Us” series"),
-  // From Ramona's „Despre autor” (2026-10-03); English is a working translation
+  seriesNote: t("Seria „Magia suntem noi”", "The “We Are the Magic” series"),
+  // From Ramona's „Despre autor” (2026-10-03); English is hers („About the Author”, 2026-10-27)
   author: {
     title: t("Despre autor", "About the author"),
     paragraphs: [
       t(
         "Ramona Nichifor este autor și artist vizual, iar poveștile ei s-au născut la ora de culcare a fiicei sale.",
-        "Ramona Nichifor is an author and visual artist, and her stories were born at her daughter's bedtime.",
+        "Ramona Nichifor is an author and visual artist whose stories were born at bedtime.",
       ),
       t(
         "Au fost șoptite cu blândețe, seară de seară, pentru a crea o stare de liniște, bucurie și siguranță. Aceste povești au apărut din prezență și iubire, devenind tovarăși tăcuți ai copilăriei, purtători de căldură, speranță și sens.",
-        "They were whispered gently, night after night, to create a feeling of calm, joy and safety. These stories grew out of presence and love, and became quiet companions of childhood, carriers of warmth, hope and meaning.",
+        "They were gently whispered to her daughter, night after night, to help her fall asleep with a heart full of beautiful emotions, to feel happy, calm, and safe. These stories grew out of presence and love, becoming quiet companions that carried warmth, hope, and meaning.",
       ),
       t(
         "Cărțile ei vorbesc cu delicatețe despre emoțiile pe care copiii le simt, dar nu știu întotdeauna să le numească. Ele oferă alinare, acceptare și un sentiment de apartenență, fără lecții sau judecată.",
-        "Her books speak gently about the feelings children have but cannot always name. They offer comfort, acceptance and a sense of belonging, without lessons or judgement.",
+        "Her books speak softly about emotions children feel but do not always know to name them. They offer reassurance, acceptance, and a sense of belonging — without lessons or judgment.",
       ),
       t(
         "Ramona Nichifor creează povești și ilustrații pentru copiii din întreaga lume, dar și pentru adulții care își redescoperă copilul interior.",
-        "Ramona Nichifor creates stories and illustrations for children all over the world, and for the grown-ups rediscovering their inner child.",
+        "Ramona Nichifor creates stories for children from all over the world, as well as for adults who rediscover their inner child.",
       ),
     ],
-    statement: t("Cărțile ei sunt menite să fie citite cu voce tare, împărtășite și simțite.", "Her books are meant to be read aloud, shared and felt."),
+    statement: t("Cărțile ei sunt menite să fie citite cu voce tare, împărtășite și simțite.", "Her books are created to be read aloud, shared, and felt."),
     formats: [
       { name: t("E-book", "E-book"), line: t("În curând", "Coming soon") },
       {
         name: t("Audiobook", "Audiobook"),
         line: t(
           "Este planificată și o versiune audiobook, care va readuce aceste povești în locul în care s-au născut pentru prima dată: vocea autoarei.",
-          "An audiobook is planned too, taking these stories back to where they were first born: the author's voice.",
+          "An audiobook version is planned, returning these stories to the place where they were first born: her voice.",
         ),
       },
     ],
@@ -365,7 +365,7 @@ export const flutureProducts: Record<"semn" | "carti", { description: Text[]; sp
     description: [
             t(
               "Nouă semne de carte cu personajele din „Fluturele dansator de step” și câte un gând bun pentru cine citește: „Crede în tine!”, „Totul e posibil!”, „Împreună reușim!”.",
-              "Nine bookmarks with the characters of „The Tap-Dancing Butterfly” and a kind thought for whoever reads: „Believe in yourself!”, „Anything is possible!”, „Together we can!”.",
+              "Nine bookmarks with the characters of “The Tap Dancer Butterfly” and a kind thought for whoever reads: “Believe in yourself!”, “Everything is possible!”, “Together, we can do it!”.",
             ),
     ],
     specs: [
@@ -377,7 +377,7 @@ export const flutureProducts: Record<"semn" | "carti", { description: Text[]; sp
     description: [
             t(
               "Un pachet de 24 de cărți cu personajele din „Fluturele dansator de step”: unsprezece perechi de găsit și o singură carte câștigătoare, Fluturele dansator. Un joc de perechi pentru toată familia.",
-              "A deck of 24 cards with the characters of „The Tap-Dancing Butterfly”: eleven pairs to find and a single winning card, the tap-dancing butterfly. A pairs game for the whole family.",
+              "A deck of 24 cards with the characters of “The Tap Dancer Butterfly”: eleven pairs to find and a single winning card, the tap dancer butterfly. A pairs game for the whole family.",
             ),
     ],
     specs: [
@@ -396,7 +396,7 @@ export const specsSoon = [{ label: productPage.labels.details, value: detailsSoo
 export const deck = {
   card: (n: number) => `cards/fluturele-${String(n).padStart(2, "0")}.webp`,
   ratio: 63 / 88,
-  winner: { n: 1, name: t("Fluturele dansator", "The tap-dancing butterfly") },
+  winner: { n: 1, name: t("Fluturele dansator", "The tap dancer butterfly") },
   pairs: [
     // only two pairs are shown (Ramona, 2026-10-13): the deck is for buying, not printing
     t("Broscuță și Broscoi", "Little frog and Big frog"),
@@ -412,7 +412,7 @@ export const deck = {
   title: t("Perechile", "The pairs"),
   lead: t("Două dintre perechi, ca să vezi cum arată. Atinge o carte ca s-o vezi mare.", "Two of the pairs, so you can see what they look like. Tap a card to see it large."),
   winnerTitle: t("Cartea câștigătoare", "The winning card"),
-  winnerLine: t("Cine rămâne cu Fluturele dansator câștigă.", "Whoever is left holding the tap-dancing butterfly wins."),
+  winnerLine: t("Cine rămâne cu Fluturele dansator câștigă.", "Whoever is left holding the tap dancer butterfly wins."),
   rulesTitle: t("Cum se joacă", "How to play"),
   rules: [
     t("maxim 4 jucători cu 1 pachet", "up to 4 players with 1 deck"),
@@ -422,12 +422,12 @@ export const deck = {
     t("continuați să trageți de la coleg", "keep drawing from the player next to you"),
     t("formați perechi de câte 2 cărți", "make pairs of 2 cards"),
     t("perechile le scoateți din joc", "take the pairs out of the game"),
-    t("cine rămâne cu FLUTURELE DANSATOR, CÂȘTIGĂ!", "whoever is left with the TAP-DANCING BUTTERFLY WINS!"),
+    t("cine rămâne cu FLUTURELE DANSATOR, CÂȘTIGĂ!", "whoever is left with the TAP DANCER BUTTERFLY WINS!"),
   ],
   packTitle: t("În pachet sunt 24 de cărți", "There are 24 cards in the deck"),
   pack: [
     t("22 de cărți ce formează 11 perechi", "22 cards that make 11 pairs"),
-    t("1 carte: Fluturele dansator, câștigătorul", "1 card: the tap-dancing butterfly, the winner"),
+    t("1 carte: Fluturele dansator, câștigătorul", "1 card: the tap dancer butterfly, the winner"),
     t("1 card cu informații și reguli de joc", "1 card with information and the rules"),
   ],
   rulesCardLabel: t("Cardul cu reguli", "The rules card"),
@@ -451,6 +451,13 @@ export const bookmarks = {
     t("Împreună reușim!", "Together we can!"),
     t("Împreună reușim!", "Together we can!"),
     t("Împreună reușim!", "Together we can!"),
+  ],
+  /** Her English set (printer file „bookmarks MOTTO in engl Butterfly 23 OCT”, 2026-10-27): same art, its own mottos */
+  srcEn: (n: number) => `en/fluture-en-${String(n).padStart(2, "0")}.webp`,
+  mottosEn: [
+    "We are the magic!", "Believe in yourself! Courage!", "Trust yourself. Be brave!", "Follow your dream. Be authentic!",
+    "I believe in you! We'll find a way!", "Everything is possible! Together, we can do it!", "Together, we can do it!",
+    "Soul family", "Best friends forever",
   ],
   title: t("Toate semnele", "All the bookmarks"),
   lead: t("Nouă modele, fiecare cu gândul lui bun. Atinge un semn ca să-l vezi mare.", "Nine designs, each with its own kind thought. Tap a bookmark to see it large."),
@@ -544,7 +551,7 @@ export const community = {
     {
       id: "lansari",
       title: t("Lansări de carte", "Book launches"),
-      audience: t("Fiecare poveste nouă din „Magia suntem noi”", "Every new story in „The Magic Is Us”"),
+      audience: t("Fiecare poveste nouă din „Magia suntem noi”", "Every new story in “We Are the Magic”"),
       kind: t("Lansare", "Launch"),
       tint: "#f3c9dc",
     },

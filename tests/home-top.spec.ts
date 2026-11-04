@@ -16,8 +16,8 @@ const locales = [
     roles: "Author · Illustrator · Personal development counsellor",
     cta: "Step into the story",
     paths: ["/en/books", "/en/art", "/en/counselling"],
-    names: ["The Butterfly Universe", "The Ladybird Universe", "The Mosquito Universe", "The Fly Universe"],
-    windows: ["/en/universes/butterfly", "/en/universes/ladybird", "/en/universes/mosquito", "/en/universes/fly"],
+    names: ["The Butterfly Universe", "The Ladybug Universe", "The Mosquito Universe", "The Fly Universe"],
+    windows: ["/en/universes/butterfly", "/en/universes/ladybug", "/en/universes/mosquito", "/en/universes/fly"],
   },
 ];
 

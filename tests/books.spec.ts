@@ -104,7 +104,7 @@ test.describe("/carti", () => {
     await expect(page.locator("h1")).toHaveText("Books");
     await expect(page.getByRole("radiogroup", { name: "Books" }).getByRole("radio")).toHaveText([/Children/, /Teens/, /Adults/]);
     const hrefs = await page.locator("[data-shelf]:visible li a").evaluateAll((els) => els.map((a) => a.getAttribute("href")));
-    expect(hrefs).toEqual(["/en/books/the-tap-dancing-butterfly", "/en/books/the-roly-poly-ladybird"]);
+    expect(hrefs).toEqual(["/en/books/the-tap-dancer-butterfly", "/en/books/the-round-ladybug"]);
     await expect(page.getByRole("heading", { name: "About the author" })).toBeVisible();
   });
 
@@ -151,26 +151,30 @@ test.describe("book page", () => {
     await expect(page.locator("main section").last().getByRole("link", { name: /Buburuza rotunjoară/ })).toHaveAttribute("href", "/carti/buburuza-rotunjoara");
   });
 
-  test("EN: /en/books/the-tap-dancing-butterfly", async ({ page }) => {
-    await page.goto("/en/books/the-tap-dancing-butterfly");
-    await expect(page.locator("h1")).toHaveText("The Tap-Dancing Butterfly");
+  test("EN: /en/books/the-tap-dancer-butterfly", async ({ page }) => {
+    await page.goto("/en/books/the-tap-dancer-butterfly");
+    await expect(page.locator("h1")).toHaveText("The Tap Dancer Butterfly");
     await expect(page.getByText("Online orders are being set up.")).toBeVisible();
     await expect(page.getByRole("link", { name: /Explore the universe/ })).toHaveAttribute("href", "/en/universes/butterfly");
     await expect(page.getByRole("heading", { name: "Leaf through" })).toBeVisible();
     await expect(page.getByRole("button", { name: /^Back cover/ })).toBeVisible();
+    // her English edition: its own cover and the pages she chose (back cover, 4, 9, 31)
+    await expect(page.locator("main img[src*='cover-fluturele-en']").first()).toBeAttached();
+    await expect(page.locator("[data-leaf] button[aria-haspopup=dialog]")).toHaveCount(4);
+    await expect(page.locator("[data-leaf] img[src*='fluturele-en-p31']")).toBeAttached();
   });
 
   test("a slug that is not the doc's own in that language is one redirect to its own URL (Ruling 6)", async ({ request, page }) => {
     const res = await request.get("/en/books/fluturele-dansator-de-step", { maxRedirects: 0 });
     expect(res.status()).toBe(308);
-    expect(res.headers().location).toMatch(/\/en\/books\/the-tap-dancing-butterfly$/);
-    await page.goto("/en/books/the-tap-dancing-butterfly");
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/en\/books\/the-tap-dancing-butterfly$/);
+    expect(res.headers().location).toMatch(/\/en\/books\/the-tap-dancer-butterfly$/);
+    await page.goto("/en/books/the-tap-dancer-butterfly");
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/en\/books\/the-tap-dancer-butterfly$/);
     const alternates = await page.locator('link[rel="alternate"]').evaluateAll((els) => els.map((e) => [e.getAttribute("hreflang"), e.getAttribute("href")]));
     expect(alternates).toEqual(
       expect.arrayContaining([
         ["ro", expect.stringMatching(/\/carti\/fluturele-dansator-de-step$/)],
-        ["en", expect.stringMatching(/\/en\/books\/the-tap-dancing-butterfly$/)],
+        ["en", expect.stringMatching(/\/en\/books\/the-tap-dancer-butterfly$/)],
       ]),
     );
   });

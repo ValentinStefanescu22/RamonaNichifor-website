@@ -35,7 +35,7 @@ test.describe("/universuri", () => {
     await page.goto("/en/universes");
     await expect(page.locator("h1")).toHaveText("Universes");
     const hrefs = await orbLinks(page).evaluateAll((els) => els.map((a) => a.getAttribute("href")));
-    expect(hrefs).toEqual(["/en/universes/butterfly", "/en/universes/ladybird", "/en/universes/mosquito", "/en/universes/fly"]);
+    expect(hrefs).toEqual(["/en/universes/butterfly", "/en/universes/ladybug", "/en/universes/mosquito", "/en/universes/fly"]);
   });
 
   test("phone: all four worlds fit on the first screen, names and badges included", async ({ page }, info) => {

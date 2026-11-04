@@ -106,7 +106,7 @@ test("lang switch keeps the page", async ({ page }) => {
 test("lang switch maps a doc's own slug in the other language", async ({ page }) => {
   await page.goto("/carti/fluturele-dansator-de-step");
   await page.locator("header").getByRole("radio", { name: "en" }).click();
-  await expect(page).toHaveURL(/\/en\/books\/the-tap-dancing-butterfly$/);
+  await expect(page).toHaveURL(/\/en\/books\/the-tap-dancer-butterfly$/);
   await page.locator("header").getByRole("radio", { name: "ro" }).click();
   await expect(page).toHaveURL(/\/carti\/fluturele-dansator-de-step$/);
 });

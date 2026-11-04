@@ -113,16 +113,21 @@ async function seed() {
   // Images. Covers and book pages are her illustrations (already stamped); scenes and portrait are not.
   const img = (f: string) => `public/img/${f}`;
   const pages = (f: string) => `mockups/public/img/pages/${f}`;
+  const en = (f: string) => `mockups/public/img/en/${f}`;
   const m = {
     portrait: await upsertMedia(payload, img("portrait.webp"), t("Ramona Nichifor", "Ramona Nichifor"), false),
-    coverFluturele: await upsertMedia(payload, img("cover-fluturele.webp"), t("Coperta cărții Fluturele dansator de step", "Cover of The Tap-Dancing Butterfly"), true),
-    coverBuburuza: await upsertMedia(payload, img("cover-buburuza.webp"), t("Coperta cărții Buburuza rotunjoară", "Cover of The Roly-Poly Ladybird"), true),
+    coverFluturele: await upsertMedia(payload, img("cover-fluturele.webp"), t("Coperta cărții Fluturele dansator de step", "Cover of the Romanian edition, Fluturele dansator de step"), true),
+    coverBuburuza: await upsertMedia(payload, img("cover-buburuza.webp"), t("Coperta cărții Buburuza rotunjoară", "Cover of the Romanian edition, Buburuza rotunjoară"), true),
+    // her English editions (2026-10-27): the English pages show these
+    coverFlutureleEn: await upsertMedia(payload, en("cover-fluturele-en.webp"), t("Coperta ediției în engleză, The Tap Dancer Butterfly", "Cover of The Tap Dancer Butterfly"), true),
+    coverBuburuzaEn: await upsertMedia(payload, en("cover-buburuza-en.webp"), t("Coperta ediției în engleză, The Round Ladybug", "Cover of The Round Ladybug"), true),
     buburuzaScene: await upsertMedia(payload, img("buburuza-scene.webp"), t("Buburuza în poiană, din coperta cărții", "The ladybird in the meadow, from the book cover"), false),
   };
-  const leaf = async (book: "fluturele" | "buburuza", items: [string, L][]) =>
+  const titles = { fluturele: t("Fluturele dansator de step", "The Tap Dancer Butterfly"), buburuza: t("Buburuza rotunjoară", "The Round Ladybug") };
+  const leaf = async (book: "fluturele" | "buburuza", items: [string, L][], dir = pages) =>
     Promise.all(
       items.map(async ([f, label]) => ({
-        image: await upsertMedia(payload, pages(f), t(`${label.ro}, ${book === "fluturele" ? "Fluturele dansator de step" : "Buburuza rotunjoară"}`, `${label.en}, ${book === "fluturele" ? "The Tap-Dancing Butterfly" : "The Roly-Poly Ladybird"}`), true),
+        image: await upsertMedia(payload, dir(f), t(`${label.ro}, ${titles[book].ro}`, `${label.en}, ${titles[book].en}`), true),
         label,
       })),
     );
@@ -136,6 +141,19 @@ async function seed() {
     ["buburuza-p8.webp", t("Pagina 8", "Page 8")],
     ["buburuza-p12.webp", t("Pagina 12", "Page 12")],
   ]);
+  // the English editions' Răsfoiește: the pages she chose for the site
+  const leafFlutureleEn = await leaf("fluturele", [
+    ["fluturele-en-coperta-spate.webp", t("Coperta spate", "Back cover")],
+    ["fluturele-en-p4.webp", t("Pagina 4", "Page 4")],
+    ["fluturele-en-p9.webp", t("Pagina 9", "Page 9")],
+    ["fluturele-en-p31.webp", t("Pagina 31", "Page 31")],
+  ], en);
+  const leafBuburuzaEn = await leaf("buburuza", [
+    ["buburuza-en-coperta-spate.webp", t("Coperta spate", "Back cover")],
+    ["buburuza-en-p3.webp", t("Pagina 3", "Page 3")],
+    ["buburuza-en-p9.webp", t("Pagina 9", "Page 9")],
+    ["buburuza-en-p26.webp", t("Pagina 26", "Page 26")],
+  ], en);
   // The Fluture keepsakes (printer files, already stamped): bookmarks alt = their motto, cards alt = the character
   const cardNames = (n: number): L => (n === deck.winner.n ? deck.winner.name : n === deck.rulesCard ? deck.rulesCardLabel : t(deck.cardNames[n - 2], deck.cardNames[n - 2]));
   const cardIds: (number | string)[] = [];
@@ -144,6 +162,9 @@ async function seed() {
   const bookmarkIds: (number | string)[] = [];
   for (const [i, motto] of bookmarks.mottos.entries())
     bookmarkIds.push(await upsertMedia(payload, `mockups/public/img/${bookmarks.src(i + 1)}`, motto, true));
+  const bookmarkIdsEn: (number | string)[] = [];
+  for (const [i, motto] of bookmarks.mottosEn.entries())
+    bookmarkIdsEn.push(await upsertMedia(payload, `mockups/public/img/${bookmarks.srcEn(i + 1)}`, t(motto, motto), true));
   log("media ready");
 
   // Universes
@@ -167,7 +188,7 @@ async function seed() {
   }
   log("universes ready");
 
-  // Books (both are published; English titles are working titles)
+  // Books (both are published). Each language has its own cover and Răsfoiește (localized: the rows are per locale)
   const format = t("A4, copertă cartonată lucioasă", "A4, glossy hardcover");
   const formats = [
     { label: "E-book", status: "soon" },
@@ -177,47 +198,42 @@ async function seed() {
     payload,
     "books",
     featuredBook.slug.ro,
-    { ageGroup: "copii", status: "published", cover: m.coverFluturele, year: 2026, pages: 40, isbn: featuredBook.isbn, universe: uni.fluturele, storeLinks: [] },
-    { slug: featuredBook.slug.ro, title: featuredBook.title.ro, subtitle: featuredBook.subtitle.ro, blurb: rt(featuredBook.blurb.map((p) => p.ro)), format: format.ro, formats, leafPages: leafFluturele.map((p) => ({ image: p.image, label: p.label.ro })) },
-    { slug: featuredBook.slug.en, title: featuredBook.title.en, subtitle: featuredBook.subtitle.en, blurb: rt(featuredBook.blurb.map((p) => p.en)) },
+    { ageGroup: "copii", status: "published", year: 2026, pages: 40, isbn: featuredBook.isbn, universe: uni.fluturele, storeLinks: [] },
+    { slug: featuredBook.slug.ro, title: featuredBook.title.ro, subtitle: featuredBook.subtitle.ro, cover: m.coverFluturele, blurb: rt(featuredBook.blurb.map((p) => p.ro)), format: format.ro, formats, leafPages: leafFluturele.map((p) => ({ image: p.image, label: p.label.ro })) },
+    // her English back cover runs to three paragraphs where the Romanian site text has two
+    { slug: featuredBook.slug.en, title: featuredBook.title.en, subtitle: featuredBook.subtitle.en, cover: m.coverFlutureleEn, blurb: rt(featuredBook.blurb.flatMap((p) => p.en.split("\n\n"))) },
   );
   const buburuzaBlurb = [
     t(
       "O buburuză rotunjoară și drăgălașă începe să creadă că nu este suficient de frumoasă. Cuprinsă de gelozie, rușine și dorința de a fi altcineva, descoperă că adevărata magie izvorăște din iubirea și acceptarea de sine.",
-      "A sweet, roly-poly ladybird begins to believe she isn't pretty enough. Caught up in jealousy, shame and the wish to be someone else, she discovers that real magic springs from love and self-acceptance.",
+      "A round little ladybug begins to believe that she is too different and not beautiful enough. Between jealousy, shame, and the desire to be someone else, she discovers that true magic begins with self-acceptance.",
     ),
     t(
       "Parte din seria „Magia suntem noi”, această carte este creată pentru a fi citită cu voce tare, pentru a deschide conversații sensibile despre sentimente și emoții pe care copiii le simt, dar nu știu întotdeauna să le numească; despre identitate, apartenență și bucuria de a fi exact așa cum ești.",
-      "Part of the „Magic Is Us” series, this book is made to be read aloud, to open gentle conversations about the feelings children have but cannot always name; about identity, belonging and the joy of being exactly who you are.",
+      "Part of the “We Are the Magic” series, this book was created to be read aloud, to open sensitive conversations about emotions that children feel, but don't always know how to name them, about identity, belonging and the joy of being exactly as you are.",
     ),
     t(
       "O poveste ilustrată pentru copii dar și pentru adulții care își redescoperă copilul interior.",
-      "An illustrated story for children, and for the grown-ups rediscovering their inner child.",
+      "An illustrated story for children but also for adults rediscovering their inner child.",
     ),
   ];
   const bookBuburuza = await upsert(
     payload,
     "books",
     "buburuza-rotunjoara",
-    { ageGroup: "copii", status: "published", cover: m.coverBuburuza, year: 2026, pages: 28, isbn: "978-973-0-44383-7", universe: uni.buburuza, storeLinks: [] },
-    { slug: "buburuza-rotunjoara", title: "Buburuza rotunjoară", subtitle: "O poveste șoptită inimii, acolo unde magia începe cu tine.", blurb: rt(buburuzaBlurb.map((p) => p.ro)), format: format.ro, formats, leafPages: leafBuburuza.map((p) => ({ image: p.image, label: p.label.ro })) },
-    { slug: "the-roly-poly-ladybird", title: "The Roly-Poly Ladybird", subtitle: "A story whispered to the heart, where the magic begins with you.", blurb: rt(buburuzaBlurb.map((p) => p.en)) },
+    { ageGroup: "copii", status: "published", year: 2026, pages: 28, isbn: "978-973-0-44383-7", universe: uni.buburuza, storeLinks: [] },
+    { slug: "buburuza-rotunjoara", title: "Buburuza rotunjoară", subtitle: "O poveste șoptită inimii, acolo unde magia începe cu tine.", cover: m.coverBuburuza, blurb: rt(buburuzaBlurb.map((p) => p.ro)), format: format.ro, formats, leafPages: leafBuburuza.map((p) => ({ image: p.image, label: p.label.ro })) },
+    { slug: "the-round-ladybug", title: "The Round Ladybug", subtitle: "A story whispered to the heart, where the magic begins with you.", cover: m.coverBuburuzaEn, blurb: rt(buburuzaBlurb.map((p) => p.en)) },
   );
-  // English labels of the book pages (array rows keep their ids across locales)
-  for (const id of [bookFluturele, bookBuburuza]) {
-    const doc = await payload.findByID({ collection: "books", id, locale: "ro", context });
-    const leafEn = id === bookFluturele ? leafFluturele : leafBuburuza;
+  // the English Răsfoiește is its own set of rows (localized array), so it is written apart from upsert's shared row ids
+  for (const [id, leafEn] of [[bookFluturele, leafFlutureleEn], [bookBuburuza, leafBuburuzaEn]] as const)
     await payload.update({
       collection: "books",
       id,
       locale: "en",
       context,
-      data: {
-        format: format.en,
-        leafPages: (doc.leafPages ?? []).map((p, i) => ({ id: p.id, image: typeof p.image === "object" ? p.image.id : p.image, label: leafEn[i].label.en })),
-      } as never,
+      data: { format: format.en, leafPages: leafEn.map((p) => ({ image: p.image, label: p.label.en })), _status: "published" } as never,
     });
-  }
   await payload.update({ collection: "universes", id: uni.fluturele, data: { books: [bookFluturele] }, context });
   await payload.update({ collection: "universes", id: uni.buburuza, data: { books: [bookBuburuza] }, context });
   log("books ready");
@@ -241,9 +257,10 @@ async function seed() {
           payload,
           "products",
           { and: [{ universe: { equals: uni[u.slug.ro] } }, { kind: { equals: k.value } }] },
-          { kind: k.value, status: "soon", universe: uni[u.slug.ro], images: real ? (k.id === "semn" ? bookmarkIds : cardIds) : [], gallery: real ? k.gallery : null },
-          localize(fields, "ro") as Record<string, unknown>,
-          localize(fields, "en") as Record<string, unknown>,
+          { kind: k.value, status: "soon", universe: uni[u.slug.ro], gallery: real ? k.gallery : null },
+          { ...(localize(fields, "ro") as Record<string, unknown>), images: real ? (k.id === "semn" ? bookmarkIds : cardIds) : [] },
+          // her English bookmarks; the cards have no English edition yet
+          { ...(localize(fields, "en") as Record<string, unknown>), images: real ? (k.id === "semn" ? bookmarkIdsEn : cardIds) : [] },
         ),
       );
     }
@@ -259,9 +276,9 @@ async function seed() {
         payload,
         "artworks",
         a.slug.ro,
-        { kind: a.kind, availability: "preorder", images: [i === 0 ? m.coverFluturele : m.coverBuburuza] },
-        pick({ slug: a.slug, title: a.title, technique: a.technique }, "ro"),
-        pick({ slug: a.slug, title: a.title, technique: a.technique }, "en"),
+        { kind: a.kind, availability: "preorder" },
+        { ...pick({ slug: a.slug, title: a.title, technique: a.technique }, "ro"), images: [i === 0 ? m.coverFluturele : m.coverBuburuza] },
+        { ...pick({ slug: a.slug, title: a.title, technique: a.technique }, "en"), images: [i === 0 ? m.coverFlutureleEn : m.coverBuburuzaEn] },
       ),
     );
   }
