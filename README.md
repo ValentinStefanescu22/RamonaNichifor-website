@@ -2,7 +2,7 @@
 
 Website for Ramona Nichifor, a Romanian children's book author, watercolour illustrator and personal development counsellor. Bilingual (Romanian by default, English at `/en`), mobile-first, with a CMS she edits herself.
 
-**Live preview:** https://ramona-nichifor-website.vercel.app/ (not indexed until launch)
+**Live:** https://ramonanichifor.com (work in progress, not indexed until launch)
 
 ## Stack
 
@@ -15,6 +15,7 @@ Website for Ramona Nichifor, a Romanian children's book author, watercolour illu
 ## Highlights
 
 - Every page reads its content from the CMS, with drafts, Live Preview and on-demand revalidation
+- Each language has its own book editions: covers, sample pages and keepsakes are set per locale
 - Illustrations get a copyright stamp and a size cap automatically on upload
 - SEO: per-page metadata, hreflang, canonical URLs, sitemap, generated Open Graph images and JSON-LD (Book, VisualArtwork, FAQPage, Event, ProfilePage)
 - Shared-element transitions between the universe map and each universe page, with reduced motion respected
