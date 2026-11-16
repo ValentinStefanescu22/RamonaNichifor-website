@@ -10,7 +10,8 @@ import { absoluteUrl, breadcrumbLd, pageMetadata, siteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PillLink } from "@/components/ui/links";
 import { BuySoon } from "@/components/ui/BuySoon";
-import { ArrowUpRight, Instagram } from "@/components/ui/icons";
+import { StoreLinks } from "@/components/ui/StoreLinks";
+import { Instagram } from "@/components/ui/icons";
 import { OtherUniverses } from "@/components/universe/OtherUniverses";
 import { Pollen } from "@/components/universe/Pollen";
 import { UniverseHero } from "@/components/universe/UniverseHero";
@@ -94,13 +95,7 @@ export default async function Page({ params }: Props) {
               {t("universes.notifyMe")}
             </PillLink>
           ) : stores.length ? (
-            <div className="mt-6 flex flex-wrap gap-3">
-              {stores.map((s) => (
-                <PillLink key={s.url} href={s.url} external icon={<ArrowUpRight size={18} />}>
-                  {s.store}
-                </PillLink>
-              ))}
-            </div>
+            <StoreLinks stores={stores} className="mt-6" />
           ) : (
             <BuySoon className="mt-6" />
           )}

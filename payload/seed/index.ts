@@ -198,7 +198,7 @@ async function seed() {
     payload,
     "books",
     featuredBook.slug.ro,
-    { ageGroup: "copii", status: "published", year: 2026, pages: 40, isbn: featuredBook.isbn, universe: uni.fluturele, storeLinks: [] },
+    { ageGroup: "copii", status: "published", year: 2026, pages: 40, isbn: featuredBook.isbn, universe: uni.fluturele, storeLinks: [...featuredBook.storeLinks] },
     { slug: featuredBook.slug.ro, title: featuredBook.title.ro, subtitle: featuredBook.subtitle.ro, cover: m.coverFluturele, blurb: rt(featuredBook.blurb.map((p) => p.ro)), format: format.ro, formats, leafPages: leafFluturele.map((p) => ({ image: p.image, label: p.label.ro })) },
     // her English back cover runs to three paragraphs where the Romanian site text has two
     { slug: featuredBook.slug.en, title: featuredBook.title.en, subtitle: featuredBook.subtitle.en, cover: m.coverFlutureleEn, blurb: rt(featuredBook.blurb.flatMap((p) => p.en.split("\n\n"))) },
@@ -221,7 +221,7 @@ async function seed() {
     payload,
     "books",
     "buburuza-rotunjoara",
-    { ageGroup: "copii", status: "published", year: 2026, pages: 28, isbn: "978-973-0-44383-7", universe: uni.buburuza, storeLinks: [] },
+    { ageGroup: "copii", status: "published", year: 2026, pages: 28, isbn: "978-973-0-44383-7", universe: uni.buburuza, storeLinks: [{ store: "Prăvălia cu Cărți", url: "https://pravaliacucarti.ro/produs/buburuza-rotunjoara" }] },
     { slug: "buburuza-rotunjoara", title: "Buburuza rotunjoară", subtitle: "O poveste șoptită inimii, acolo unde magia începe cu tine.", cover: m.coverBuburuza, blurb: rt(buburuzaBlurb.map((p) => p.ro)), format: format.ro, formats, leafPages: leafBuburuza.map((p) => ({ image: p.image, label: p.label.ro })) },
     { slug: "the-round-ladybug", title: "The Round Ladybug", subtitle: "A story whispered to the heart, where the magic begins with you.", cover: m.coverBuburuzaEn, blurb: rt(buburuzaBlurb.map((p) => p.en)) },
   );

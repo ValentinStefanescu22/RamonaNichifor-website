@@ -10,12 +10,12 @@ test("book", async ({ page }) => {
   await expect(meta).toBeVisible();
   const [h, m] = [await h2.boundingBox(), await meta.boundingBox()];
   expect(m!.y).toBeGreaterThan(h!.y + h!.height);
-  await expect(book.getByText("În curând")).toBeVisible();
-  await expect(book.getByText("Comenzile online se pregătesc.")).toBeVisible();
+  await expect(book.getByText("Comenzile online se pregătesc.")).toHaveCount(0);
+  await expect(book.getByRole("link", { name: "Cumpără de pe Prăvălia cu Cărți" })).toHaveAttribute("href", "https://pravaliacucarti.ro/produs/fluturele-dansator-de-step");
   await expect(book.getByText("ISBN 978-973-0-44382-0")).toBeVisible();
   await expect(book.getByRole("link", { name: "Despre carte" })).toHaveAttribute("href", "/carti/fluturele-dansator-de-step");
-  // no store links yet: the only link in the section is „Despre carte”
-  await expect(book.getByRole("link")).toHaveCount(1);
+  // „Despre carte” and the store, nothing else
+  await expect(book.getByRole("link")).toHaveCount(2);
   expect(await hasSideScroll(page)).toBe(false);
 });
 

@@ -132,7 +132,7 @@ export const featuredBook = {
   ],
   year: 2026,
   isbn: "978-973-0-44382-0",
-  storeLinks: [],
+  storeLinks: [{ store: "Prăvălia cu Cărți", url: "https://pravaliacucarti.ro/produs/fluturele-dansator-de-step" }],
   universe: 0,
   status: "published",
 } as const;

@@ -13,8 +13,9 @@ import { Painted } from "@/components/page/Painted";
 import { RichText } from "@/components/page/RichText";
 import { OrbArt } from "@/components/universe/OrbArt";
 import { BuySoon } from "@/components/ui/BuySoon";
+import { StoreLinks } from "@/components/ui/StoreLinks";
 import { StatusChip } from "@/components/ui/StatusChip";
-import { ArrowRight, ArrowUpRight, Instagram } from "@/components/ui/icons";
+import { ArrowRight, Instagram } from "@/components/ui/icons";
 import { PillLink, TextLink } from "@/components/ui/links";
 import { Link } from "@/i18n/navigation";
 import { BookCover } from "@/components/books/BookCover";
@@ -148,13 +149,7 @@ export default async function Page({ params }: Props) {
                     <TextLink href={{ pathname: "/contact", query: { subiect: "carte" } }}>{t("ui.writeToMe")}</TextLink>
                   </div>
                 ) : stores.length ? (
-                  <div className="flex flex-wrap gap-3">
-                    {stores.map((s) => (
-                      <PillLink key={s.url} href={s.url} external icon={<ArrowUpRight size={18} />}>
-                        {s.store}
-                      </PillLink>
-                    ))}
-                  </div>
+                  <StoreLinks stores={stores} />
                 ) : (
                   <BuySoon />
                 )}

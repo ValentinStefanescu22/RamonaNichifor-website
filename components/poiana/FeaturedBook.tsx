@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import type { Book, SiteSettings } from "@/content/types";
 import { BuySoon } from "@/components/ui/BuySoon";
+import { StoreLinks } from "@/components/ui/StoreLinks";
 import { ArrowRight } from "@/components/ui/icons";
 import { PillLink } from "@/components/ui/links";
 import { TiltCover } from "./TiltCover";
@@ -29,7 +30,7 @@ export function FeaturedBook({ book, site }: { book: Book; site: SiteSettings })
           <PillLink href={{ pathname: "/carti/[slug]", params: { slug: book.slug } }} icon={<ArrowRight size={17} />} className="mt-8">
             {t("aboutBook")}
           </PillLink>
-          <BuySoon link={false} className="mt-5" />
+          {book.storeLinks.length ? <StoreLinks stores={book.storeLinks} className="mt-6" /> : <BuySoon link={false} className="mt-5" />}
           <p className="mt-3 text-[0.92rem] text-ink-soft tabular-nums">ISBN {book.isbn}</p>
         </div>
       </div>

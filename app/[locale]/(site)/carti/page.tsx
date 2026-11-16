@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { PageHero } from "@/components/page/PageHero";
 import { Painted } from "@/components/page/Painted";
 import { BuySoon } from "@/components/ui/BuySoon";
+import { StoreLinks } from "@/components/ui/StoreLinks";
 import { AboutAuthor } from "@/components/books/AboutAuthor";
 import type { AgeId } from "@/components/books/AgeTabs";
 import { Shelf } from "@/components/books/Shelf";
@@ -51,6 +52,7 @@ export default async function Page({ params }: Props) {
   const tints = Object.fromEntries(universes.map((u) => [u.slug, u.tint]));
   const tintOf = (b: Book) => tints[b.universeSlug] ?? FALLBACK_TINT;
   const ofAge = (id: AgeId) => books.filter((b) => b.ageGroup === id);
+  const sold = books.filter((b) => b.status === "published" && b.storeLinks.length);
 
   return (
     <main>
@@ -71,7 +73,19 @@ export default async function Page({ params }: Props) {
         <div className="mx-auto grid max-w-6xl gap-6 border-y border-ink/10 py-10 lg:grid-cols-[0.62fr_1.38fr] lg:gap-20">
           <h2 className="display text-[1.8rem] text-ink">{t("books.where")}</h2>
           <div className="space-y-4">
-            <BuySoon />
+            {sold.length ? (
+              // each book with its own stores; one not sold anywhere yet is left out here (its page says „în curând”)
+              <ul className="space-y-5">
+                {sold.map((b) => (
+                  <li key={b.slug} className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <span className="display text-[1.3rem] text-ink">{b.title}</span>
+                    <StoreLinks stores={b.storeLinks} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <BuySoon />
+            )}
             {page.author.formats.length > 0 && (
               <dl className="grid gap-x-8 gap-y-3 text-[1rem] sm:grid-cols-[auto_1fr]">
                 {page.author.formats.map((f) => (

@@ -91,7 +91,13 @@ test.describe("/carti", () => {
     await expect(last).toContainText("Ramona Nichifor este autor și artist vizual");
     await expect(last.getByRole("link", { name: "Povestea mea" })).toHaveAttribute("href", "/despre");
     const where = page.locator("main section", { has: page.getByRole("heading", { name: "Unde găsești cărțile" }) });
-    await expect(where).toContainText("Comenzile online se pregătesc.");
+    // each book out with its store (Prăvălia cu Cărți), opening in a new tab
+    await expect(where).not.toContainText("Comenzile online se pregătesc.");
+    for (const [title, url] of [["Fluturele dansator de step", "https://pravaliacucarti.ro/produs/fluturele-dansator-de-step"], ["Buburuza rotunjoară", "https://pravaliacucarti.ro/produs/buburuza-rotunjoara"]]) {
+      const row = where.locator("li", { hasText: title });
+      await expect(row.getByRole("link", { name: "Cumpără de pe Prăvălia cu Cărți" })).toHaveAttribute("href", url);
+      await expect(row.getByRole("link")).toHaveAttribute("target", "_blank");
+    }
     await expect(where.getByText("E-book", { exact: true })).toBeVisible();
     await expect(where.locator("dd").first()).toHaveText("În curând");
     await expect(where.getByText("Audiobook", { exact: true })).toBeVisible();
@@ -133,11 +139,11 @@ test.describe("book page", () => {
       ["Format", "A4, copertă cartonată lucioasă"],
       ["ISBN", "978-973-0-44382-0"],
     ]);
-    await expect(page.getByText("Comenzile online se pregătesc.")).toBeVisible();
-    await expect(page.getByText("În curând").first()).toBeVisible();
-    // no store link and no buy control until a real one exists
-    await expect(page.getByRole("link", { name: /cumpără|comandă|buy/i })).toHaveCount(0);
-    await expect(page.getByRole("button", { name: /cumpără|comandă|buy/i })).toHaveCount(0);
+    // the real store, not „în curând”; JSON-LD names it as where the book is (sameAs)
+    await expect(page.getByText("Comenzile online se pregătesc.")).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Cumpără de pe Prăvălia cu Cărți" })).toHaveAttribute("href", "https://pravaliacucarti.ro/produs/fluturele-dansator-de-step");
+    const ld = await page.locator('script[type="application/ld+json"]').evaluateAll((els) => els.map((e) => JSON.parse(e.textContent!)));
+    expect(ld.find((d) => d["@type"] === "Book").sameAs).toEqual(["https://pravaliacucarti.ro/produs/fluturele-dansator-de-step"]);
     expect(await hasSideScroll(page)).toBe(false);
   });
 
@@ -154,7 +160,7 @@ test.describe("book page", () => {
   test("EN: /en/books/the-tap-dancer-butterfly", async ({ page }) => {
     await page.goto("/en/books/the-tap-dancer-butterfly");
     await expect(page.locator("h1")).toHaveText("The Tap Dancer Butterfly");
-    await expect(page.getByText("Online orders are being set up.")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Buy from Prăvălia cu Cărți" })).toHaveAttribute("href", "https://pravaliacucarti.ro/produs/fluturele-dansator-de-step");
     await expect(page.getByRole("link", { name: /Explore the universe/ })).toHaveAttribute("href", "/en/universes/butterfly");
     await expect(page.getByRole("heading", { name: "Leaf through" })).toBeVisible();
     await expect(page.getByRole("button", { name: /^Back cover/ })).toBeVisible();
