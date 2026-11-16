@@ -418,16 +418,25 @@ async function seed() {
   });
   await fillGlobal(payload, "contact-page", { tagline: contactPage.tagline });
 
-  // The four kinds of gathering (no dates yet), her one partner (no logo), and the legal pages as marked drafts
+  // The four kinds of gathering (no dates yet), the dated ones, her one partner (no logo), and the legal pages as marked drafts
   const eventKinds = { pictura: "atelier-pictura", lansari: "lansare", autografe: "autografe", citit: "atelier-citit" } as const;
   for (const e of community.events)
     await upsertWhere(
       payload,
       "events",
-      { kind: { equals: eventKinds[e.id as keyof typeof eventKinds] } },
+      { and: [{ kind: { equals: eventKinds[e.id as keyof typeof eventKinds] } }, { startsAt: { exists: false } }] },
       { kind: eventKinds[e.id as keyof typeof eventKinds], status: "upcoming" },
       pick({ title: e.title, audience: e.audience }, "ro"),
       pick({ title: e.title, audience: e.audience }, "en"),
+    );
+  for (const e of community.dated)
+    await upsertWhere(
+      payload,
+      "events",
+      { and: [{ kind: { equals: e.kind } }, { startsAt: { equals: e.startsAt } }] },
+      { kind: e.kind, startsAt: e.startsAt, status: "upcoming" },
+      pick({ title: e.title, place: e.place }, "ro"),
+      pick({ title: e.title, place: e.place }, "en"),
     );
   for (const p of community.partners)
     await upsertWhere(payload, "partners", { name: { equals: p.name } }, { name: p.name, handle: p.handle, url: p.url, order: 0 }, {}, {});

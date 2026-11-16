@@ -194,20 +194,36 @@ test.describe("/comunitate", () => {
     expect(seen.size).toBeGreaterThan(1);
   });
 
-  test("Întâlniri: four kinds, each „Datele, în curând”, no Event JSON-LD, no sign-up link without a date", async ({ page }) => {
+  test("Întâlniri: the dated launch first (date, place, sign-up, Event JSON-LD), then the four kinds „Datele, în curând”", async ({ page }) => {
     await page.goto("/comunitate");
     const section = page.locator("section", { has: page.getByRole("heading", { level: 2, name: "Întâlniri" }) });
     const rows = section.locator("ul > li");
-    await expect(rows).toHaveCount(4);
-    await expect(rows.getByRole("heading", { level: 3 })).toHaveText(["Ateliere de pictură", "Lansări de carte", "Sesiuni de autografe", "Ateliere de citit"]);
-    for (const row of await rows.all()) {
+    await expect(rows).toHaveCount(5);
+    await expect(rows.getByRole("heading", { level: 3 })).toHaveText([
+      "„Buburuza rotunjoară” și „Fluturele dansator de step”",
+      "Ateliere de pictură",
+      "Lansări de carte",
+      "Sesiuni de autografe",
+      "Ateliere de citit",
+    ]);
+    // Ramona's poster: 20.11.2026, 18:00 in Romania, Prăvălia cu Cărți, Constanța
+    const launch = rows.first();
+    await expect(launch).toContainText("Lansare");
+    await expect(launch.locator("time")).toHaveAttribute("datetime", "2026-11-20T16:00:00.000Z");
+    await expect(launch.locator("time")).toHaveText("20 noiembrie 2026 la 18:00");
+    await expect(launch).toContainText("Prăvălia cu Cărți, Constanța");
+    await expect(launch.getByRole("link", { name: "Vreau să particip" })).toHaveAttribute("href", "/contact?subiect=comunitate");
+    for (const row of await rows.all().then((r) => r.slice(1))) {
       await expect(row).toContainText("Datele, în curând");
       await expect(row.locator("a")).toHaveCount(0);
     }
-    await expect(rows.first()).toContainText("Acuarelă pentru copii și pentru adulți");
-    expect((await jsonLd(page)).filter((d) => d["@type"] === "Event")).toHaveLength(0);
+    await expect(rows.nth(1)).toContainText("Acuarelă pentru copii și pentru adulți");
+    const events = (await jsonLd(page)).filter((d) => d["@type"] === "Event");
+    expect(events).toHaveLength(1);
+    expect(events[0]).toMatchObject({ startDate: "2026-11-20T16:00:00.000Z", location: { "@type": "Place", name: "Prăvălia cu Cărți, Constanța" } });
     await page.goto("/en/community");
     await expect(page.locator("main")).toContainText("Dates coming soon");
+    await expect(page.locator("main")).toContainText("“The Round Ladybug” and “The Tap Dancer Butterfly” (Romanian editions)");
   });
 
   test("Proiecte cu sens: no project yet, so the title and a large „În curând”", async ({ page }) => {

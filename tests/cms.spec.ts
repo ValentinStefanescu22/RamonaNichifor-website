@@ -353,7 +353,8 @@ test("artworks with a price, several pictures, sold and on request render every 
 // Comunitate: an event with a date shows it, its place and the sign-up link, and gets Event JSON-LD; dated events come first, soonest first
 test("an event given a date shows it with a sign-up link and Event JSON-LD, and goes back to „Datele, în curând”", async ({ page, request }) => {
   const docs = (await (await request.get("/api/events?locale=ro&depth=0&limit=20&sort=createdAt", { headers: auth })).json()).docs;
-  const byKind = (k: string) => docs.find((d: { kind: string }) => d.kind === k);
+  // the four kinds without a date (the real launch on Ramona's poster keeps its own date and stays first throughout)
+  const byKind = (k: string) => docs.find((d: { kind: string; startsAt?: string }) => d.kind === k && !d.startsAt);
   const pictura = byKind("atelier-pictura");
   const lansare = byKind("lansare");
   const save = async (doc: { id: number }, data: Record<string, unknown>) => {
@@ -367,34 +368,34 @@ test("an event given a date shows it with a sign-up link and Event JSON-LD, and 
     await save(lansare, { startsAt: "2030-05-17T09:30:00.000Z", place: "Librăria de probă" });
     await expect(async () => {
       await page.goto("/comunitate");
-      await expect(rows().first()).toContainText("17 mai 2030", { timeout: 1000 });
+      await expect(rows().nth(1)).toContainText("17 mai 2030", { timeout: 1000 });
     }).toPass(FRESH);
 
-    // soonest first (the launch, though created second), then the other dated one, then the two without a date
-    await expect(rows().getByRole("heading", { level: 3 })).toHaveText(["Lansări de carte", "Ateliere de pictură", "Sesiuni de autografe", "Ateliere de citit"]);
-    const first = rows().first();
+    // soonest first: the real launch (2026), then the test launch (though created second), the other dated one, then the two without a date
+    await expect(rows().getByRole("heading", { level: 3 })).toHaveText(["„Buburuza rotunjoară” și „Fluturele dansator de step”", "Lansări de carte", "Ateliere de pictură", "Sesiuni de autografe", "Ateliere de citit"]);
+    const first = rows().nth(1);
     await expect(first.locator("time")).toHaveAttribute("datetime", "2030-05-17T09:30:00.000Z");
     await expect(first).toContainText("12:30"); // Bucharest summer time
     await expect(first).toContainText("Librăria de probă");
     await expect(first).not.toContainText("Datele, în curând");
     await expect(first.getByRole("link", { name: "Vreau să particip" })).toHaveAttribute("href", "/contact?subiect=comunitate");
-    await expect(rows().nth(2)).toContainText("Datele, în curând");
-    await expect(rows().nth(2).locator("a")).toHaveCount(0);
+    await expect(rows().nth(3)).toContainText("Datele, în curând");
+    await expect(rows().nth(3).locator("a")).toHaveCount(0);
 
     const events = (await ld()).filter((d) => d["@type"] === "Event");
-    expect(events).toHaveLength(2);
-    expect(events[0]).toMatchObject({
+    expect(events).toHaveLength(3);
+    expect(events[1]).toMatchObject({
       "@type": "Event",
       name: "Lansări de carte",
       startDate: "2030-05-17T09:30:00.000Z",
       location: { "@type": "Place", name: "Librăria de probă" },
       organizer: { "@type": "Person", name: "Ramona Nichifor" },
     });
-    expect(events[0].eventAttendanceMode).toContain("OfflineEventAttendanceMode");
+    expect(events[1].eventAttendanceMode).toContain("OfflineEventAttendanceMode");
 
     await expect(async () => {
       await page.goto("/en/community");
-      await expect(rows("Gatherings").first()).toContainText("17 May 2030", { timeout: 1000 });
+      await expect(rows("Gatherings").nth(1)).toContainText("17 May 2030", { timeout: 1000 });
     }).toPass(FRESH);
   } finally {
     await save(pictura, { startsAt: null, place: pictura.place ?? "" });
@@ -402,10 +403,10 @@ test("an event given a date shows it with a sign-up link and Event JSON-LD, and 
   }
   await expect(async () => {
     await page.goto("/comunitate");
-    await expect(rows().first()).toContainText("Datele, în curând", { timeout: 1000 });
+    await expect(rows().nth(1)).toContainText("Datele, în curând", { timeout: 1000 });
   }).toPass(FRESH);
-  await expect(rows().getByRole("heading", { level: 3 })).toHaveText(["Ateliere de pictură", "Lansări de carte", "Sesiuni de autografe", "Ateliere de citit"]);
-  expect((await ld()).filter((d) => d["@type"] === "Event")).toHaveLength(0);
+  await expect(rows().getByRole("heading", { level: 3 })).toHaveText(["„Buburuza rotunjoară” și „Fluturele dansator de step”", "Ateliere de pictură", "Lansări de carte", "Sesiuni de autografe", "Ateliere de citit"]);
+  expect((await ld()).filter((d) => d["@type"] === "Event")).toHaveLength(1);
 });
 
 // Confidențialitate: the date Ramona last changed the text shows under the title, per language, and goes away when cleared

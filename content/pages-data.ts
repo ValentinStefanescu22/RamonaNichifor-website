@@ -571,6 +571,16 @@ export const community = {
     },
   ],
   datesSoon: t("Datele, în curând", "Dates coming soon"),
+  // Gatherings with a date, from Ramona's posters; `startsAt` in UTC (Bucharest is UTC+2 in winter, UTC+3 in summer)
+  dated: [
+    {
+      kind: "lansare",
+      // poster 2026-11-16: „Lansare de carte, 20.11.2026 | 18:00, Prăvălia cu Cărți, Constanța”
+      startsAt: "2026-11-20T16:00:00.000Z",
+      title: t("„Buburuza rotunjoară” și „Fluturele dansator de step”", "“The Round Ladybug” and “The Tap Dancer Butterfly” (Romanian editions)"),
+      place: t("Prăvălia cu Cărți, Constanța", "Prăvălia cu Cărți, Constanța, Romania"),
+    },
+  ],
 };
 
 /* ---------------------------------------------------------------- Pagini legale */
