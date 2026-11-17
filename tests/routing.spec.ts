@@ -37,7 +37,9 @@ async function checkLink(page: Page, start: string, region: Region, href: string
   const link = page.locator(roots[region]).locator(`a[href="${href}"]`).filter({ visible: true }).first();
   // the orbs on Universuri float (never "stable"), sit under the pollen canvas: instant scroll (the page scrolls smoothly, a forced click would save a half-way position), forced click
   const orbs = /^\/(en\/universes|universuri)\/?$/.test(new URL(page.url()).pathname);
-  if (orbs) await link.evaluate((el) => el.scrollIntoView({ block: "center", behavior: "instant" }));
+  // a link more than two screens down (Comunitate's open launch) is a long smooth glide, still moving when the start is read: instant too
+  const far = await link.evaluate((el) => el.getBoundingClientRect().top > 2 * innerHeight);
+  if (orbs || far) await link.evaluate((el) => el.scrollIntoView({ block: "center", behavior: "instant" }));
   else await link.scrollIntoViewIfNeeded();
   const startUrl = page.url();
   const startY = await scrollY(page);

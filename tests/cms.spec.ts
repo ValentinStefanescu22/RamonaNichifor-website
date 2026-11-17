@@ -351,7 +351,7 @@ test("artworks with a price, several pictures, sold and on request render every 
 // Database down (Review Focus 5) is not here: stopping Postgres would break the other databases on this machine.
 
 // Comunitate: an event with a date shows it, its place and the sign-up link, and gets Event JSON-LD; dated events come first, soonest first
-test("an event given a date shows it with a sign-up link and Event JSON-LD, and goes back to „Datele, în curând”", async ({ page, request }) => {
+test("an event given a date shows it with Event JSON-LD, and goes back to „Datele, în curând”", async ({ page, request }) => {
   const docs = (await (await request.get("/api/events?locale=ro&depth=0&limit=20&sort=createdAt", { headers: auth })).json()).docs;
   // the four kinds without a date (the real launch on Ramona's poster keeps its own date and stays first throughout)
   const byKind = (k: string) => docs.find((d: { kind: string; startsAt?: string }) => d.kind === k && !d.startsAt);
@@ -372,15 +372,20 @@ test("an event given a date shows it with a sign-up link and Event JSON-LD, and 
     }).toPass(FRESH);
 
     // soonest first: the real launch (2026), then the test launch (though created second), the other dated one, then the two without a date
-    await expect(rows().getByRole("heading", { level: 3 })).toHaveText(["„Buburuza rotunjoară” și „Fluturele dansator de step”", "Lansări de carte", "Ateliere de pictură", "Sesiuni de autografe", "Ateliere de citit"]);
+    await expect(rows().locator("h3 [data-title]")).toHaveText(["„Buburuza rotunjoară” și „Fluturele dansator de step”", "Lansări de carte", "Ateliere de pictură", "Sesiuni de autografe", "Ateliere de citit"]);
+    // only the soonest (the real launch) starts open: open this one
     const first = rows().nth(1);
+    await first.getByRole("button").click();
+    await expect(first.getByRole("button")).toHaveAttribute("aria-expanded", "true");
     await expect(first.locator("time")).toHaveAttribute("datetime", "2030-05-17T09:30:00.000Z");
     await expect(first).toContainText("12:30"); // Bucharest summer time
     await expect(first).toContainText("Librăria de probă");
     await expect(first).not.toContainText("Datele, în curând");
-    await expect(first.getByRole("link", { name: "Vreau să particip" })).toHaveAttribute("href", "/contact?subiect=comunitate");
+    await expect(first.getByRole("link", { name: "Vreau să particip" })).toHaveCount(0);
     await expect(rows().nth(3)).toContainText("Datele, în curând");
-    await expect(rows().nth(3).locator("a")).toHaveCount(0);
+    // folded: its only link (Instagram) is out of reach until the row opens
+    await expect(rows().nth(3).getByRole("button")).toHaveAttribute("aria-expanded", "false");
+    await expect(rows().nth(3).locator("[inert]")).toHaveCount(1);
 
     const events = (await ld()).filter((d) => d["@type"] === "Event");
     expect(events).toHaveLength(3);
@@ -405,7 +410,7 @@ test("an event given a date shows it with a sign-up link and Event JSON-LD, and 
     await page.goto("/comunitate");
     await expect(rows().nth(1)).toContainText("Datele, în curând", { timeout: 1000 });
   }).toPass(FRESH);
-  await expect(rows().getByRole("heading", { level: 3 })).toHaveText(["„Buburuza rotunjoară” și „Fluturele dansator de step”", "Ateliere de pictură", "Lansări de carte", "Sesiuni de autografe", "Ateliere de citit"]);
+  await expect(rows().locator("h3 [data-title]")).toHaveText(["„Buburuza rotunjoară” și „Fluturele dansator de step”", "Ateliere de pictură", "Lansări de carte", "Sesiuni de autografe", "Ateliere de citit"]);
   expect((await ld()).filter((d) => d["@type"] === "Event")).toHaveLength(1);
 });
 

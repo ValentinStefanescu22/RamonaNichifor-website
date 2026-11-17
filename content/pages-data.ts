@@ -579,6 +579,14 @@ export const community = {
       startsAt: "2026-11-20T16:00:00.000Z",
       title: t("„Buburuza rotunjoară” și „Fluturele dansator de step”", "“The Round Ladybug” and “The Tap Dancer Butterfly” (Romanian editions)"),
       place: t("Prăvălia cu Cărți, Constanța", "Prăvălia cu Cărți, Constanța, Romania"),
+      // her poster, shown whole when the row opens (a photo of the printed books: no © stamp, like the scenes)
+      image: {
+        file: "events/lansare-2026-11-20.webp",
+        alt: t(
+          "Afișul lansării: „Buburuza rotunjoară” și „Fluturele dansator de step”, 20.11.2026, ora 18:00, Prăvălia cu Cărți, Constanța",
+          "The launch poster: “The Round Ladybug” and “The Tap Dancer Butterfly”, 20 November 2026, 6 pm, Prăvălia cu Cărți, Constanța",
+        ),
+      },
     },
   ],
 };

@@ -1,18 +1,11 @@
 import type { Locator, Page } from "@playwright/test";
-import { allow404, expect, hasSideScroll, test } from "./fixtures";
+import { allow404, expect, hasSideScroll, test, wholeImage } from "./fixtures";
 
 // Cărți (the shelf by age) and the book page with Răsfoiește (spec §5.4).
-// Seeded content (npm run seed): Fluturele and Buburuza are out, with no store links yet; Adolescenți and Adulți are empty.
+// Seeded content (npm run seed): Fluturele and Buburuza are out, sold at Prăvălia cu Cărți; Adolescenți and Adulți are empty.
 
 const BOOK = "/carti/fluturele-dansator-de-step";
 const isPhone = (name: string) => name === "phone";
-
-/** True when an <img> shows its picture whole: the box has the file's own proportions (±0.01) */
-const wholeImage = (img: Locator) =>
-  img.evaluate((el: HTMLImageElement) => {
-    const box = el.getBoundingClientRect();
-    return { box: box.width / box.height, natural: el.naturalWidth / el.naturalHeight, w: box.width };
-  });
 
 const radio = (page: Page, name: string | RegExp) => page.getByRole("radio", { name });
 

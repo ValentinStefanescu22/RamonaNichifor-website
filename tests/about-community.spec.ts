@@ -1,5 +1,5 @@
 import type { Page } from "@playwright/test";
-import { expect, hasSideScroll, test } from "./fixtures";
+import { expect, hasSideScroll, test, wholeImage } from "./fixtures";
 
 // Despre (spec §5.7) and Comunitate cu sens (§5.7b). Seeded content (npm run seed): her story in four movements, three crafts,
 // four kinds of gathering without dates, no projects, one partner (AVA Art & Soul). The test that gives an event a date edits the
@@ -194,33 +194,58 @@ test.describe("/comunitate", () => {
     expect(seen.size).toBeGreaterThan(1);
   });
 
-  test("Întâlniri: the dated launch first (date, place, sign-up, Event JSON-LD), then the four kinds „Datele, în curând”", async ({ page }) => {
+  test("Întâlniri: rows that open; the launch first and open (day, poster, Event JSON-LD), the four kinds „Datele, în curând”", async ({ page }) => {
     await page.goto("/comunitate");
     const section = page.locator("section", { has: page.getByRole("heading", { level: 2, name: "Întâlniri" }) });
     const rows = section.locator("ul > li");
     await expect(rows).toHaveCount(5);
-    await expect(rows.getByRole("heading", { level: 3 })).toHaveText([
+    await expect(rows.locator("h3 [data-title]")).toHaveText([
       "„Buburuza rotunjoară” și „Fluturele dansator de step”",
       "Ateliere de pictură",
       "Lansări de carte",
       "Sesiuni de autografe",
       "Ateliere de citit",
     ]);
-    // Ramona's poster: 20.11.2026, 18:00 in Romania, Prăvălia cu Cărți, Constanța
+    // Ramona's poster: 20.11.2026, 18:00 in Romania, Prăvălia cu Cărți, Constanța; the soonest upcoming row starts open
     const launch = rows.first();
-    await expect(launch).toContainText("Lansare");
+    const toggle = launch.getByRole("heading", { level: 3 }).getByRole("button");
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
     await expect(launch.locator("time")).toHaveAttribute("datetime", "2026-11-20T16:00:00.000Z");
-    await expect(launch.locator("time")).toHaveText("20 noiembrie 2026 la 18:00");
+    await expect(launch.locator("time")).toHaveText("18:00");
+    await expect(launch).toContainText("20 noiembrie 2026 la 18:00");
     await expect(launch).toContainText("Prăvălia cu Cărți, Constanța");
-    await expect(launch.getByRole("link", { name: "Vreau să particip" })).toHaveAttribute("href", "/contact?subiect=comunitate");
-    for (const row of await rows.all().then((r) => r.slice(1))) {
+    const poster = launch.getByRole("img", { name: /^Afișul lansării/ });
+    await expect(poster).toBeVisible();
+    await poster.scrollIntoViewIfNeeded();
+    await expect.poll(() => poster.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+    const r = await wholeImage(poster);
+    expect(Math.abs(r.box - r.natural), "the poster is never cropped").toBeLessThanOrEqual(0.01);
+    // no sign-up or calendar buttons and no „peste N zile” tag (client, 2026-11-17)
+    await expect(launch.getByRole("link", { name: /Vreau să particip|Adaugă în calendar/ })).toHaveCount(0);
+    await expect(launch).not.toContainText(/peste \d+|mâine|\bazi\b/);
+    await expect(launch.getByRole("link", { name: "Vezi pe hartă" })).toHaveAttribute("href", /google\.com\/maps\/search\/.*Pr%C4%83v%C4%83lia/);
+    // it folds away and opens again; folded, its links are out of reach (inert)
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(launch.locator("[inert]")).toHaveCount(1);
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(launch.locator("[inert]")).toHaveCount(0);
+    // the four kinds start folded with „Datele, în curând”; open, her line and the way to hear about dates
+    for (const row of (await rows.all()).slice(1)) {
       await expect(row).toContainText("Datele, în curând");
-      await expect(row.locator("a")).toHaveCount(0);
+      await expect(row.getByRole("button")).toHaveAttribute("aria-expanded", "false");
+      await expect(row.locator("[inert]")).toHaveCount(1);
     }
-    await expect(rows.nth(1)).toContainText("Acuarelă pentru copii și pentru adulți");
+    const pictura = rows.nth(1);
+    await pictura.getByRole("button").click();
+    await expect(pictura.getByText("Acuarelă pentru copii și pentru adulți")).toBeVisible();
+    await expect(pictura.getByRole("link", { name: "Anunță-mă pe Instagram" })).toHaveAttribute("href", /instagram\.com/);
+    expect(await hasSideScroll(page)).toBe(false);
     const events = (await jsonLd(page)).filter((d) => d["@type"] === "Event");
     expect(events).toHaveLength(1);
     expect(events[0]).toMatchObject({ startDate: "2026-11-20T16:00:00.000Z", location: { "@type": "Place", name: "Prăvălia cu Cărți, Constanța" } });
+    expect(events[0].image).toMatch(/lansare-2026-11-20/);
     await page.goto("/en/community");
     await expect(page.locator("main")).toContainText("Dates coming soon");
     await expect(page.locator("main")).toContainText("“The Round Ladybug” and “The Tap Dancer Butterfly” (Romanian editions)");

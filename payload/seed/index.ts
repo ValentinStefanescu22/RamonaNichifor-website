@@ -434,7 +434,7 @@ async function seed() {
       payload,
       "events",
       { and: [{ kind: { equals: e.kind } }, { startsAt: { equals: e.startsAt } }] },
-      { kind: e.kind, startsAt: e.startsAt, status: "upcoming" },
+      { kind: e.kind, startsAt: e.startsAt, status: "upcoming", image: await upsertMedia(payload, `mockups/public/img/${e.image.file}`, e.image.alt, false) },
       pick({ title: e.title, place: e.place }, "ro"),
       pick({ title: e.title, place: e.place }, "en"),
     );

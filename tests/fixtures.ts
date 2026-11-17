@@ -43,3 +43,10 @@ export const allow404 = (errors: string[]) => {
 /** True when the page scrolls sideways (it never should). */
 export const hasSideScroll = (page: import("@playwright/test").Page) =>
   page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+
+/** The box an <img> is drawn in against the file's own proportions: equal (±0.01) means the picture shows whole */
+export const wholeImage = (img: import("@playwright/test").Locator) =>
+  img.evaluate((el: HTMLImageElement) => {
+    const box = el.getBoundingClientRect();
+    return { box: box.width / box.height, natural: el.naturalWidth / el.naturalHeight, w: box.width };
+  });

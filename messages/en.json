@@ -181,7 +181,6 @@
     "findMe": "Where to find me"
   },
   "community": {
-    "join": "I'd like to come",
     "datesSoon": "Dates coming soon",
     "partnerInvite": "Want to partner up? Write to me",
     "welcome": "Welcome to Comunitate cu sens!",
@@ -189,6 +188,8 @@
     "propose": "Suggest a project",
     "partnerSoon": "Description coming soon",
     "online": "Online",
+    "onMap": "See it on the map",
+    "notify": "Get the news on Instagram",
     "kind": {
       "atelier-pictura": "Workshop",
       "lansare": "Launch",

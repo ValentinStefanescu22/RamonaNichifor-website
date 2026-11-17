@@ -48,7 +48,7 @@ export default async function Page({ params }: Props) {
       <section className="bg-cream px-4 pt-4 pb-20 sm:px-6 lg:pb-28">
         <div className="mx-auto max-w-6xl">
           <SectionTitle lead={c.eventsLead}>{c.eventsTitle}</SectionTitle>
-          <Events events={c.events} />
+          <Events events={c.events} notifyHref={site.contacts.instagram.href} />
         </div>
       </section>
 

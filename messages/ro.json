@@ -181,7 +181,6 @@
     "findMe": "Unde mă găsești"
   },
   "community": {
-    "join": "Vreau să particip",
     "datesSoon": "Datele, în curând",
     "partnerInvite": "Vrei să fim parteneri? Scrie-mi",
     "welcome": "Bine ai venit în Comunitate cu sens!",
@@ -189,6 +188,8 @@
     "propose": "Propune un proiect",
     "partnerSoon": "Descriere în curând",
     "online": "Online",
+    "onMap": "Vezi pe hartă",
+    "notify": "Anunță-mă pe Instagram",
     "kind": {
       "atelier-pictura": "Atelier",
       "lansare": "Lansare",
